@@ -1,0 +1,29 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    
+    <!-- Parse Information -->
+    <string name="application_id">sja2aTWuKp4jiX1mDEhcFAb3eHztXtmp50Bjs83l</string>
+    <string name="client_key">EN8CwyUYZ9HmRRQ10zxWS2lZIrq1j7DpQSeq5YNX</string>
+    
+    
+    <string name="app_name">CommunityUpgrade</string>
+    <string name="hello_world">Hello world!</string>
+    <string name="action_settings">Settings</string>
+
+    
+    <!-- Loggin In Progress Text -->
+    <string name="logging_in_progress_title">Loading</string>
+    <string name="logging_in_progress_message">Please wait while loading...</string>
+    
+    <!-- Sign Up Messages -->
+    <string name="signup_error">There was a problem signing up. Do you already have an account?</string>
+    
+    
+    <!-- Sign Up Layout Text -->
+    <string name="signup_btn_text">Sign Up</string>
+    
+    
+    <!-- Login Layout Text -->
+    <string name="login_btn_text">Log In</string>
+    <string name="signup_textview_text">Sign Up Instead?</string>
+</resources>
