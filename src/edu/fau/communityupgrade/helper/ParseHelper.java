@@ -1,18 +1,12 @@
 package edu.fau.communityupgrade.helper;
 
-import java.util.ArrayList;
-import java.util.List;
-
-import com.parse.FindCallback;
-import com.parse.ParseException;
 import com.parse.ParseGeoPoint;
 import com.parse.ParseObject;
-import com.parse.ParseQuery;
-import com.parse.ParseRelation;
 import com.parse.ParseUser;
 
 import edu.fau.communityupgrade.database.CommentManager;
 import edu.fau.communityupgrade.database.PlaceManager;
+import edu.fau.communityupgrade.database.UserManager;
 import edu.fau.communityupgrade.models.Comment;
 import edu.fau.communityupgrade.models.Place;
 import edu.fau.communityupgrade.models.User;
@@ -33,7 +27,9 @@ public class ParseHelper {
 	 */
 	public static User parseUserToUser(final ParseUser parseUser)
 	{
-		User user = new User(parseUser.getUsername(),parseUser.getObjectId());	
+		
+		User user = new User(parseUser.getString(UserManager.USERNAME),
+				parseUser.getObjectId());	
 		return user;
 	}
 	
@@ -47,8 +43,15 @@ public class ParseHelper {
 		String objectId = parseObject.getObjectId();
 		String comment_content = parseObject.getString(CommentManager.COMMENT_CONTENT);
 		String placeId = parseObject.getParseObject(CommentManager.PLACE_ID).getObjectId();
-		User createdBy = parseUserToUser(parseObject.getParseUser(CommentManager.CREATED_BY));
-		String parentId = parseObject.getParseObject(CommentManager.PARENT_ID).getObjectId();
+		
+		User createdBy = null;
+		
+		//if(parseObject.containsKey(CommentManager.CREATED_BY))
+			//createdBy = parseUserToUser(parseObject.getParseUser(CommentManager.CREATED_BY));
+		
+		String parentId = null;
+		//if(parseObject.containsKey(CommentManager.PARENT_ID))
+		 //parentId = parseObject.getParseObject(CommentManager.PARENT_ID).getObjectId();
 		
 		Comment comment = new Comment(objectId,comment_content,placeId,createdBy,parentId);
 		return comment;
@@ -61,9 +64,12 @@ public class ParseHelper {
 	 */
 	public static Place parseObjectToPlace(final ParseObject parseObject)
 	{
+		ParseUser parseUser = parseObject.getParseUser(PlaceManager.CREATED_BY);
+		User user = parseUserToUser(parseUser);
+		
 		String name = parseObject.getString(PlaceManager.NAME);
 		
-		//User user = parseUserToUser(parseObject.getParseUser(PlaceManager.CREATED_BY));
+		
 		
 		ParseGeoPoint point = parseObject.getParseGeoPoint(PlaceManager.GEOPOINT);
 		
@@ -84,8 +90,10 @@ public class ParseHelper {
 			
 		});
 		*/
+		
+		
 		//Create Place
-		Place place = new Place(name,null,point.getLatitude(),point.getLongitude(),null);
+		Place place = new Place(name,user,point.getLatitude(),point.getLongitude(),null);
 		
 		return place;
 	}

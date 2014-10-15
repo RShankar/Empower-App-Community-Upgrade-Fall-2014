@@ -10,7 +10,7 @@ public class Place {
 	
 	private final User createdBy;
 	
-	private final ArrayList<Comment> comments;
+	private ArrayList<Comment> comments;
 	
 	public Place(String name, User user, double latitude, double longitude, ArrayList<Comment> comments)
 	{
@@ -37,8 +37,13 @@ public class Place {
 		return createdBy;
 	}
 	
+	public void setComments(ArrayList<Comment> c)
+	{
+		this.comments = c;
+	}
+	
 	public String toString()
 	{
-		return name+", "+latitude+", "+longitude;
+		return name+", "+latitude+", "+longitude+",USER: "+createdBy.getUsername()+comments.toString();
 	}
 }

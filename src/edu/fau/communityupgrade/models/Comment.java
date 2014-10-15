@@ -21,7 +21,6 @@ public class Comment {
 	}
 
 
-
 	public String getObjectId() {
 		return objectId;
 	}
@@ -48,6 +47,12 @@ public class Comment {
 
 	public String getParentId() {
 		return parentId;
+	}
+	
+	public String toString()
+	{
+		return comment_content;
+		
 	}
 	
 }

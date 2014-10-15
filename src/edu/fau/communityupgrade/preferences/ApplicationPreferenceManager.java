@@ -14,13 +14,19 @@ public class ApplicationPreferenceManager {
 
 	private static final String USER_PREFERENCE_FILE = "UserPreferences"; 
 	private static final String USER_PREFERENCE_SESSION_ID = "UserSessionID";
+	private static final String USER_PREFERENCE_SESSION_SET_TIME = "UserSessionSetTime";
+	public static final long USER_PREFERENCE_EMPTY_SESSION_TIME = -1;
+	
 	private static final String TAG = "ApplicationPreferenceManager";
 	
 	private final Context context;
+	private SharedPreferences mUserPreferences;
 	
 	public ApplicationPreferenceManager(Context context)
 	{
 		this.context = context;
+		mUserPreferences = context.getSharedPreferences(
+				USER_PREFERENCE_FILE, Context.MODE_PRIVATE);;
 	}
 	
 	/**
@@ -30,11 +36,32 @@ public class ApplicationPreferenceManager {
 	 */
 	public String getUserSessionId()
 	{
-		SharedPreferences preferences = context.getSharedPreferences(
-				USER_PREFERENCE_FILE, Context.MODE_PRIVATE);
-		String sessionID = preferences.getString(USER_PREFERENCE_SESSION_ID, null);
+		
+		String sessionID = mUserPreferences.getString(USER_PREFERENCE_SESSION_ID, null);
 		return sessionID;
 	}
+	
+	/**
+	 * Retrieve the last time the user was authenticated.
+	 * Used to check if user authetication should be done again.
+	 * @return
+	 */
+	public long getUserSessionSetTime()
+	{
+		long time = mUserPreferences.getLong(USER_PREFERENCE_SESSION_SET_TIME, -1);
+		return time;
+	}
+	
+	/**
+	 * Set the last time the user was authenticated.
+	 * @param time
+	 */
+	public void setUserSessionSetTime(final long time)
+	{
+		SharedPreferences.Editor editor = mUserPreferences.edit();
+		editor.putLong(USER_PREFERENCE_SESSION_SET_TIME, time);
+	}
+	
 	
 	/**
 	 * Set the Session ID for the user.
@@ -42,9 +69,7 @@ public class ApplicationPreferenceManager {
 	 */
 	public void setUserSessionId(final String Id)
 	{
-		SharedPreferences preferences = context.getSharedPreferences(
-				USER_PREFERENCE_FILE, Context.MODE_PRIVATE);
-		SharedPreferences.Editor editor = preferences.edit();
+		SharedPreferences.Editor editor = mUserPreferences.edit();
 		
 		editor.putString(USER_PREFERENCE_SESSION_ID, Id);
 		

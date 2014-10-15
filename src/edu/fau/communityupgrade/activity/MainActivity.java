@@ -8,16 +8,14 @@ import android.view.Menu;
 import android.view.MenuItem;
 import android.widget.TextView;
 import edu.fau.communityupgrade.R;
+import edu.fau.communityupgrade.callback.DefaultParseCallback;
 import edu.fau.communityupgrade.database.PlaceManager;
-import edu.fau.communityupgrade.database.UserManager;
-import edu.fau.communityupgrade.models.Place;
 import edu.fau.communityupgrade.ui.LoadingDialog;
 
 
 public class MainActivity extends BaseActivity {
 
 	private PlaceManager placeManager;
-	private UserManager userManager;
 	private LoadingDialog mProgressDialog;
 	
 	private static final String TAG = "MainActivity";
@@ -28,7 +26,6 @@ public class MainActivity extends BaseActivity {
 		setContentView(R.layout.activity_main);
 		mProgressDialog = new LoadingDialog(this);
 		placeManager = new PlaceManager();
-		userManager = UserManager.getInstance();
 		textView = (TextView)findViewById(R.id.basic_text_view);
 	}
 	
@@ -38,17 +35,11 @@ public class MainActivity extends BaseActivity {
 		
 		super.onResume();
 		mProgressDialog.show();
-		authenticateUser();
 		long millis = System.currentTimeMillis() % 1000;
 		Log.d(TAG,"Time: "+millis);
 		
-		ArrayList<Place> places = placeManager.getAllPlacesCreatedByCurrentUser();
+		placeManager.getAllPlacesCreatedByCurrentUser(new PlaceFindCallback());
 		
-		textView.setText(places.toString());
-		
-		millis = System.currentTimeMillis() % 1000;
-		Log.d(TAG,"Time: "+millis);
-		mProgressDialog.dismiss();
 	}
 
 	@Override
@@ -77,5 +68,24 @@ public class MainActivity extends BaseActivity {
 			return true;
 		}
 		return super.onOptionsItemSelected(item);
+	}
+	
+	private class PlaceFindCallback implements DefaultParseCallback
+	{
+
+		@Override
+		public void onComplete(ArrayList places) {
+
+			textView.setText(places.toString());
+			mProgressDialog.dismiss();
+			
+		}
+
+		@Override
+		public void onError() {
+			// TODO Auto-generated method stub
+			
+		}
+		
 	}
 }

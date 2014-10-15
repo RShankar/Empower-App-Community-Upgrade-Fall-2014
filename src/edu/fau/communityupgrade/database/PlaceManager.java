@@ -10,6 +10,7 @@ import com.parse.ParseException;
 import com.parse.ParseObject;
 import com.parse.ParseQuery;
 
+import edu.fau.communityupgrade.callback.DefaultParseCallback;
 import edu.fau.communityupgrade.helper.ParseHelper;
 import edu.fau.communityupgrade.models.Place;
 
@@ -32,44 +33,69 @@ public class PlaceManager {
 	
 	public static String TABLE = "Place";
 	public static String TAG = "PlaceManager";
+	private CommentManager commentManager;
+	
 	public PlaceManager()
 	{
-		
+		commentManager = new CommentManager();
 	}
 
 	/**
 	 * Returns an ArrayList of all Places initialized by current
-	 * user.
+	 * user. Ran in a background thread.
 	 * @return
 	 */
-	public ArrayList<Place> getAllPlacesCreatedByCurrentUser()
+	public void getAllPlacesCreatedByCurrentUser(DefaultParseCallback callback)
 	{
-		UserManager userManager = UserManager.getInstance();
+		UserManager userManager  = UserManager.getInstance();
 		
 		ParseQuery<ParseObject> query = ParseQuery.getQuery(TABLE);
+		query.include(CREATED_BY);
+		query.whereEqualTo(CREATED_BY, userManager.getParseUser());
 		
-		final ArrayList<Place> placesList = new ArrayList<Place>();
+		query.findInBackground(new PlaceFindCallback(callback));
+	}
+	
+	/**
+	 * This Callback is used to handle the information once the find has 
+	 * happened from the previous thread. Requires passing a instance
+	 * of DefaultParseCallback to send the information back to the Activity.
+	 * @author kyle
+	 *
+	 */
+	private class PlaceFindCallback extends FindCallback<ParseObject>
+	{
+		DefaultParseCallback callback;
 		
-		
-		List<ParseObject> list = new ArrayList<ParseObject>();
-		try 
+		public PlaceFindCallback(DefaultParseCallback callback)
 		{
-			list.addAll(query.find());
-		} 
-		catch (ParseException e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
+			this.callback = callback;
 		}
 		
-		for(int i=0;i<list.size();i++)
-		{
-			 
-			Place place = ParseHelper.parseObjectToPlace(list.get(i));
-			Log.d(TAG,"TEST: "+place);
-			placesList.add(place);
+		@Override
+		public void done(List<ParseObject> list, ParseException e) {
+			
+			if(e != null)
+			{
+				Log.e(TAG,"Error retrieving places: ",e);
+				callback.onError();
+				return;
+			}
+			
+			CommentManager cManager = new CommentManager();
+			
+			final ArrayList<Place> placesList = new ArrayList<Place>();
+			for(int i=0;i<list.size();i++)
+			{
+				Place place = ParseHelper.parseObjectToPlace(list.get(i));
+				place.setComments(cManager.getCommentsByPlace(list.get(i)));
+				Log.d(TAG,"TEST: "+place);
+				placesList.add(place);
+			}
+			
+			callback.onComplete(placesList);
 		}
 		
-		return placesList;
 	}
 	
 	
