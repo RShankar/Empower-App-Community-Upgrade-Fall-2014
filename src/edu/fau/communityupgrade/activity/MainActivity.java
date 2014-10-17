@@ -2,13 +2,15 @@ package edu.fau.communityupgrade.activity;
 
 import java.util.ArrayList;
 
+import android.content.Intent;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.widget.TextView;
+import android.widget.Toast;
 import edu.fau.communityupgrade.R;
-import edu.fau.communityupgrade.callback.DefaultParseCallback;
+import edu.fau.communityupgrade.callback.DefaultFindCallback;
 import edu.fau.communityupgrade.database.PlaceManager;
 import edu.fau.communityupgrade.ui.LoadingDialog;
 
@@ -25,30 +27,26 @@ public class MainActivity extends BaseActivity {
 		super.onCreate(savedInstanceState);
 		setContentView(R.layout.activity_main);
 		mProgressDialog = new LoadingDialog(this);
-		placeManager = new PlaceManager();
+		placeManager = new PlaceManager(this);
 		textView = (TextView)findViewById(R.id.basic_text_view);
 	}
 	
 	@Override
 	public void onResume()
-	{
-		
+	{	
 		super.onResume();
+		Intent intent = new Intent(MainActivity.this,TestPlaceActivity.class);
+		startActivity(intent);
 		mProgressDialog.show();
 		long millis = System.currentTimeMillis() % 1000;
 		Log.d(TAG,"Time: "+millis);
-		
 		placeManager.getAllPlacesCreatedByCurrentUser(new PlaceFindCallback());
-		
 	}
 
 	@Override
 	public void onStart()
 	{
 		super.onStart();
-		
-		
-		
 	}
 	
 	@Override
@@ -70,7 +68,7 @@ public class MainActivity extends BaseActivity {
 		return super.onOptionsItemSelected(item);
 	}
 	
-	private class PlaceFindCallback implements DefaultParseCallback
+	private class PlaceFindCallback implements DefaultFindCallback
 	{
 
 		@Override
@@ -82,8 +80,9 @@ public class MainActivity extends BaseActivity {
 		}
 
 		@Override
-		public void onError() {
-			// TODO Auto-generated method stub
+		public void onError(String errorMsg) {
+			Toast.makeText(getApplicationContext(),
+					"Error getting places: "+errorMsg, Toast.LENGTH_SHORT).show();
 			
 		}
 		

@@ -4,27 +4,27 @@ import android.app.ProgressDialog;
 import android.content.Context;
 import edu.fau.communityupgrade.R;
 
-public class LoadingDialog {
-
-	final Context context;
-	final ProgressDialog mProgressDialog;
+public class LoadingDialog extends ProgressDialog {
 	
-	public LoadingDialog(Context context)
+	//TODO: Put these in XML file. Load from there.
+	public static final int DEFAULT_LOADING_TITLE_ID = R.string.logging_in_progress_title;
+	public static final int DEFAULT_LOADING_MESSAGE_ID = R.string.logging_in_progress_message;
+	
+	public LoadingDialog(final Context context)
 	{
-		this.context = context;
-		mProgressDialog = new ProgressDialog(context);
+		super(context);
 		
-		mProgressDialog.setTitle(context.getString(R.string.logging_in_progress_title));
-		mProgressDialog.setMessage(context.getString(R.string.logging_in_progress_message));
+		//Use default loading values
+		setTitle(context.getString(DEFAULT_LOADING_TITLE_ID));
+		setMessage(context.getString(DEFAULT_LOADING_MESSAGE_ID));
 	}
 	
-	public void show()
+	public LoadingDialog(final Context context, final String title, final String message )
 	{
-		mProgressDialog.show();
-	}
-	
-	public void dismiss()
-	{
-		mProgressDialog.dismiss();
+		super(context);
+		
+		setTitle(title);
+		setMessage(message);
+		
 	}
 }

@@ -5,7 +5,7 @@
     android:versionName="1.0" >
 
     <uses-sdk
-        android:minSdkVersion="9"
+        android:minSdkVersion="17"
         android:targetSdkVersion="21" />
     
     <uses-permission android:name="android.permission.INTERNET" />
@@ -34,6 +34,10 @@
             android:name="edu.fau.communityupgrade.activity.LoginActivity" />
         <activity
             android:name="edu.fau.communityupgrade.activity.SignUpActivity" />
+        <activity
+            android:name="edu.fau.communityupgrade.activity.TestPlaceActivity" />
+        <activity
+            android:name="edu.fau.communityupgrade.activity.TestSinglePlaceActivity" />
     </application>
 
 </manifest>

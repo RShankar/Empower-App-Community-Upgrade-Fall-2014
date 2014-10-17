@@ -26,4 +26,18 @@
     <!-- Login Layout Text -->
     <string name="login_btn_text">Log In</string>
     <string name="signup_textview_text">Sign Up Instead?</string>
+    
+    
+    <!-- Test Places Layout Text -->
+    <string name="add_place_btn_label">Add Place</string>
+    <string name="add_place_name_label">Place Name:</string>
+    <string name="add_place_contact_name_label">Contact Name:</string>
+    <string name="add_place_contact_number_label">Contact Number:</string>
+    
+    <string name="validate_data_title">Invalid Input</string>
+    <string name="validate_data_message">No fields can be empty!</string>
+    
+    
+    <string name="default_confirmation">OK</string>
 </resources>
+

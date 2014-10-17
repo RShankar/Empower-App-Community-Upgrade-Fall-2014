@@ -15,59 +15,58 @@ public class Auth {
 	private UserManager mUserManager;
 	private Context context;
 	private static final String TAG = "Auth";
+	private final ApplicationPreferenceManager preferenceManager;
 	
-	private static final long CHECK_AUTH_RATE_MILLI = 30000*30;
+	private static final long CHECK_AUTH_RATE_MILLI = 1;
 	
 	public Auth(final Context context)
 	{
 		this.context = context;
 		mUserManager = UserManager.getInstance();
+		preferenceManager = new ApplicationPreferenceManager(context);
 	}
 	
-	/**
-	 * Used to check if the current user should be logged in.
-	 */
-	public void authenticateUser()
-	{	
+	public boolean isUserAuthenticationExpired()
+	{
+		//Last time the user was authenticated
+		long lastUserAuthTime = preferenceManager.getUserSessionSetTime();
+		
 		//Get current time
 		Time time = new Time();
 		time.setToNow();
 		
-		//Get Preference Manager
-		ApplicationPreferenceManager preferenceManager = 
-				new ApplicationPreferenceManager(context);
-		
-		long lastUserAuthTime = preferenceManager.getUserSessionSetTime();
-		
 		if(lastUserAuthTime == ApplicationPreferenceManager.USER_PREFERENCE_EMPTY_SESSION_TIME
 			|| lastUserAuthTime > time.toMillis(true))
 		{
-			//Set the next time the user should be authenticated
-			preferenceManager.setUserSessionSetTime(time.toMillis(true)+CHECK_AUTH_RATE_MILLI);
+			return true;
 		}
 		else
 		{
 			//USer has already been authenticated
-			return;
+			return false;
 		}
-		
-		
+	}
+	
+	
+	/**
+	 * Authenticates current User using Session ID stored 
+	 * in preference manager.
+	 */
+	public void authenticateUser(final AuthCallback callback)
+	{	
 		//Get SessionID for user
 		String userSessionId = preferenceManager.getUserSessionId();
 		
 		//Callback to login the user
 		UserLoginCallback loginCallBack = new UserLoginCallback(){
-
 			@Override
 			public void onSuccess(String userToken) {
 			}
 
 			@Override
 			public void onFailure() {
-				//Go to Login Page
-				Intent intent = new Intent(context.getApplicationContext(),
-						LoginActivity.class);
-				context.startActivity(intent);
+				
+				callback.onAuthenticationFailure();
 			}
 
 			@Override

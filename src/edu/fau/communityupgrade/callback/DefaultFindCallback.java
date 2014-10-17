@@ -10,9 +10,9 @@ import java.util.ArrayList;
  * @author kyle
  *
  */
-public interface DefaultParseCallback {
+public interface DefaultFindCallback<T> {
 
-	void onComplete(ArrayList list);
+	void onComplete(ArrayList<T> list);
 	
-	void onError();
+	void onError(String error);
 }

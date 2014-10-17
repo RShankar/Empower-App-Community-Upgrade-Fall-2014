@@ -1,0 +1,63 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:orientation="vertical"
+    android:padding="10dp" >
+    
+    <TableLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="vertical"
+        android:stretchColumns="1"
+        android:id="@+id/add_place"
+        >
+        <!-- Place Name -->
+        <TableRow>
+		    <TextView
+		        android:labelFor="@+id/add_place_name" 
+		        android:text="@string/add_place_name_label"
+		        style="@style/DefaultLabel"
+		        />
+	    
+		    <EditText
+		        android:id="@+id/add_place_name"
+		        style="@style/DefaultInput"/>
+	    </TableRow>
+	    <!-- Place Contact Name -->
+	    <TableRow>
+		    <TextView
+		        android:labelFor="@+id/add_place_contact_name" 
+		        android:text="@string/add_place_contact_name_label"
+		        style="@style/DefaultLabel"
+		        />
+		    <EditText
+		        android:id="@+id/add_place_contact_name"
+		        style="@style/DefaultInput"/>
+	    </TableRow>
+	    <TableRow>
+		    <TextView
+		        android:labelFor="@+id/add_place_contact_number" 
+		        android:text="@string/add_place_contact_number_label"
+		        style="@style/DefaultLabel"
+		        />
+		    <EditText
+		        android:id="@+id/add_place_contact_number"
+		        style="@style/DefaultInput"/>
+	    </TableRow>
+	    <TableRow>
+		    <Button
+		        style="@style/DefaultButton"
+		        android:id="@+id/add_place_btn"
+		        android:layout_span="2"
+		        android:text="@string/add_place_btn_label" />
+	    </TableRow>
+    </TableLayout>
+
+    <ListView
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:id="@+id/test_place_list_view" />
+    
+</LinearLayout>
+

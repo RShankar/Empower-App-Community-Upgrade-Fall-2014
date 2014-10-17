@@ -14,12 +14,12 @@ public class CommentManager {
 	
 	public static String TABLE = "Comment";
 	
-	public static String OBJECT_ID = "objectId";
-	public static String COMMENT_CONTENT = "comment_content";
-	public static String PLACE_ID = "placeId";
-	public static String CREATED_BY = "createdBy";
-	public static String PARENT_ID = "parentId";
-	
+	public final static String OBJECT_ID = "objectId";
+	public final static String COMMENT_CONTENT = "comment_content";
+	public final static String PLACE_ID = "placeId";
+	public final static String CREATED_BY = "createdBy";
+	public final static String PARENT_ID = "parentId";
+	public final static String SCORE = "score";
 	
 	/**
 	 * Can only be used by Other managers.
@@ -53,8 +53,13 @@ public class CommentManager {
 			list.add(ParseHelper.parseObjectToComment(parseObjects.get(i)));
 		}
 		
-		
-		
 		return list;
+	}
+	
+	public void saveComment(Comment comment)
+	{
+		
+		
+		
 	}
 }

@@ -25,7 +25,7 @@ public class UserManager {
 	
 	public static final String TABLE = "_User";
 	public static final String USERNAME = "username";
-	private boolean isLoggedIn = false;
+	private volatile boolean isLoggedIn = false;
 	final ParseUser currentUser;
 	private static UserManager mUserManager;
 	
@@ -117,7 +117,6 @@ public class UserManager {
 			call.done(e);
 		}
 	}
-
 	
 	
 	/**

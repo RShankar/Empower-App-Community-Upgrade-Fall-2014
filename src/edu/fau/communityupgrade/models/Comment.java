@@ -1,23 +1,32 @@
 package edu.fau.communityupgrade.models;
 
-public class Comment {
+import android.os.Parcel;
+import android.os.Parcelable;
+
+public class Comment implements Parcelable {
 
 	private final String objectId;
 	private final String comment_content;
 	private final String placeId;
 	private final User createdBy;
 	private final String parentId;
-	
+	private final double score;
 	
 	
 	public Comment(String objectId, String comment_content, String placeId,
-			User createdBy, String parentId) {
+			User createdBy, String parentId,double score) {
 		
 		this.objectId = objectId;
 		this.comment_content = comment_content;
 		this.placeId = placeId;
 		this.createdBy = createdBy;
 		this.parentId = parentId;
+		this.score = score;
+	}
+
+
+	public double getScore() {
+		return score;
 	}
 
 
@@ -54,5 +63,44 @@ public class Comment {
 		return comment_content;
 		
 	}
+
+	@Override
+	public int describeContents() {
+		return 0;
+	}
+
+
+	@Override
+	public void writeToParcel(Parcel dest, int flags) {
+		dest.writeString(comment_content);
+		dest.writeString(objectId);
+		dest.writeString(parentId);
+		dest.writeString(placeId);
+		dest.writeDouble(score);
+		dest.writeParcelable(createdBy, 0);
+		
+	}
 	
+	//Parcel input Constructor
+	public Comment(Parcel in)
+	{
+		comment_content = in.readString();
+		objectId = in.readString();
+		parentId = in.readString();
+		placeId = in.readString();
+		score = in.readDouble();
+		createdBy = in.readParcelable(User.class.getClassLoader());
+	}
+	
+	/**
+	 * Required Create Class for creating Comments from Parcelable
+	 */
+	public static final Parcelable.Creator<Comment> CREATOR = new Parcelable.Creator<Comment>() {
+        public Comment createFromParcel(Parcel in) {
+            return new Comment(in);
+        }
+        public Comment[] newArray(int size) {
+            return new Comment[size];
+        }
+    };
 }

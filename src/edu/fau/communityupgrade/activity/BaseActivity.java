@@ -1,8 +1,9 @@
 package edu.fau.communityupgrade.activity;
 
+import android.content.Intent;
 import android.support.v7.app.ActionBarActivity;
 import edu.fau.communityupgrade.auth.Auth;
-import edu.fau.communityupgrade.database.UserManager;
+import edu.fau.communityupgrade.auth.AuthCallback;
 
 
 /**
@@ -12,9 +13,8 @@ import edu.fau.communityupgrade.database.UserManager;
  */
 public class BaseActivity extends ActionBarActivity {
 
-	//Used to handle all of the information about the user
-	private final UserManager mUserManager = UserManager.getInstance();
 	private static final String TAG = "BaseActivity";
+	private boolean firstRun = true;
 	private Auth auth;
 	
 	@Override
@@ -22,7 +22,24 @@ public class BaseActivity extends ActionBarActivity {
 	{
 		super.onResume();
 		auth = new Auth(this);
-		auth.authenticateUser();
+		if(firstRun || auth.isUserAuthenticationExpired()){
+			firstRun = false;
+			auth.authenticateUser(new BaseAuthCallback());
+		}
+	}
+	
+	private class BaseAuthCallback implements AuthCallback
+	{
+
+		@Override
+		public void onAuthenticationFailure() {
+			
+			//Go to Login Page
+			Intent intent = new Intent(getApplicationContext(), LoginActivity.class);
+			startActivity(intent);
+		}
+		
+		
 	}
 	
 }
