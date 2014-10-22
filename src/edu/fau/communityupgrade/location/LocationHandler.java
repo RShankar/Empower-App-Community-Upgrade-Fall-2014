@@ -13,6 +13,7 @@ import android.location.LocationManager;
 import android.os.Bundle;
 import android.util.Log;
 import edu.fau.communityupgrade.callback.LocationHandlerCallback;
+import edu.fau.communityupgrade.preferences.ApplicationPreferenceManager;
 
 /**
  * This class handles the location components of the application.
@@ -24,11 +25,15 @@ public class LocationHandler {
 	private final Context mContext;
 	private final LocationManager mLocationManager;
 	private final Criteria mCriteria;
+	private final ApplicationPreferenceManager preferenceManager;
+	
 	private final static String TAG = "LocationHandler";
+	
+	private static final long CACHE_TIME_EXPIRED = 5000;
 	
 	private static final int MAX_LOCATIONS_FROM_GEOCODER = 1;
 	
-	private static final String MAIN_PROVIDER =  LocationManager.NETWORK_PROVIDER;
+	public static final String MAIN_PROVIDER =  LocationManager.NETWORK_PROVIDER;
 	
 	private static final String[] PROVIDERS = {LocationManager.NETWORK_PROVIDER,
 												};
@@ -37,31 +42,49 @@ public class LocationHandler {
 	{
 		mContext = context;
 		mLocationManager = (LocationManager)mContext.getSystemService(Context.LOCATION_SERVICE);
-
-		mCriteria = new Criteria();
+		preferenceManager = new ApplicationPreferenceManager(mContext);
 		
+		mCriteria = new Criteria();
 		mCriteria.setAccuracy(Criteria.ACCURACY_COARSE);
+	}
+	
+	private boolean isCacheExpired()
+	{
+		ApplicationPreferenceManager preferenceManager = new ApplicationPreferenceManager(mContext);
+		final long lastSavedTime = preferenceManager.getLastLocation().getTime();
+		final long currentTime = System.currentTimeMillis();
+		
+		if(lastSavedTime == ApplicationPreferenceManager.LOCATION_NOT_SET)
+		{
+			return true;
+		}
+		if(currentTime - lastSavedTime > CACHE_TIME_EXPIRED)
+		{
+			return true;
+		}
+		else
+		{
+			return false;
+		}
+		
 	}
 	
 	//Update Location
 	public void updateLocation(LocationHandlerCallback callback)
 	{
-		
-		for(int i=0;i<PROVIDERS.length;i++)
+		if(!isCacheExpired())
 		{
-			if(mLocationManager.isProviderEnabled(MAIN_PROVIDER))
-			{
-				mLocationManager.requestSingleUpdate(MAIN_PROVIDER, 
-						new LocationHandlerListener(callback), mContext.getMainLooper());
-				return;
-			}
+			Location location = preferenceManager.getLastLocation();
+			callback.onLocationUpdate(location);
+		}
+		else if(mLocationManager.isProviderEnabled(MAIN_PROVIDER))
+		{
+			mLocationManager.requestSingleUpdate(MAIN_PROVIDER, 
+					new LocationHandlerListener(callback), mContext.getMainLooper());
+			return;
 		}
 		
-		callback.onProviderNotAvailable();
-		
-		
-		
-		
+		callback.onProviderNotAvailable();	
 	}
 	
 	public Location getLocationFromAddress(final String address)
@@ -101,6 +124,7 @@ public class LocationHandler {
 		@Override
 		public void onLocationChanged(Location location) {
 			Log.d(TAG,"Location changed");
+			preferenceManager.setLastLocation(location);
 			mLocationHandlerCallback.onLocationUpdate(location);
 		}
 

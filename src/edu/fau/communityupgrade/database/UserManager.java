@@ -62,7 +62,7 @@ public class UserManager {
 		{
 			Log.e(TAG,"Error logging in: ",e);
 			callback.onFailure();
-		}
+		} 
 	}
 
 	/**
@@ -74,7 +74,8 @@ public class UserManager {
 	{
 		try
 		{	
-			ParseUser user = ParseUser.become(sessionToken);
+			//Authenticates user and returns user if authenticated
+			ParseUser user = ParseUser.become(sessionToken); 
 			callback.onSuccess(user.getSessionToken());
 		}
 		catch(ParseException e)

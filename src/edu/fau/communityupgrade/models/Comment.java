@@ -60,8 +60,7 @@ public class Comment implements Parcelable {
 	
 	public String toString()
 	{
-		return comment_content;
-		
+		return comment_content+" by "+createdBy.getUsername();
 	}
 
 	@Override

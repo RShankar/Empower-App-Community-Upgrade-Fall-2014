@@ -12,6 +12,7 @@ import android.widget.Toast;
 import edu.fau.communityupgrade.R;
 import edu.fau.communityupgrade.callback.DefaultFindCallback;
 import edu.fau.communityupgrade.database.PlaceManager;
+import edu.fau.communityupgrade.models.Place;
 import edu.fau.communityupgrade.ui.LoadingDialog;
 
 
@@ -27,7 +28,6 @@ public class MainActivity extends BaseActivity {
 		super.onCreate(savedInstanceState);
 		setContentView(R.layout.activity_main);
 		mProgressDialog = new LoadingDialog(this);
-		placeManager = new PlaceManager(this);
 		textView = (TextView)findViewById(R.id.basic_text_view);
 	}
 	
@@ -37,10 +37,6 @@ public class MainActivity extends BaseActivity {
 		super.onResume();
 		Intent intent = new Intent(MainActivity.this,TestPlaceActivity.class);
 		startActivity(intent);
-		mProgressDialog.show();
-		long millis = System.currentTimeMillis() % 1000;
-		Log.d(TAG,"Time: "+millis);
-		placeManager.getAllPlacesCreatedByCurrentUser(new PlaceFindCallback());
 	}
 
 	@Override
@@ -68,23 +64,4 @@ public class MainActivity extends BaseActivity {
 		return super.onOptionsItemSelected(item);
 	}
 	
-	private class PlaceFindCallback implements DefaultFindCallback
-	{
-
-		@Override
-		public void onComplete(ArrayList places) {
-
-			textView.setText(places.toString());
-			mProgressDialog.dismiss();
-			
-		}
-
-		@Override
-		public void onError(String errorMsg) {
-			Toast.makeText(getApplicationContext(),
-					"Error getting places: "+errorMsg, Toast.LENGTH_SHORT).show();
-			
-		}
-		
-	}
 }

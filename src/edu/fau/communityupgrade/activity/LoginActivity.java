@@ -1,10 +1,9 @@
 package edu.fau.communityupgrade.activity;
 
 import android.app.Activity;
-import android.app.ProgressDialog;
 import android.content.Intent;
-import android.content.pm.PackageManager;
 import android.os.Bundle;
+import android.util.Log;
 import android.view.View;
 import android.view.View.OnClickListener;
 import android.widget.Button;
@@ -12,6 +11,8 @@ import android.widget.EditText;
 import android.widget.TextView;
 import android.widget.Toast;
 import edu.fau.communityupgrade.R;
+import edu.fau.communityupgrade.auth.Auth;
+import edu.fau.communityupgrade.callback.AuthCallback;
 import edu.fau.communityupgrade.callback.UserLoginCallback;
 import edu.fau.communityupgrade.database.UserManager;
 import edu.fau.communityupgrade.preferences.ApplicationPreferenceManager;
@@ -32,6 +33,7 @@ public class LoginActivity extends Activity {
 	@Override
 	public void onCreate(Bundle savedInstanceState)
 	{
+		Log.d(TAG,"onCreate");
 		super.onCreate(savedInstanceState);
 		setContentView(R.layout.login);
 		
@@ -48,7 +50,7 @@ public class LoginActivity extends Activity {
 		loginBtn.setOnClickListener(new LoginListener());
 		
 		//Progress Dialog to show the user logging in.
-		mProgressDialog = new LoadingDialog(this);
+		mProgressDialog = new LoadingDialog(this,"Logging in","Logging User in..");
 		
 		//set OnClick Listener for signUp button
 		signUp.setOnClickListener(new OnClickListener(){
@@ -66,9 +68,30 @@ public class LoginActivity extends Activity {
 	@Override
 	public void onResume()
 	{
+		Log.d(TAG,"onResume");
 		super.onResume();
-		
-		
+		mProgressDialog.show();
+		Auth auth = new Auth(this);
+		auth.authenticateUser(new AuthCallback(){
+			@Override
+			public void onAuthenticationFailure() {
+				mProgressDialog.dismiss();
+			}
+
+			@Override
+			public void onAuthenticationSuccess() {
+				mProgressDialog.dismiss();
+				GoToMainPage();
+				
+			}
+			
+		});
+	}
+	
+	private void GoToMainPage()
+	{
+		Intent intent = new Intent(LoginActivity.this,TestPlaceActivity.class);
+		startActivity(intent);
 	}
 	
 	/**
@@ -94,13 +117,7 @@ public class LoginActivity extends Activity {
 									new ApplicationPreferenceManager(LoginActivity.this);
 							
 							preferenceManager.setUserSessionId(userToken);
-							
-							//Sends user to Launcher Activity
-							PackageManager pm = getPackageManager();
-							Intent launchIntent = pm.getLaunchIntentForPackage(
-									getApplicationContext().getPackageName());
-
-							startActivity(launchIntent);
+							GoToMainPage();
 						}
 
 						@Override

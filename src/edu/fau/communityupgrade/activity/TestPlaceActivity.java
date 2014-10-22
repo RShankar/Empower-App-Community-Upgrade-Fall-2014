@@ -1,6 +1,5 @@
 package edu.fau.communityupgrade.activity;
 
-import java.io.Serializable;
 import java.util.ArrayList;
 
 import android.app.AlertDialog;
@@ -8,6 +7,7 @@ import android.app.AlertDialog.Builder;
 import android.content.Context;
 import android.content.Intent;
 import android.os.Bundle;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.View.OnClickListener;
@@ -48,18 +48,22 @@ public class TestPlaceActivity extends BaseActivity {
 	//Default loading Dialog 
 	LoadingDialog loadingDialog;
 	
+	LoadingDialog SaveDialog;
+	
 	EditText placeName,placeContactName,placeContactPhone;
 	Button addPlaceBtn;
 	
 	private static final double MAX_DISTANCE = 60.0;
-	
+	private static final String TAG = "TestPlaceActivity";
 	@Override
 	public void onCreate(Bundle bundle)
 	{
 		super.onCreate(bundle);
 		setContentView(R.layout.testplace_layout);
+		
 		placeManager = new PlaceManager(this);
 		loadingDialog = new LoadingDialog(this);
+		SaveDialog = new LoadingDialog(this,getString(R.string.dialog_saving_title),getString(R.string.dialog_saving_message));
 		
 		arrayOfPlaces = new ArrayList<Place>();
 		
@@ -87,6 +91,9 @@ public class TestPlaceActivity extends BaseActivity {
 			@Override
 			public void onItemClick(AdapterView<?> parent, View view,
 					int position, long id) {
+				
+				Log.d(TAG,"onItemClick: "+position);
+				
 				//Get current Place
 				Place place = arrayOfPlaces.get(position);
 				
@@ -115,36 +122,52 @@ public class TestPlaceActivity extends BaseActivity {
 	private void updatePlaces(double maxDistance)
 	{
 		loadingDialog.show();
-		// Construct the data source
-		placeManager.getAllPlacesNearUser(maxDistance,
-				new DefaultFindCallback<Place>(){
-
-					@Override
-					public void onComplete(ArrayList<Place> list) {
-						
-						
-						if(list == null)
-						{
-							addPlaceBtn.setText("Uh Oh!");
-							return;
-						}
-						
-						arrayOfPlaces = list;
-						placesAdapter.clear();
-						placesAdapter.addAll(list);
-						loadingDialog.dismiss();
-						
-					}
-
-					@Override
-					public void onError(String error) {
-						loadingDialog.dismiss();
-						
-					}
-			
-			
-		});
 		
+		// Construct the data source
+		placeManager.getAllPlacesNearUser(maxDistance,new PlaceFindCallback());
+		
+	}
+	
+	/**
+	 * This callback is used after the places have been found. 
+	 * Use this to retrieve the Places and place them in the view.
+	 * @author kyle
+	 *
+	 */
+	private class PlaceFindCallback implements DefaultFindCallback<Place>{
+		@Override
+		public void onComplete(ArrayList<Place> list) {
+			
+			Log.d(TAG,"Downloaded Places");
+			if(list == null)
+			{
+				addPlaceBtn.setText("Uh Oh!");
+				return;
+			}
+			arrayOfPlaces = list;
+			placesAdapter.clear();
+			placesAdapter.addAll(list);
+			loadingDialog.dismiss();
+			
+		}
+
+		@Override
+		public void onError(String error) {
+			Log.d(TAG,error);
+			loadingDialog.dismiss();
+			
+		}
+
+		@Override
+		public void onProviderNotAvailable() {
+			loadingDialog.dismiss();
+			Builder alert = new AlertDialog.Builder(TestPlaceActivity.this);
+			alert.setTitle(getString(R.string.error_no_provider_title));
+			alert.setMessage(getString(R.string.error_no_provider_message));
+			alert.setPositiveButton(getString(R.string.default_confirmation),null);
+			alert.show(); 
+			
+		}
 	}
 	
 	/**
@@ -156,22 +179,30 @@ public class TestPlaceActivity extends BaseActivity {
 		@Override
 		public void onSaveComplete(Place place) {
 			placesAdapter.add(place);
-			loadingDialog.dismiss();
+			SaveDialog.dismiss();
 			Toast.makeText(TestPlaceActivity.this, "Place Saved!", Toast.LENGTH_SHORT).show();
 		}
 
 		@Override
 		public void onError(String error) {
-			loadingDialog.dismiss();
-			Toast.makeText(TestPlaceActivity.this, "An Error Occurred", Toast.LENGTH_SHORT).show();
+			SaveDialog.dismiss();
+		}
+
+		@Override
+		public void onProviderNotAvailable() {
+			SaveDialog.dismiss();
+			Builder alert = new AlertDialog.Builder(TestPlaceActivity.this);
+			alert.setTitle(getString(R.string.error_no_provider_title));
+			alert.setMessage(getString(R.string.error_no_provider_message));
+			alert.setPositiveButton(getString(R.string.default_confirmation),null);
+			alert.show();    
 			
 		}
-		
-		
 	}
 	
 	/**
-	 * Returns true is input is valid and false if it isn't
+	 * Returns true is input is valid 
+	 * and false if it isn't
 	 * @return
 	 */
 	private boolean isInputValid()
@@ -184,6 +215,7 @@ public class TestPlaceActivity extends BaseActivity {
 	
 	/**
 	 * Adapter for ListView of Places
+	 * Retrieves place from list, inflates View, sets values of list item 
 	 * @author kyle
 	 *
 	 */
@@ -212,6 +244,12 @@ public class TestPlaceActivity extends BaseActivity {
 	   }
 	}
 
+	/**
+	 * OnClickListener for the Add Place Button
+	 * - Checks if input is valid
+	 * @author kyle
+	 *
+	 */
 	private class AddPlaceClickListener implements OnClickListener
 	{
 		@Override
@@ -226,7 +264,7 @@ public class TestPlaceActivity extends BaseActivity {
 				return;
 			}
 			String name = placeName.getText().toString();
-			loadingDialog.show();
+			SaveDialog.show();
 			placeManager.SavePlaceFromUserLocation(new Place(null,name,null,"","", 0, 0,null), 
 					new PlaceSaveCallback());
 			

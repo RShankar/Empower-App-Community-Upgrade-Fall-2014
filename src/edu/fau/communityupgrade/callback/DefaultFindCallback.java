@@ -14,5 +14,7 @@ public interface DefaultFindCallback<T> {
 
 	void onComplete(ArrayList<T> list);
 	
+	void onProviderNotAvailable();
+	
 	void onError(String error);
 }

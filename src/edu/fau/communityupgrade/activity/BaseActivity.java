@@ -2,8 +2,10 @@ package edu.fau.communityupgrade.activity;
 
 import android.content.Intent;
 import android.support.v7.app.ActionBarActivity;
+import android.util.Log;
+import android.view.WindowManager;
 import edu.fau.communityupgrade.auth.Auth;
-import edu.fau.communityupgrade.auth.AuthCallback;
+import edu.fau.communityupgrade.callback.AuthCallback;
 
 
 /**
@@ -21,6 +23,10 @@ public class BaseActivity extends ActionBarActivity {
 	public void onResume()
 	{
 		super.onResume();
+		
+	    
+		
+		Log.d(TAG,"onResume");
 		auth = new Auth(this);
 		if(firstRun || auth.isUserAuthenticationExpired()){
 			firstRun = false;
@@ -37,6 +43,10 @@ public class BaseActivity extends ActionBarActivity {
 			//Go to Login Page
 			Intent intent = new Intent(getApplicationContext(), LoginActivity.class);
 			startActivity(intent);
+		}
+
+		@Override
+		public void onAuthenticationSuccess() {
 		}
 		
 		

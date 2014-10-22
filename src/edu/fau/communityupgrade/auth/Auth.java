@@ -6,6 +6,7 @@ import android.content.Intent;
 import android.text.format.Time;
 import android.util.Log;
 import edu.fau.communityupgrade.activity.LoginActivity;
+import edu.fau.communityupgrade.callback.AuthCallback;
 import edu.fau.communityupgrade.callback.UserLoginCallback;
 import edu.fau.communityupgrade.database.UserManager;
 import edu.fau.communityupgrade.preferences.ApplicationPreferenceManager;
@@ -17,7 +18,7 @@ public class Auth {
 	private static final String TAG = "Auth";
 	private final ApplicationPreferenceManager preferenceManager;
 	
-	private static final long CHECK_AUTH_RATE_MILLI = 1;
+	private static final long CHECK_AUTH_RATE_MILLI = 15000;
 	
 	public Auth(final Context context)
 	{
@@ -61,6 +62,7 @@ public class Auth {
 		UserLoginCallback loginCallBack = new UserLoginCallback(){
 			@Override
 			public void onSuccess(String userToken) {
+				callback.onAuthenticationSuccess();
 			}
 
 			@Override
@@ -72,6 +74,7 @@ public class Auth {
 			@Override
 			public void onError() {
 				Log.e(TAG,"There was an error logging the user in.");
+				callback.onAuthenticationFailure();
 				((Activity) context).finish();	
 			}
 		};

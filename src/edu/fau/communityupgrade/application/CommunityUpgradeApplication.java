@@ -16,11 +16,15 @@ public class CommunityUpgradeApplication extends Application {
 	public void onCreate()
 	{
 		super.onCreate();
+		Parse.setLogLevel(Parse.LOG_LEVEL_VERBOSE);
 		
-		//Initializes Parse
+		Parse.enableLocalDatastore(this);
+		
+		//Initializes Parse 
 		Parse.initialize(this, 
 				getString(R.string.application_id), 
 				getString(R.string.client_key));
+		
 		
 		ParseUser.enableAutomaticUser();
         ParseACL defaultACL = new ParseACL();

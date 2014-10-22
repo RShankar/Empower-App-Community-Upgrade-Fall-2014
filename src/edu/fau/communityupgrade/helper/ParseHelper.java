@@ -53,12 +53,14 @@ public class ParseHelper {
 		double score = parseObject.getDouble(CommentManager.SCORE);
 		User createdBy = null;
 		
-		//if(parseObject.containsKey(CommentManager.CREATED_BY))
-			//createdBy = parseUserToUser(parseObject.getParseUser(CommentManager.CREATED_BY));
+		if(parseObject.containsKey(CommentManager.CREATED_BY))
+			createdBy = parseUserToUser(parseObject.getParseUser(CommentManager.CREATED_BY));
 		
 		String parentId = null;
-		//if(parseObject.containsKey(CommentManager.PARENT_ID))
-		 //parentId = parseObject.getParseObject(CommentManager.PARENT_ID).getObjectId();
+		
+		if(parseObject.containsKey(CommentManager.PARENT_ID)){
+			parentId = parseObject.getString(CommentManager.PARENT_ID);
+		}
 		
 		Comment comment = new Comment(objectId,comment_content,placeId,createdBy,parentId,score);
 		return comment;
@@ -91,13 +93,13 @@ public class ParseHelper {
 			@Override
 			public void done(List<ParseObject> list, ParseException arg1) {
 
+				if(list == null)
+					return;
 				for(int i=0;i<list.size();i++)
 				{
 					comments.add(parseObjectToComment(list.get(i)));
 				}
-				
 			}
-			
 		});
 		
 		

@@ -2,6 +2,7 @@ package edu.fau.communityupgrade.ui;
 
 import android.app.ProgressDialog;
 import android.content.Context;
+import android.view.WindowManager;
 import edu.fau.communityupgrade.R;
 
 public class LoadingDialog extends ProgressDialog {
@@ -17,6 +18,8 @@ public class LoadingDialog extends ProgressDialog {
 		//Use default loading values
 		setTitle(context.getString(DEFAULT_LOADING_TITLE_ID));
 		setMessage(context.getString(DEFAULT_LOADING_MESSAGE_ID));
+		setCancelable(false);
+
 	}
 	
 	public LoadingDialog(final Context context, final String title, final String message )

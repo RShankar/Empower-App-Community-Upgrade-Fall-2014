@@ -21,23 +21,22 @@
         android:name="edu.fau.communityupgrade.application.CommunityUpgradeApplication" >
         
         <activity
-            android:name="edu.fau.communityupgrade.activity.MainActivity"
+            android:name="edu.fau.communityupgrade.activity.LoginActivity"
             android:label="@string/app_name" >
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
-
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
         </activity>
         
         <activity
-            android:name="edu.fau.communityupgrade.activity.LoginActivity" />
+            android:name="edu.fau.communityupgrade.activity.SignUpActivity"
+            android:screenOrientation="portrait" />
+        <activity android:name="edu.fau.communityupgrade.activity.TestPlaceActivity"
+            android:screenOrientation="portrait" />
         <activity
-            android:name="edu.fau.communityupgrade.activity.SignUpActivity" />
-        <activity
-            android:name="edu.fau.communityupgrade.activity.TestPlaceActivity" />
-        <activity
-            android:name="edu.fau.communityupgrade.activity.TestSinglePlaceActivity" />
+            android:name="edu.fau.communityupgrade.activity.TestSinglePlaceActivity"
+            android:screenOrientation="portrait" />
     </application>
 
 </manifest>

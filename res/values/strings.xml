@@ -39,5 +39,13 @@
     
     
     <string name="default_confirmation">OK</string>
+    
+    <!-- Errors -->
+    <string name="error_no_provider_title">No Provider Available.</string>
+    <string name="error_no_provider_message">No Provider Available. Have you turned on location access?</string>
+    
+    <!-- Dialog Strings -->
+    <string name="dialog_saving_title">Saving</string>
+    <string name="dialog_saving_message">Your information is being saved.</string>
 </resources>
 

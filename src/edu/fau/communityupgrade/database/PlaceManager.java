@@ -5,6 +5,7 @@ import java.util.List;
 
 import android.content.Context;
 import android.location.Location;
+import android.os.Handler;
 import android.util.Log;
 
 import com.parse.FindCallback;
@@ -21,6 +22,7 @@ import edu.fau.communityupgrade.callback.LocationHandlerCallback;
 import edu.fau.communityupgrade.helper.ParseHelper;
 import edu.fau.communityupgrade.location.LocationHandler;
 import edu.fau.communityupgrade.models.Place;
+import edu.fau.communityupgrade.preferences.ApplicationPreferenceManager;
 
 /**
  * This class connects to the Parse Database
@@ -33,7 +35,7 @@ import edu.fau.communityupgrade.models.Place;
 public class PlaceManager {
 
 	//Name of the DB columns
-	public final static String OBJECT_ID = "objectId";
+	public final static String OBJECT_ID = "objectId"; 
 	public final static String CREATED_BY = "createdBy";
 	public final static String CREATED_AT = "createdAt";
 	public final static String NAME = "name";
@@ -43,12 +45,21 @@ public class PlaceManager {
 		
 	public static String TABLE = "Place";
 	public static String TAG = "PlaceManager";
+	
+	
+	public static final long CACHE_EXPIRE_TIME_MILLI = 30*1000*60;
+	private static final String CACHE_KEY_PLACES_NEAR = "Cache_Key_Places_Near";
+	
+	private static String LIST_OF_PLACES_NEAR_USER_KEY = "";
+	
+	private ApplicationPreferenceManager preferenceManager;
 	private Context mContext;
 	
 	
-	public PlaceManager(Context context)
+	public PlaceManager(final Context context)
 	{
 		mContext = context;
+		preferenceManager = new ApplicationPreferenceManager(mContext);
 	}
 
 	/**
@@ -56,7 +67,7 @@ public class PlaceManager {
 	 * user. Ran in a background thread.
 	 * @return
 	 */
-	public void getAllPlacesCreatedByCurrentUser(DefaultFindCallback<Place> callback)
+	public void getAllPlacesCreatedByCurrentUser(final DefaultFindCallback<Place> callback)
 	{
 		UserManager userManager  = UserManager.getInstance();
 		ParseUser user = userManager.getParseUser();
@@ -68,10 +79,11 @@ public class PlaceManager {
 		}
 		
 		ParseQuery<ParseObject> query = ParseQuery.getQuery(TABLE);
+		query.setCachePolicy(ParseQuery.CachePolicy.NETWORK_ELSE_CACHE);
 		query.include(CREATED_BY);
 		query.whereEqualTo(CREATED_BY,user);
 		
-		query.findInBackground(new PlaceFindCallback(callback));
+		query.findInBackground(new PlaceFindByUserCallback(callback));
 	}
 	
 	/**
@@ -83,29 +95,64 @@ public class PlaceManager {
 	public void getAllPlacesNearUser(final double radiusInMiles, 
 										final DefaultFindCallback<Place> callback)
 	{
-		final ParseQuery<ParseObject> mapQuery = ParseQuery.getQuery(TABLE);
+		Log.d(TAG,"getAllPlacesNearUser");
+		
+		long currentTime = System.currentTimeMillis();
+		long lastCacheTime = preferenceManager.getLastPlaceSavedTime();
+		final boolean useCached;
+		
+		
+		if(lastCacheTime != -1 && currentTime - lastCacheTime < CACHE_EXPIRE_TIME_MILLI)
+		{
+			useCached = true;
+		}
+		else
+		{
+			useCached = false;
+		} 
+		
+		Log.d(TAG,"lastCacheTime: "+lastCacheTime+", currentTime - lastCacheTime: "+(currentTime - lastCacheTime)+", useCache: "+useCached);
+
+		
 		LocationHandler locationHandler = new LocationHandler(mContext);
 		locationHandler.updateLocation(new LocationHandlerCallback(){
 
 			@Override
-			public void onLocationUpdate(Location location) {
-				ParseGeoPoint point = new ParseGeoPoint();
-				point.setLatitude(location.getLatitude());
-				point.setLongitude(location.getLongitude());
-				
-				mapQuery.include(CREATED_BY);
-				mapQuery.whereWithinMiles(LOCATION, point, radiusInMiles);
-				
-				mapQuery.findInBackground(new PlaceFindCallback(callback));
+			public void onLocationUpdate(final Location location) {
+				getPlacesNearUser(location, radiusInMiles,callback,useCached);
 			}
 
 			@Override
 			public void onProviderNotAvailable() {
-				callback.onError("No Provider is available.");
-				
+				callback.onProviderNotAvailable();
 			}
-		});
+		});	
+	}
+	
+	/**
+	 * Uses location give to retrieve information and pass it to the callback
+	 * @param location
+	 * @param radiusInMiles
+	 * @param callback
+	 */
+	private void getPlacesNearUser(final Location location, final double radiusInMiles, final DefaultFindCallback<Place> callback, final boolean useCache )
+	{		
+		final ParseQuery<ParseObject> mapQuery = ParseQuery.getQuery(TABLE);
 		
+		if(useCache)
+		{
+			Log.d(TAG,"fromPin");
+			mapQuery.fromLocalDatastore();
+		}
+		
+		ParseGeoPoint point = new ParseGeoPoint();
+		point.setLatitude(location.getLatitude());
+		point.setLongitude(location.getLongitude());
+		
+		mapQuery.include(CREATED_BY);
+		mapQuery.whereWithinMiles(LOCATION, point, radiusInMiles);
+		
+		mapQuery.findInBackground(new PlaceFindNearCallback(callback,useCache));
 	}
 	
 	/**
@@ -120,9 +167,9 @@ public class PlaceManager {
 		
 		LocationHandler locationHandler = new LocationHandler(mContext);
 		locationHandler.updateLocation(new LocationHandlerCallback(){
-
+			
 			@Override
-			public void onLocationUpdate(Location location) {
+			public void onLocationUpdate(final Location location) {
 				ParseGeoPoint point = new ParseGeoPoint();
 				point.setLatitude(location.getLatitude());
 				point.setLongitude(location.getLongitude());
@@ -139,28 +186,32 @@ public class PlaceManager {
 
 			@Override
 			public void onProviderNotAvailable() {
-				
-				
+				callback.onProviderNotAvailable();
 			}
 		});
-		
 	}
 	
-	
+	/**
+	 * This Callback is used when the user wants to save a place.
+	 * Once the place has been saved, this callback will be used
+	 * to tell the Activity that is was saved or if an error occured.
+	 * @author kyle
+	 *
+	 */
 	private class PlaceSaveCallback extends SaveCallback
 	{
 		final DefaultSaveCallback<Place> callback;
 		
 		final Place place;
 		
-		public PlaceSaveCallback(DefaultSaveCallback<Place> c, ParseObject object)
+		public PlaceSaveCallback(final DefaultSaveCallback<Place> c, final ParseObject object)
 		{
 			callback = c;
 			place = ParseHelper.parseObjectToPlace(object);
 		}
 
 		@Override
-		public void done(ParseException e) {
+		public void done(final ParseException e) {
 			if(e == null)
 			{
 				callback.onSaveComplete(place);
@@ -178,21 +229,21 @@ public class PlaceManager {
 	 * happened from the previous thread. Requires passing a instance
 	 * of DefaultParseCallback to send the information back to the Activity.
 	 * @author kyle
-	 *
 	 */
-	private class PlaceFindCallback extends FindCallback<ParseObject>
+	private class PlaceFindNearCallback extends FindCallback<ParseObject>
 	{
-		DefaultFindCallback<Place> callback;
 		
-		public PlaceFindCallback(DefaultFindCallback<Place> callback)
+		final DefaultFindCallback<Place> callback;
+		
+		public PlaceFindNearCallback(final DefaultFindCallback<Place> callback, boolean c)
 		{
 			this.callback = callback;
 		}
 		
 		@Override
-		public void done(List<ParseObject> list, ParseException e) {
+		public void done(final List<ParseObject> list, final ParseException e) {
 			
-			final ArrayList<Place> placesList = new ArrayList<Place>();
+			Log.d(TAG,"Retrieved Places");
 			
 			if(e != null)
 			{
@@ -201,18 +252,88 @@ public class PlaceManager {
 				return;
 			}
 			
-			CommentManager cManager = new CommentManager();
+			ParseObject.pinAllInBackground(list);
+			preferenceManager.setLastPlaceSavedTime();
+			
+			createListOfPlaces(list,callback);
 			
 			
-			for(int i=0;i<list.size();i++)
-			{
-				Place place = ParseHelper.parseObjectToPlace(list.get(i));
-				place.setComments(cManager.getCommentsByPlace(list.get(i)));
-				Log.d(TAG,"TEST: "+place);
-				placesList.add(place);
+		}
+		
+	}
+	
+	/**
+	 * 
+	 * @param places
+	 * @param callback
+	 */
+	private void createListOfPlaces(final List<ParseObject> places,final DefaultFindCallback<Place> callback)
+	{
+		/**
+		 * 
+		 */
+		new Thread(new Runnable(){
+
+			@Override
+			public void run() {
+				CommentManager cManager = new CommentManager(mContext);
+				final ArrayList<Place> placesList = new ArrayList<Place>();
+				
+				
+				for(int i=0;i<places.size();i++)
+				{
+					Place place = ParseHelper.parseObjectToPlace(places.get(i));
+					place.setComments(cManager.getCommentsByPlace(places.get(i)));
+					//Log.d(TAG,"TEST: "+place);
+					placesList.add(place);
+				}
+				
+				Log.d(TAG,"callback.onComplete");
+			
+				Handler mainHandler = new Handler(mContext.getMainLooper());
+
+				//Required to update View
+				Runnable myRunnable = new Runnable(){
+					@Override
+					public void run() {
+						callback.onComplete(placesList);
+						
+					}
+				};
+				mainHandler.post(myRunnable);	
 			}
-			
-			callback.onComplete(placesList);
+		}).start();
+		
+		
+	}
+	
+	
+	
+	/**
+	 * This Callback is used to handle the information once the find has 
+	 * happened from the previous thread. Requires passing a instance
+	 * of DefaultParseCallback to send the information back to the Activity.
+	 * @author kyle
+	 *
+	 */
+	private class PlaceFindByUserCallback extends FindCallback<ParseObject>
+	{
+		DefaultFindCallback<Place> callback;
+		
+		public PlaceFindByUserCallback(DefaultFindCallback<Place> callback)
+		{
+			this.callback = callback;
+		}
+		
+		@Override
+		public void done(List<ParseObject> list, ParseException e) {
+			if(e != null)
+			{
+				Log.e(TAG,"Error retrieving places: ",e);
+				callback.onError(e.toString());
+				return;
+			}
+			createListOfPlaces(list,callback);
 		}
 		
 	}
