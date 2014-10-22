@@ -23,9 +23,6 @@ public class BaseActivity extends ActionBarActivity {
 	public void onResume()
 	{
 		super.onResume();
-		
-	    
-		
 		Log.d(TAG,"onResume");
 		auth = new Auth(this);
 		if(firstRun || auth.isUserAuthenticationExpired()){
@@ -34,6 +31,11 @@ public class BaseActivity extends ActionBarActivity {
 		}
 	}
 	
+	/**
+	 * Used start 
+	 * @author kyle
+	 *
+	 */
 	private class BaseAuthCallback implements AuthCallback
 	{
 

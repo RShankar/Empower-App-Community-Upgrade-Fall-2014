@@ -127,7 +127,7 @@ public class TestPlaceActivity extends BaseActivity {
 		placeManager.getAllPlacesNearUser(maxDistance,new PlaceFindCallback());
 		
 	}
-	
+
 	/**
 	 * This callback is used after the places have been found. 
 	 * Use this to retrieve the Places and place them in the view.

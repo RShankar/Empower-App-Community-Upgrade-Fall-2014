@@ -2,12 +2,10 @@ package edu.fau.communityupgrade.ui;
 
 import android.app.ProgressDialog;
 import android.content.Context;
-import android.view.WindowManager;
 import edu.fau.communityupgrade.R;
 
 public class LoadingDialog extends ProgressDialog {
 	
-	//TODO: Put these in XML file. Load from there.
 	public static final int DEFAULT_LOADING_TITLE_ID = R.string.logging_in_progress_title;
 	public static final int DEFAULT_LOADING_MESSAGE_ID = R.string.logging_in_progress_message;
 	
