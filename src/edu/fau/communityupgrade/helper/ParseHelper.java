@@ -53,8 +53,12 @@ public class ParseHelper {
 		double score = parseObject.getDouble(CommentManager.SCORE);
 		User createdBy = null;
 		
-		if(parseObject.containsKey(CommentManager.CREATED_BY))
-			createdBy = parseUserToUser(parseObject.getParseUser(CommentManager.CREATED_BY));
+		ParseUser user = parseObject.getParseUser(CommentManager.CREATED_BY);
+		if(user!= null)
+		{
+			createdBy = parseUserToUser(user);
+		}
+			
 		
 		String parentId = null;
 		
@@ -77,7 +81,8 @@ public class ParseHelper {
 		User user = parseUserToUser(parseUser);
 		
 		String name = parseObject.getString(PlaceManager.NAME);
-		String cName = parseObject.getString(PlaceManager.CONTACT_NAME);
+		String description = parseObject.getString(PlaceManager.DESCRIPTION);
+		String address = parseObject.getString(PlaceManager.ADDRESS);
 		String cNumber = parseObject.getString(PlaceManager.CONTACT_NUMBER);
 		String objectId = parseObject.getString(PlaceManager.OBJECT_ID);
 		
@@ -104,7 +109,7 @@ public class ParseHelper {
 		
 		
 		//Create Place
-		Place place = new Place(objectId,name,user,cName,cNumber,point.getLatitude(),point.getLongitude(),null);
+		Place place = new Place(objectId,name,user,description,cNumber,address,point.getLatitude(),point.getLongitude(),null);
 		
 		return place;
 	}

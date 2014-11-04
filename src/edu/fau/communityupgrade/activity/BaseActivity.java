@@ -1,9 +1,11 @@
 package edu.fau.communityupgrade.activity;
 
+import android.app.ActionBar;
 import android.content.Intent;
+import android.os.Bundle;
 import android.support.v7.app.ActionBarActivity;
 import android.util.Log;
-import android.view.WindowManager;
+import android.view.MenuItem;
 import edu.fau.communityupgrade.auth.Auth;
 import edu.fau.communityupgrade.callback.AuthCallback;
 
@@ -16,14 +18,31 @@ import edu.fau.communityupgrade.callback.AuthCallback;
 public class BaseActivity extends ActionBarActivity {
 
 	private static final String TAG = "BaseActivity";
+	private ActionBar actionBar;
+	
 	private boolean firstRun = true;
 	private Auth auth;
+	
+	@Override
+	public void onCreate(Bundle bundle)
+	{
+		super.onCreate(bundle);
+		actionBar = getActionBar();
+		actionBar.setHomeButtonEnabled(true);
+	}
+	
+	@Override
+	public boolean onOptionsItemSelected(MenuItem item) {
+	    onBackPressed();
+	    return true;
+	}
 	
 	@Override
 	public void onResume()
 	{
 		super.onResume();
 		Log.d(TAG,"onResume");
+		
 		auth = new Auth(this);
 		if(firstRun || auth.isUserAuthenticationExpired()){
 			firstRun = false;

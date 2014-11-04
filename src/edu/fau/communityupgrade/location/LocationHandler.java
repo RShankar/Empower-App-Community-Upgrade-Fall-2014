@@ -35,7 +35,8 @@ public class LocationHandler {
 	
 	public static final String MAIN_PROVIDER =  LocationManager.NETWORK_PROVIDER;
 	
-	private static final String[] PROVIDERS = {LocationManager.NETWORK_PROVIDER,
+	private static final String[] PROVIDERS = {LocationManager.GPS_PROVIDER,
+												LocationManager.NETWORK_PROVIDER
 												};
 	
 	public LocationHandler(Context context)
@@ -82,6 +83,17 @@ public class LocationHandler {
 			mLocationManager.requestSingleUpdate(MAIN_PROVIDER, 
 					new LocationHandlerListener(callback), mContext.getMainLooper());
 			return;
+		}
+		
+		for(int i=0;i<PROVIDERS.length;i++)
+		{
+			if(mLocationManager.isProviderEnabled(PROVIDERS[i]))
+			{
+				Log.d(TAG,"Location Provider Available");
+				mLocationManager.requestSingleUpdate(PROVIDERS[i], 
+						new LocationHandlerListener(callback),null);
+				return;
+			}
 		}
 		
 		callback.onProviderNotAvailable();	

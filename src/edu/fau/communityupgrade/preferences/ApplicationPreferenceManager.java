@@ -18,6 +18,7 @@ public class ApplicationPreferenceManager {
 	private static final String USER_PREFERENCE_FILE = "UserPreferences"; 
 	private static final String LOCATION_PREFERENCE_FILE = "LocationPreferences";
 	private static final String PLACE_PREFERENCE_FILE = "PlacePreferences";
+	private static final String COMMENT_PREFERENCE_FILE = "CommentPreferences";
 	private static final String USER_PREFERENCE_SESSION_ID = "UserSessionID";
 	private static final String USER_PREFERENCE_SESSION_SET_TIME = "UserSessionSetTime";
 	
@@ -152,6 +153,14 @@ public class ApplicationPreferenceManager {
 		return preferences.getLong(PLACE_KEY_TIME_SAVED, -1);
 	}
 	
+	public void clearLastPlaceSaved()
+	{
+		SharedPreferences preferences = context.getSharedPreferences(PLACE_PREFERENCE_FILE, Context.MODE_PRIVATE);
+		SharedPreferences.Editor editor = preferences.edit();
+		editor.putLong(PLACE_KEY_TIME_SAVED, -1);
+		editor.commit();
+	}
+	
 	public void setLastPlaceSavedTime()
 	{
 		SharedPreferences preferences = context.getSharedPreferences(PLACE_PREFERENCE_FILE, Context.MODE_PRIVATE);
@@ -163,16 +172,26 @@ public class ApplicationPreferenceManager {
 	public long getLastCommentSavedTime(final String placeId)
 	{
 		//return 0;
-		SharedPreferences preferences = context.getSharedPreferences(PLACE_PREFERENCE_FILE, Context.MODE_PRIVATE);
+		SharedPreferences preferences = context.getSharedPreferences(COMMENT_PREFERENCE_FILE, Context.MODE_PRIVATE);
+		
 		return preferences.getLong(CACHE_KEY_COMMENTS+placeId, -1);
+	}
+	
+	public void clearrAllCommentsSavedTimes()
+	{
+		SharedPreferences preferences = context.getSharedPreferences(COMMENT_PREFERENCE_FILE, Context.MODE_PRIVATE);
+		SharedPreferences.Editor editor = preferences.edit();
+		editor.clear();
+		editor.commit();
 	}
 	
 	public void setLastCommentsSavedTime(final String placeId)
 	{
-		SharedPreferences preferences = context.getSharedPreferences(PLACE_PREFERENCE_FILE, Context.MODE_PRIVATE);
+		SharedPreferences preferences = context.getSharedPreferences(COMMENT_PREFERENCE_FILE, Context.MODE_PRIVATE);
 		SharedPreferences.Editor editor = preferences.edit();
 		editor.putLong(CACHE_KEY_COMMENTS+placeId, System.currentTimeMillis());
 		editor.commit();
+		
 	}
 	
 	

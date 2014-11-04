@@ -50,7 +50,7 @@ public class TestPlaceActivity extends BaseActivity {
 	
 	LoadingDialog SaveDialog;
 	
-	EditText placeName,placeContactName,placeContactPhone;
+	EditText placeName,placeDescription,placeContactPhone,placeAddress;
 	Button addPlaceBtn;
 	
 	private static final double MAX_DISTANCE = 60.0;
@@ -69,7 +69,8 @@ public class TestPlaceActivity extends BaseActivity {
 		
 		//Set EditText Objects
 		placeName = (EditText)findViewById(R.id.add_place_name);
-		placeContactName = (EditText)findViewById(R.id.add_place_contact_name);
+		placeDescription = (EditText)findViewById(R.id.add_place_description);
+		placeAddress = (EditText)findViewById(R.id.add_place_address);
 		placeContactPhone = (EditText)findViewById(R.id.add_place_contact_number);
 		
 		//Set Button Object
@@ -96,6 +97,8 @@ public class TestPlaceActivity extends BaseActivity {
 				
 				//Get current Place
 				Place place = arrayOfPlaces.get(position);
+				
+				Log.d(TAG,place.toString());
 				
 				//Intent to start next activity
 				Intent intent = new Intent(TestPlaceActivity.this,TestSinglePlaceActivity.class);
@@ -170,35 +173,7 @@ public class TestPlaceActivity extends BaseActivity {
 		}
 	}
 	
-	/**
-	 * This Callback reacts to what happens when a place is saved.
-	 * @author kyle
-	 */
-	private class PlaceSaveCallback implements DefaultSaveCallback<Place>{
-
-		@Override
-		public void onSaveComplete(Place place) {
-			placesAdapter.add(place);
-			SaveDialog.dismiss();
-			Toast.makeText(TestPlaceActivity.this, "Place Saved!", Toast.LENGTH_SHORT).show();
-		}
-
-		@Override
-		public void onError(String error) {
-			SaveDialog.dismiss();
-		}
-
-		@Override
-		public void onProviderNotAvailable() {
-			SaveDialog.dismiss();
-			Builder alert = new AlertDialog.Builder(TestPlaceActivity.this);
-			alert.setTitle(getString(R.string.error_no_provider_title));
-			alert.setMessage(getString(R.string.error_no_provider_message));
-			alert.setPositiveButton(getString(R.string.default_confirmation),null);
-			alert.show();    
-			
-		}
-	}
+	
 	
 	/**
 	 * Returns true is input is valid 
@@ -208,8 +183,9 @@ public class TestPlaceActivity extends BaseActivity {
 	private boolean isInputValid()
 	{
 		return !(placeName.getText().toString().isEmpty() ||
-				placeContactName.getText().toString().isEmpty() ||
-				placeContactPhone.getText().toString().isEmpty());
+				placeDescription.getText().toString().isEmpty() ||
+				placeContactPhone.getText().toString().isEmpty()
+				|| placeAddress.getText().toString().isEmpty());
 		
 	}
 	
@@ -220,7 +196,6 @@ public class TestPlaceActivity extends BaseActivity {
 	 *
 	 */
 	private class PlacesAdapter extends ArrayAdapter<Place> {
-
 		
 	    public PlacesAdapter(Context context, ArrayList<Place> places) {
 	       super(context, 0, places);
@@ -264,10 +239,51 @@ public class TestPlaceActivity extends BaseActivity {
 				return;
 			}
 			String name = placeName.getText().toString();
+			String address = placeAddress.getText().toString();
+			String description = placeDescription.getText().toString();
+			String contactNum = placeContactPhone.getText().toString();
 			SaveDialog.show();
-			placeManager.SavePlaceFromUserLocation(new Place(null,name,null,"","", 0, 0,null), 
+			placeManager.SavePlaceFromUserLocation(new Place(null,name,null,description,contactNum,address, 0, 0,null), 
 					new PlaceSaveCallback());
-			
+		}
+	}
+	
+	private void clearPlaceInput()
+	{
+		placeName.setText("");
+		placeAddress.setText("");
+		placeDescription.setText("");
+		placeContactPhone.setText("");
+		
+	}
+	
+	/**
+	 * This Callback reacts to what happens when a place is saved.
+	 * @author kyle
+	 */
+	private class PlaceSaveCallback implements DefaultSaveCallback<Place>{
+
+		@Override
+		public void onSaveComplete(Place place) {
+			placesAdapter.add(place);
+			clearPlaceInput();
+			SaveDialog.dismiss();
+			Toast.makeText(TestPlaceActivity.this, "Place Saved!", Toast.LENGTH_SHORT).show();
+		}
+
+		@Override
+		public void onError(String error) {
+			SaveDialog.dismiss();
+		}
+
+		@Override
+		public void onProviderNotAvailable() {
+			SaveDialog.dismiss();
+			Builder alert = new AlertDialog.Builder(TestPlaceActivity.this);
+			alert.setTitle(getString(R.string.error_no_provider_title));
+			alert.setMessage(getString(R.string.error_no_provider_message));
+			alert.setPositiveButton(getString(R.string.default_confirmation),null);
+			alert.show();    
 			
 		}
 	}

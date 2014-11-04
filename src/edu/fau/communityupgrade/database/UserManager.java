@@ -2,7 +2,6 @@ package edu.fau.communityupgrade.database;
 
 import android.util.Log;
 
-import com.parse.LogInCallback;
 import com.parse.ParseException;
 import com.parse.ParseUser;
 import com.parse.SignUpCallback;
@@ -118,7 +117,6 @@ public class UserManager {
 			call.done(e);
 		}
 	}
-	
 	
 	/**
 	 * Returns the current user as a ParseUser object.

@@ -24,17 +24,28 @@
 		        android:id="@+id/add_place_name"
 		        style="@style/DefaultInput"/>
 	    </TableRow>
-	    <!-- Place Contact Name -->
 	    <TableRow>
 		    <TextView
-		        android:labelFor="@+id/add_place_contact_name" 
-		        android:text="@string/add_place_contact_name_label"
+		        android:labelFor="@+id/add_place_address" 
+		        android:text="@string/add_place_address_label"
 		        style="@style/DefaultLabel"
 		        />
 		    <EditText
-		        android:id="@+id/add_place_contact_name"
+		        android:id="@+id/add_place_address"
 		        style="@style/DefaultInput"/>
 	    </TableRow>
+	    <!-- Place Description -->
+	    <TableRow>
+		    <TextView
+		        android:labelFor="@+id/add_place_description" 
+		        android:text="@string/add_place_description_label"
+		        style="@style/DefaultLabel"
+		        />
+		    <EditText
+		        android:id="@+id/add_place_description"
+		        style="@style/DefaultInput"/>
+	    </TableRow>
+	    
 	    <TableRow>
 		    <TextView
 		        android:labelFor="@+id/add_place_contact_number" 

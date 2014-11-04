@@ -31,12 +31,16 @@
     <!-- Test Places Layout Text -->
     <string name="add_place_btn_label">Add Place</string>
     <string name="add_place_name_label">Place Name:</string>
-    <string name="add_place_contact_name_label">Contact Name:</string>
+    <string name="add_place_address_label">Address:</string>
+    <string name="add_place_description_label">Description:</string>
     <string name="add_place_contact_number_label">Contact Number:</string>
     
     <string name="validate_data_title">Invalid Input</string>
     <string name="validate_data_message">No fields can be empty!</string>
     
+    <!--  Test Place Single Text -->
+    <string name="add_comment_label">Comment: </string>
+    <string name="add_comment_button_text">Add Comment</string>
     
     <string name="default_confirmation">OK</string>
     

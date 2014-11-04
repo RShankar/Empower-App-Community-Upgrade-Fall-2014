@@ -3,8 +3,30 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:orientation="vertical" >
-	    
-
+    
+    <TableLayout
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:orientation="vertical"
+        android:stretchColumns="1">
+        <TableRow>
+		    <TextView
+		        android:labelFor="@+id/add_comment" 
+		        android:text="@string/add_comment_label"
+		        style="@style/DefaultLabel"
+		        />
+		    <EditText
+		        android:id="@+id/add_comment_content"
+		        style="@style/DefaultInput"/>
+	    </TableRow>
+	    <TableRow>
+	        <Button
+	            android:id="@+id/add_comment_button"
+	            android:text="@string/add_comment_button_text"
+	            style="@style/DefaultButton" />
+	    </TableRow>
+    </TableLayout>
+    
     <ListView
     android:layout_width="match_parent"
     android:layout_height="wrap_content"

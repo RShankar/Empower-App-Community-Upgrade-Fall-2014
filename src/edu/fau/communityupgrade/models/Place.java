@@ -15,31 +15,47 @@ public class Place implements Parcelable {
 	
 	private final User createdBy;
 	
-	private final String contactName;
+	private final String description;
+	
+	private final String address;
 	
 	private final String contactNumber;
 	
-	private ArrayList<Comment> comments;
+	private final ArrayList<Comment> comments;
 	
-	public Place(String objectId,String name, User user, String cName, String cNumber, double latitude, double longitude, ArrayList<Comment> comments)
+	public Place(String objectId,String name, User user, String description, String cNumber, String address, double latitude, double longitude, final ArrayList<Comment> comments)
 	{
 		this.objectId = objectId;
 		this.name = name;
 		this.createdBy = user;
 		this.latitude = latitude;
 		this.longitude = longitude;
-		this.comments = comments;
-		contactName = cName;
+		if(comments == null)
+		{
+			this.comments = new ArrayList<Comment>();
+		}
+		else
+		{
+			this.comments = comments;
+		}
+		
+		this.description = description;
+		this.address = address;
 		contactNumber = cNumber;
 	}
 
 	public String getObjectId() {
 		return objectId;
 	}
+	
+	public String getAddress()
+	{
+		return address;
+	}
 
 
 	public String getContactName() {
-		return contactName;
+		return description;
 	}
 
 	public String getContactNumber() {
@@ -65,10 +81,6 @@ public class Place implements Parcelable {
 
 	public ArrayList<Comment> getComments() {
 		
-		if(comments == null)
-		{
-			comments = new ArrayList<Comment>();
-		}
 		
 		return comments;
 	}
@@ -77,14 +89,27 @@ public class Place implements Parcelable {
 	 * Used to update Comments
 	 * @param c
 	 */
-	public void setComments(ArrayList<Comment> c)
+	public void setComments(final ArrayList<Comment> c)
 	{
-		comments = c;
+		comments.addAll(c);
 	}
 	
 	public String toString()
 	{
-		return name+", "+latitude+", "+longitude+",USER: "+createdBy.getUsername()+comments.toString();
+		String toString = "";
+		if(name != null)
+			toString += name;
+		
+		toString += ", "+latitude+", "+longitude;
+		
+		if(createdBy != null)
+			toString += createdBy.getUsername();
+		
+		if(comments != null)
+			toString += comments.toString();
+		
+		
+		return toString;
 	}
 
 	@Override
@@ -96,10 +121,12 @@ public class Place implements Parcelable {
 	public void writeToParcel(Parcel dest, int flags) {
 		dest.writeString(objectId);
 		dest.writeString(name);
-		dest.writeString(contactName);
+		dest.writeString(description);
 		dest.writeString(contactNumber);
+		dest.writeString(description);
 		dest.writeDouble(latitude);
 		dest.writeDouble(longitude);
+		dest.writeList(comments);
 		dest.writeParcelable(createdBy, 0);
 		
 	}
@@ -108,10 +135,20 @@ public class Place implements Parcelable {
 	{
 		objectId = in.readString();
 		name = in.readString();
-		contactName = in.readString();
+		description = in.readString();
 		contactNumber = in.readString();
+		address = in.readString();
 		latitude = in.readDouble();
 		longitude = in.readDouble();
+		
+		ArrayList<Comment> d = in.readArrayList(Comment.class.getClassLoader());
+		
+		comments = new ArrayList<Comment>();
+		if(d != null)
+		{
+			comments.addAll(d);
+		}
+		
 		createdBy = in.readParcelable(User.class.getClassLoader());
 	}
 	

@@ -4,6 +4,7 @@
     android:layout_height="?android:attr/listPreferredItemHeight"
     android:padding="6dip" >
 
+  
 
     <TextView
         android:id="@+id/line"
