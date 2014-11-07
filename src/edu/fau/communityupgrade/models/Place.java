@@ -23,7 +23,7 @@ public class Place implements Parcelable {
 	
 	private final ArrayList<Comment> comments;
 	
-	public Place(String objectId,String name, User user, String description, String cNumber, String address, double latitude, double longitude, final ArrayList<Comment> comments)
+	public Place(final String objectId,final String name, User user, String description, String cNumber, String address, double latitude, double longitude, final ArrayList<Comment> comments)
 	{
 		this.objectId = objectId;
 		this.name = name;
@@ -99,6 +99,12 @@ public class Place implements Parcelable {
 		String toString = "";
 		if(name != null)
 			toString += name;
+		
+		toString += ","+"ObjectID = ";
+		if(objectId == null)
+			toString += "null";
+		else
+			toString += objectId;
 		
 		toString += ", "+latitude+", "+longitude;
 		

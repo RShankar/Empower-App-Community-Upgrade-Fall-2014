@@ -7,6 +7,7 @@ import java.util.ArrayList;
 import android.content.Context;
 import android.graphics.Color;
 import android.os.Bundle;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.View.OnClickListener;
@@ -55,6 +56,11 @@ public class TestSinglePlaceActivity extends BaseActivity {
 		commentManager = new CommentManager(this);
 		setContentView(R.layout.testplace_single_layout);
 		place = (Place)getIntent().getParcelableExtra(PLACE_OBJECT_EXTRA);
+		if(place != null)
+		{
+			Log.d(TAG,"Place: "+place);
+			
+		}
 		commentListView = (ListView)findViewById(R.id.test_comments_list_view);
 		selectedComment = null;
 		parentComment = null;
@@ -146,6 +152,7 @@ public class TestSinglePlaceActivity extends BaseActivity {
 			String parentId = null;
 			if(selectedComment != null)
 				parentId = selectedComment.getObjectId();
+			
 			Comment comment = new Comment(null, commentContent,place.getObjectId(),createdBy, parentId, 0.0);
 			commentManager.saveComment(comment, new DefaultSaveCallback<Comment>(){
 

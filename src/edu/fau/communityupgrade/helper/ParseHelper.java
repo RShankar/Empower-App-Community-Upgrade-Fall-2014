@@ -3,6 +3,8 @@ package edu.fau.communityupgrade.helper;
 import java.util.ArrayList;
 import java.util.List;
 
+import android.util.Log;
+
 import com.parse.FindCallback;
 import com.parse.ParseException;
 import com.parse.ParseGeoPoint;
@@ -26,6 +28,7 @@ import edu.fau.communityupgrade.models.User;
  */
 public class ParseHelper {
 
+	private static final String TAG = "ParseHelper";
 	
 	/**
 	 * Converts ParseUser to User Model Object
@@ -80,11 +83,12 @@ public class ParseHelper {
 		ParseUser parseUser = parseObject.getParseUser(PlaceManager.CREATED_BY);
 		User user = parseUserToUser(parseUser);
 		
+		
 		String name = parseObject.getString(PlaceManager.NAME);
 		String description = parseObject.getString(PlaceManager.DESCRIPTION);
 		String address = parseObject.getString(PlaceManager.ADDRESS);
 		String cNumber = parseObject.getString(PlaceManager.CONTACT_NUMBER);
-		String objectId = parseObject.getString(PlaceManager.OBJECT_ID);
+		String objectId = parseObject.getObjectId();
 		
 		ParseGeoPoint point = parseObject.getParseGeoPoint(PlaceManager.LOCATION);
 		

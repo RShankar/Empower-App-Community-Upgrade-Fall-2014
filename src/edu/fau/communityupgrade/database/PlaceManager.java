@@ -11,6 +11,7 @@ import android.os.Handler;
 import android.util.Log;
 
 import com.parse.FindCallback;
+import com.parse.GetCallback;
 import com.parse.ParseException;
 import com.parse.ParseGeoPoint;
 import com.parse.ParseObject;
@@ -19,6 +20,7 @@ import com.parse.ParseUser;
 import com.parse.SaveCallback;
 
 import edu.fau.communityupgrade.callback.DefaultFindCallback;
+import edu.fau.communityupgrade.callback.DefaultFindFirstCallback;
 import edu.fau.communityupgrade.callback.DefaultSaveCallback;
 import edu.fau.communityupgrade.callback.LocationHandlerCallback;
 import edu.fau.communityupgrade.helper.ParseHelper;
@@ -72,6 +74,26 @@ public class PlaceManager {
 		
 		commentManager = new CommentManager(mContext);
 		placeListCache = new HashMap<String,ArrayList<Place>>();
+	}
+	
+	protected void getParseObjectPlaceById(final String id, final DefaultFindFirstCallback<ParseObject>  callback)
+	{
+		ParseQuery<ParseObject> query = new ParseQuery<ParseObject>(TABLE);
+		query.whereEqualTo(OBJECT_ID, id);
+		query.getFirstInBackground(new GetCallback<ParseObject>(){
+
+			@Override
+			public void done(ParseObject parseObject, ParseException e) {
+				if(e != null)
+				{
+					callback.onError(e.toString());
+					return;
+				}
+				callback.onComplete(parseObject);
+			}
+			
+			
+		});		
 	}
 	/**
 	 * Returns an ArrayList of all Places initialized by current

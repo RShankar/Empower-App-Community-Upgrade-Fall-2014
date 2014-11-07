@@ -16,6 +16,7 @@ import com.parse.ParseQuery;
 import com.parse.SaveCallback;
 
 import edu.fau.communityupgrade.callback.DefaultFindCallback;
+import edu.fau.communityupgrade.callback.DefaultFindFirstCallback;
 import edu.fau.communityupgrade.callback.DefaultSaveCallback;
 import edu.fau.communityupgrade.helper.ParseHelper;
 import edu.fau.communityupgrade.models.Comment;
@@ -42,9 +43,11 @@ public class CommentManager {
 	private final HashMap<String,ArrayList<Comment>> cacheOfComments;
 	private ApplicationPreferenceManager preferenceManager;
 	private UserManager userManager;
+	private final Context mContext;
 	
-	public CommentManager(Context context)
+	public CommentManager(final Context context)
 	{
+		mContext = context;
 		preferenceManager = new ApplicationPreferenceManager(context);
 		preferenceManager.clearrAllCommentsSavedTimes();
 		cacheOfComments = new HashMap<String,ArrayList<Comment>>();
@@ -145,14 +148,42 @@ public class CommentManager {
 	
 	public void saveComment(final Comment comment, final DefaultSaveCallback<Comment> Callback)
 	{
-		ParseObject saveObject = new ParseObject(TABLE);
-		
+		PlaceManager placeManager = new PlaceManager(mContext);
+		final ParseObject saveObject = new ParseObject(TABLE);
+		Log.d(TAG,"Comment Saving!");
 		saveObject.put(COMMENT_CONTENT, comment.getComment_content());
 		saveObject.put(CREATED_BY, userManager.getParseUser());
-		saveObject.put(PLACE_ID, comment.getPlaceId());
-		saveObject.put(PARENT_ID, comment.getParentId());
+		
+		
+		if(comment.getParentId() != null){
+			saveObject.put(PARENT_ID, comment.getParentId());
+		}
 		saveObject.put(SCORE, 0);
-		saveObject.saveEventually(new CommentSaveCallback(Callback, saveObject));
+		
+		placeManager.getParseObjectPlaceById(comment.getPlaceId(), new DefaultFindFirstCallback<ParseObject>(){
+
+			@Override
+			public void onComplete(ParseObject object) {
+
+				saveObject.put(PLACE_ID,object);
+				saveObject.saveEventually(new CommentSaveCallback(Callback, saveObject));
+				
+			}
+
+			@Override
+			public void onProviderNotAvailable() {
+				// TODO Auto-generated method stub
+				
+			}
+
+			@Override
+			public void onError(String error) {
+				// TODO Auto-generated method stub
+				
+			}
+			
+			
+		});
 	}
 	
 	private class CommentSaveCallback extends SaveCallback
