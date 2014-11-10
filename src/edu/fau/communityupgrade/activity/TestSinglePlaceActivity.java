@@ -47,6 +47,8 @@ public class TestSinglePlaceActivity extends BaseActivity {
 	private Button addCommentButton;
 	private EditText addCommentContent;
 	
+	
+	
 	@Override
 	public void onCreate(Bundle savedInstance)
 	{

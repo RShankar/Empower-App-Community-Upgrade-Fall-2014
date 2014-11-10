@@ -101,11 +101,11 @@ public class TestPlaceActivity extends BaseActivity {
 				Log.d(TAG,place.toString());
 				
 				//Intent to start next activity
-				Intent intent = new Intent(TestPlaceActivity.this,TestSinglePlaceActivity.class);
+				Intent intent = new Intent(TestPlaceActivity.this,SinglePlaceActivity.class);
 				
 				//bundle to hold current Place
 				Bundle mBundle = new Bundle();  
-		        mBundle.putParcelable(TestSinglePlaceActivity.PLACE_OBJECT_EXTRA, place);  
+		        mBundle.putParcelable(SinglePlaceActivity.PLACE_OBJECT_EXTRA_KEY, place);  
 				intent.putExtras(mBundle);
 				startActivity(intent);	
 			}

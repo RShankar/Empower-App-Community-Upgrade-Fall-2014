@@ -1,7 +1,6 @@
 package edu.fau.communityupgrade.activity;
 
 import android.app.Activity;
-import android.app.ProgressDialog;
 import android.content.Intent;
 import android.content.pm.PackageManager;
 import android.os.Bundle;
@@ -14,6 +13,7 @@ import android.widget.Toast;
 import edu.fau.communityupgrade.R;
 import edu.fau.communityupgrade.callback.UserSignUpCallback;
 import edu.fau.communityupgrade.database.UserManager;
+import edu.fau.communityupgrade.preferences.ApplicationPreferenceManager;
 import edu.fau.communityupgrade.ui.LoadingDialog;
 
 public class SignUpActivity extends Activity {
@@ -43,7 +43,16 @@ public class SignUpActivity extends Activity {
 	@Override
 	public void onResume()
 	{
+		Log.d(TAG,"onResume");
 		super.onResume();
+	}
+	
+	private boolean validateInformation()
+	{
+		return (!username.getText().toString().isEmpty() ||
+				!password.getText().toString().isEmpty());
+		
+		
 	}
 
 	/**
@@ -55,6 +64,15 @@ public class SignUpActivity extends Activity {
 
 		@Override
 		public void onClick(View v) {
+			
+			if(!validateInformation()){
+				Toast.makeText(getApplicationContext(), 
+						getString(R.string.signup_validation_error), 
+						Toast.LENGTH_LONG).show();
+				
+				return;
+			}
+			
 			mProgressDialog.show();
 			Log.d(TAG,"username: "+username.getText().toString()+", pass: "+password.getText());
 			
@@ -64,10 +82,14 @@ public class SignUpActivity extends Activity {
 
 						@Override
 						public void onSuccess(String userToken) {
+							ApplicationPreferenceManager preferenceManager = 
+									new ApplicationPreferenceManager(SignUpActivity.this);
+							preferenceManager.setUserSessionId(userToken);
+							
 							PackageManager pm = getPackageManager();
 							Intent launchIntent = pm.getLaunchIntentForPackage(
 									getApplicationContext().getPackageName());
-
+							finish();
 							startActivity(launchIntent);
 						}
 

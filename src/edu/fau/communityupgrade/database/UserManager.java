@@ -30,7 +30,7 @@ public class UserManager {
 	
 	private UserManager()
 	{
-		currentUser = new ParseUser();
+		currentUser = ParseUser.getCurrentUser();
 	}
 	
 	public static UserManager getInstance()
@@ -72,7 +72,7 @@ public class UserManager {
 	public void Login(String sessionToken, UserLoginCallback callback)
 	{
 		try
-		{	
+		{
 			//Authenticates user and returns user if authenticated
 			ParseUser user = ParseUser.become(sessionToken); 
 			callback.onSuccess(user.getSessionToken());
@@ -105,17 +105,13 @@ public class UserManager {
 	 */
 	public void SignUp(String username, String password, final UserSignUpCallback callback)
 	{
+		
 		currentUser.setUsername(username);
 		currentUser.setPassword(password);
-		ParseUserSignupCallBack call = new ParseUserSignupCallBack(callback);
-		try
-		{
-			currentUser.signUp();
-		}
-		catch(ParseException e)
-		{
-			call.done(e);
-		}
+		
+		ParseUserSignupCallBack call = new ParseUserSignupCallBack(callback); 
+		
+		currentUser.signUpInBackground(call);
 	}
 	
 	/**

@@ -17,7 +17,7 @@
     
     <!-- Sign Up Messages -->
     <string name="signup_error">There was a problem signing up. Do you already have an account?</string>
-    
+    <string name="signup_validation_error">Both username and password are required.</string>
     
     <!-- Sign Up Layout Text -->
     <string name="signup_btn_text">Sign Up</string>
