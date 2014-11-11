@@ -38,9 +38,13 @@
     <string name="validate_data_title">Invalid Input</string>
     <string name="validate_data_message">No fields can be empty!</string>
     
-    <!--  Test Place Single Text -->
+    <!--  Place Single Text -->
     <string name="add_comment_label">Comment: </string>
     <string name="add_comment_button_text">Add Comment</string>
+    <string name="add_comment_validation_empty_error">Your comment cannot be empty.</string>
+    <string name="add_comment_validation_short_error">Your comment must be at least 3 characters long.</string>
+    <string name="add_comment_saved_confirmation">Your comment has been saved!</string>
+    <string name="add_comment_saved_error">There was an error saving your comment. Please try again later.</string>
     
     <string name="default_confirmation">OK</string>
     

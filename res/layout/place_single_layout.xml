@@ -4,9 +4,17 @@
     android:layout_height="match_parent"
     android:orientation="vertical" >
     
+    <ListView
+    android:layout_width="match_parent"
+    android:layout_height="0dp"
+    android:layout_weight="1"
+    
+    android:id="@+id/comment_list_view" ></ListView>
+    
+    <!-- Add Comment  -->
     <TableLayout
         android:layout_width="match_parent"
-        android:layout_height="match_parent"
+        android:layout_height="wrap_content"
         android:orientation="vertical"
         android:stretchColumns="1">
         <TableRow>
@@ -18,8 +26,6 @@
 		    <EditText
 		        android:id="@+id/add_comment_content"
 		        style="@style/DefaultInput"/>
-	    </TableRow>
-	    <TableRow>
 	        <Button
 	            android:id="@+id/add_comment_button"
 	            android:text="@string/add_comment_button_text"
@@ -27,8 +33,5 @@
 	    </TableRow>
     </TableLayout>
     
-    <ListView
-    android:layout_width="match_parent"
-    android:layout_height="wrap_content"
-    android:id="@+id/test_comments_list_view" />
+    
 </LinearLayout>

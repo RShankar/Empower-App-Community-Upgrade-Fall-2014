@@ -38,6 +38,7 @@ public class CommentManager {
 	public final static String CREATED_BY = "createdBy";
 	public final static String PARENT_ID = "parentId";
 	public final static String SCORE = "score";
+	public final static String CREATED_AT = "createdAt";
 	
 	private final static String TAG = "CommentManager";
 	private final HashMap<String,ArrayList<Comment>> cacheOfComments;
@@ -55,7 +56,7 @@ public class CommentManager {
 	}
 	
 	/**
-	 * Can only be used by Other managers.
+	 * Can only be used by Other managers. Used to get Comments for each Place.
 	 * Assumed:
 	 * 	Already ran in separate Thread.
 	 * @param parseObject
@@ -76,7 +77,8 @@ public class CommentManager {
 		query.include(CREATED_BY);
 		query.whereEqualTo(PLACE_ID, parseObject);
 		query.whereDoesNotExist(PARENT_ID);
-		query.orderByDescending(SCORE);
+		query.addDescendingOrder(SCORE);
+		query.addAscendingOrder(CREATED_AT);
 		List<ParseObject> parseObjects;
 		
 		try {

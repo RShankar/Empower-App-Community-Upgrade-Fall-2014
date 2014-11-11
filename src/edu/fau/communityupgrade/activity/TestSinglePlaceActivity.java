@@ -162,7 +162,6 @@ public class TestSinglePlaceActivity extends BaseActivity {
 				public void onSaveComplete(Comment arg0) {
 					addCommentContent.setText("");
 					Toast.makeText(TestSinglePlaceActivity.this, "Comment Saved!", Toast.LENGTH_LONG).show();
-					
 				}
 
 				@Override

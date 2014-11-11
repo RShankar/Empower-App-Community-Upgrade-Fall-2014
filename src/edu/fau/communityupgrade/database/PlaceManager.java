@@ -191,7 +191,7 @@ public class PlaceManager {
 		
 		mapQuery.include(CREATED_BY);
 		mapQuery.whereWithinMiles(LOCATION, point, radiusInMiles);
-		
+		mapQuery.addAscendingOrder(CREATED_AT);
 		mapQuery.findInBackground(new PlaceFindNearUserCallback(callback,useCache));
 	}
 	
