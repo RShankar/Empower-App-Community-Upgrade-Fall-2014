@@ -40,7 +40,7 @@ public class mapActivity extends FragmentActivity {
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.basic_demo);
+        setContentView(R.layout.map_layout);
         setUpMapIfNeeded();
     }
 
