@@ -46,6 +46,7 @@ public class SinglePlaceActivity extends BaseActivity {
 	private CommentsAdapter commentsAdapter;
 	private EditText commentText;
 	private Button AddCommentButton;
+	
 	@Override
 	public void onCreate(final Bundle savedInstance)
 	{
@@ -63,23 +64,19 @@ public class SinglePlaceActivity extends BaseActivity {
 
 		//Initialize Loading Dialog
 		loadingDialog = new LoadingDialog(this,"Saving Comment","Saving Comment.");
-
 		
 		//Load Views
 		commentText = (EditText)findViewById(R.id.add_comment_content);
 		AddCommentButton = (Button)findViewById(R.id.add_comment_button);
 		commentListView = (ListView)findViewById(R.id.comment_list_view);
 		commentItemArray = CommentAdapterItem.commentListToItemList(currentPlace.getComments(),null);
+		commentListView.setOnItemClickListener(new CommentItemClickListener());
+		AddCommentButton.setOnClickListener(new AddCommentClickListener());	
 		
 		commentsAdapter = new CommentsAdapter(this, commentItemArray);
 		commentListView.setAdapter(commentsAdapter);
-		commentListView.setOnItemClickListener(new CommentItemClickListener());
-		AddCommentButton.setOnClickListener(new AddCommentClickListener());
-		
 		
 	}
-	
-	
 	
 	/**
 	 * OnClickListener Implementation for AddCommentButton.
@@ -108,15 +105,31 @@ public class SinglePlaceActivity extends BaseActivity {
 			}
 			
 			User currentUser = UserManager.getInstance().getCurrentUser();
-			Comment comment = new Comment(null, comment_content, currentPlace.getObjectId(), currentUser, null, 0);
+			Comment parentComment = null;
+			String parentId = null;
+			if(selectedCommentItem != null)
+			{
+				parentComment = selectedCommentItem.getComment();
+				parentId = parentComment.getObjectId();
+			}
+			Comment comment = new Comment(null, comment_content, currentPlace.getObjectId(), currentUser, parentId, 0);
 			
 			loadingDialog.show();
 			commentManager.saveComment(comment, new DefaultSaveCallback<Comment>(){
 
 				@Override
-				public void onSaveComplete(Comment arg0) {
+				public void onSaveComplete(final Comment c) {
 					loadingDialog.dismiss();
 					commentText.getEditableText().clear();
+					Log.d(TAG,c.toString());
+					CommentAdapterItem item = new CommentAdapterItem(c,selectedCommentItem);
+					int position = commentsAdapter.getPosition(selectedCommentItem);
+					commentsAdapter.insert(item,position+1);
+					if(selectedCommentItem != null)
+					{
+						selectedCommentItem.addChildView(item);
+					}
+					commentsAdapter.notifyDataSetChanged();
 					Toast.makeText(SinglePlaceActivity.this, getString(R.string.add_comment_saved_confirmation), 
 							Toast.LENGTH_LONG).show();
 					
@@ -150,6 +163,7 @@ public class SinglePlaceActivity extends BaseActivity {
 				selectedCommentItem.removeAllChildViews(commentsAdapter);
 				selectedCommentView = null;
 				selectedCommentItem = null;
+				commentsAdapter.notifyDataSetChanged();
 				return;
 			}
 			if(selectedCommentView != null)
@@ -182,7 +196,6 @@ public class SinglePlaceActivity extends BaseActivity {
 									int currentIndex = position+1;
 									for(int i=0;i<items.size();i++)
 									{
-	
 									    if(selectedCommentItem != null)
 									    {
 									    	selectedCommentItem.addChildView(items.get(i));
@@ -198,14 +211,11 @@ public class SinglePlaceActivity extends BaseActivity {
 		
 								@Override
 								public void onError(String error) {
-									// TODO Auto-generated method stub
-									
+									// TODO Auto-generated method stub						
 								}
 					});
-			}
-			
+			}	
 		}
-		
 	}
 	
 	/**
@@ -223,12 +233,13 @@ public class SinglePlaceActivity extends BaseActivity {
 		public View getView(int position,View convertView, ViewGroup parent)
 		{
 			//Get data
-			CommentAdapterItem currentItem = getItem(position);
-			Comment comment = currentItem.getComment();
+			final CommentAdapterItem currentItem = getItem(position);
+			final Comment comment = currentItem.getComment();
 			// Check if an existing view is being reused, otherwise inflate the view
 		    if (convertView == null) {
 		    	convertView = LayoutInflater.from(getContext()).inflate(R.layout.place_comment_list_item, parent, false);
 		    }
+		    
 		    View indents[] = {
 		    		convertView.findViewById(R.id.left_indent1),
 		    		convertView.findViewById(R.id.left_indent2),
@@ -240,16 +251,38 @@ public class SinglePlaceActivity extends BaseActivity {
 		    		convertView.findViewById(R.id.left_indent8)
 		    };
 		    
-		    for(int i=0;i<currentItem.getLevel();i++)
+		    for(int i=0;i<8;i++)
 		    {
-		    	indents[i].setVisibility(View.VISIBLE);
-		    	indents[i].setBackgroundColor(Color.DKGRAY);
+		    	if(i < currentItem.getLevel()){
+		    		indents[i].setVisibility(View.VISIBLE);
+		    		indents[i].setBackgroundColor(Color.DKGRAY);
+		    	}
+		    	else
+		    	{
+		    		indents[i].setVisibility(View.GONE);
+		    	}
 		    }
+			final TextView scoreView = (TextView)convertView.findViewById(R.id.score);
+			scoreView.setText(""+comment.getScore());
 		    
-		    TextView commentContent = (TextView)convertView.findViewById(R.id.comment_content);
+		    final TextView commentContent = (TextView)convertView.findViewById(R.id.comment_content);
 		    commentContent.setText(comment.getComment_content()+" by "+comment.getCreatedBy().getUsername());
 		    
-		    return convertView;
+		    final Button upvoteButton = (Button)convertView.findViewById(R.id.upvote_btn);
+		    
+		    upvoteButton.setOnClickListener(new OnClickListener(){
+		    	
+				@Override
+				public void onClick(View v) {
+					commentManager.addVote(comment.getObjectId(), true);
+					upvoteButton.setBackgroundColor(Color.GREEN);
+					double score = Double.parseDouble(scoreView.getText().toString());
+					score++;
+					scoreView.setText(""+score);
+				}
+		    });
+		    
+		    return convertView; 
 		}
 	}
 
@@ -280,10 +313,7 @@ public class SinglePlaceActivity extends BaseActivity {
 				level = 0;
 			}
 			
-			if(parentItem != null)
-				Log.d(TAG,"CommentID: "+comment.getObjectId()+", Level: "+level+", ParentID:"+parentItem.getComment().getObjectId());
-			else
-				Log.d(TAG,"CommentID: "+comment.getObjectId()+", Level: "+level+", ParentID:"+"null");
+			
 		}
 		public Comment getComment()
 		{
@@ -310,7 +340,7 @@ public class SinglePlaceActivity extends BaseActivity {
 			{
 				childViews.get(i).removeAllChildViews(adapter);
 				adapter.remove(childViews.get(i));
-			}
+			} 
 			childViews.clear();
 		}
 		

@@ -3,7 +3,7 @@ package edu.fau.communityupgrade.models;
 import android.os.Parcel;
 import android.os.Parcelable;
 
-public class Comment implements Parcelable {
+public class Comment implements Parcelable, Comparable<Comment> {
 
 	private final String objectId;
 	private final String comment_content;
@@ -60,7 +60,7 @@ public class Comment implements Parcelable {
 	
 	public String toString()
 	{
-		return comment_content+" by "+createdBy.getUsername();
+		return "ObjectId:"+objectId+", "+comment_content+" by "+createdBy.getUsername()+", parentID: "+parentId;
 	}
 
 	@Override
@@ -102,4 +102,22 @@ public class Comment implements Parcelable {
             return new Comment[size];
         }
     };
+
+    @Override
+    public boolean equals(Object another)
+    {
+    	if(another.getClass().isInstance(this.getClass()))
+    	{
+    		return this.getObjectId().equals(((Comment)another).getObjectId());
+    	}
+    	else
+    	{
+    		return this == another;
+    	}
+    }
+
+	@Override
+	public int compareTo(Comment another) {
+		return this.getObjectId().compareTo(another.getObjectId());
+	}
 }

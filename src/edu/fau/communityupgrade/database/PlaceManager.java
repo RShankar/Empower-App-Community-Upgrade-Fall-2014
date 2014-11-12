@@ -59,8 +59,8 @@ public class PlaceManager {
 	private static final String CACHE_NEARBY_PLACES = "CACHE_NEARBY_PLACES";
 	private static final String CACHE_USERS_PLACES = "CACHE_USERS_PLACES";
 	
-	private final HashMap<String,ArrayList<Place>> placeListCache;
-	
+	private final HashMap<String,ArrayList<Place>> cacheOfPlacesByKey;
+	private final HashMap<String,ParseObject> cacheOfParseObjectsById; 
 	private ApplicationPreferenceManager preferenceManager;
 	private final CommentManager commentManager;
 	private Context mContext;
@@ -71,14 +71,20 @@ public class PlaceManager {
 		mContext = context;
 		preferenceManager = new ApplicationPreferenceManager(mContext);
 		preferenceManager.clearLastPlaceSaved();
-		
 		commentManager = new CommentManager(mContext);
-		placeListCache = new HashMap<String,ArrayList<Place>>();
+		cacheOfPlacesByKey = new HashMap<String,ArrayList<Place>>();
+		cacheOfParseObjectsById = new HashMap<String,ParseObject>();
 	}
 	
 	protected void getParseObjectPlaceById(final String id, final DefaultFindFirstCallback<ParseObject>  callback)
 	{
+		if(cacheOfParseObjectsById.containsKey(id))
+		{
+			callback.onComplete(cacheOfParseObjectsById.get(id));
+		}
+		
 		ParseQuery<ParseObject> query = new ParseQuery<ParseObject>(TABLE);
+		query.fromLocalDatastore();
 		query.whereEqualTo(OBJECT_ID, id);
 		query.getFirstInBackground(new GetCallback<ParseObject>(){
 
@@ -112,11 +118,22 @@ public class PlaceManager {
 		}
 		
 		ParseQuery<ParseObject> query = ParseQuery.getQuery(TABLE);
+		query.fromLocalDatastore();
 		query.setCachePolicy(ParseQuery.CachePolicy.NETWORK_ELSE_CACHE);
 		query.include(CREATED_BY);
 		query.whereEqualTo(CREATED_BY,user);
 		
 		query.findInBackground(new PlaceFindByUserCallback(callback));
+	}
+	
+	private boolean useCache()
+	{
+
+		final long currentTime = System.currentTimeMillis();
+		final long lastCacheTime = preferenceManager.getLastPlaceSavedTime();
+		
+		return (lastCacheTime != -1 && currentTime - lastCacheTime < CACHE_EXPIRE_TIME_MILLI
+				&& cacheOfPlacesByKey.containsKey(CACHE_NEARBY_PLACES));
 	}
 	
 	/**
@@ -130,25 +147,11 @@ public class PlaceManager {
 	{
 		Log.d(TAG,"getAllPlacesNearUser");
 		
-		long currentTime = System.currentTimeMillis();
-		long lastCacheTime = preferenceManager.getLastPlaceSavedTime();
-		final boolean useCached;
-		
-		
-		if(lastCacheTime != -1 && currentTime - lastCacheTime < CACHE_EXPIRE_TIME_MILLI
-				&& placeListCache.containsKey(CACHE_NEARBY_PLACES))
+		if(useCache())
 		{
-			callback.onComplete(placeListCache.get(CACHE_NEARBY_PLACES));
+			callback.onComplete(cacheOfPlacesByKey.get(CACHE_NEARBY_PLACES));
 			return;
 		}
-		else
-		{
-			useCached = false;
-		} 
-		
-		Log.d(TAG,"lastCacheTime: "+lastCacheTime+", currentTime - lastCacheTime: "+(currentTime - lastCacheTime)+", useCache: "+useCached);
-
-		
 		
 		LocationHandler locationHandler = new LocationHandler(mContext);
 		
@@ -158,7 +161,7 @@ public class PlaceManager {
 			@Override
 			public void onLocationUpdate(final Location location) {
 				Log.d(TAG,"getPlacesNearUSer:onLocationUpdate");
-				getPlacesNearUser(location, radiusInMiles,callback,useCached);
+				getPlacesNearUser(location, radiusInMiles,callback);
 			}
 
 			@Override
@@ -175,15 +178,9 @@ public class PlaceManager {
 	 * @param radiusInMiles
 	 * @param callback
 	 */
-	private void getPlacesNearUser(final Location location, final double radiusInMiles, final DefaultFindCallback<Place> callback, final boolean useCache )
+	private void getPlacesNearUser(final Location location, final double radiusInMiles, final DefaultFindCallback<Place> callback)
 	{		
 		final ParseQuery<ParseObject> mapQuery = ParseQuery.getQuery(TABLE);
-		
-		if(useCache)
-		{
-			Log.d(TAG,"fromPin");
-			mapQuery.fromLocalDatastore();
-		}
 		
 		ParseGeoPoint point = new ParseGeoPoint();
 		point.setLatitude(location.getLatitude());
@@ -192,7 +189,7 @@ public class PlaceManager {
 		mapQuery.include(CREATED_BY);
 		mapQuery.whereWithinMiles(LOCATION, point, radiusInMiles);
 		mapQuery.addAscendingOrder(CREATED_AT);
-		mapQuery.findInBackground(new PlaceFindNearUserCallback(callback,useCache));
+		mapQuery.findInBackground(new PlaceFindNearUserCallback(callback));
 	}
 	
 	/**
@@ -236,28 +233,54 @@ public class PlaceManager {
 	
 	
 	/**
-	 * Updates Cache to include new list
+	 * Sets list of places in cache to passed collection
 	 * @param key
 	 * @param list
 	 */
 	private void updateCache(final String key, final Collection<Place> list)
 	{
 		//
-		if(!placeListCache.containsKey(key)){
-			placeListCache.put(key, new ArrayList<Place>());
+		if(!cacheOfPlacesByKey.containsKey(key)){
+			cacheOfPlacesByKey.put(key, new ArrayList<Place>());
 		}
-		placeListCache.get(key).clear();
-		placeListCache.get(key).addAll(list);
+		cacheOfPlacesByKey.get(key).clear();
+		cacheOfPlacesByKey.get(key).addAll(list);
+		preferenceManager.setLastPlaceSavedTime();
 	}
 	
+	/**
+	 * Adds single instance of place to collection at Key
+	 * @param key
+	 * @param place
+	 */
 	private void updateCache(final String key, final Place place)
 	{
 		//
-		if(!placeListCache.containsKey(key)){
-			placeListCache.put(key, new ArrayList<Place>());
+		if(!cacheOfPlacesByKey.containsKey(key)){
+			cacheOfPlacesByKey.put(key, new ArrayList<Place>());
 		}
-		placeListCache.get(key).add(place);
+		cacheOfPlacesByKey.get(key).add(place);
 	}
+	
+	private void updateCache(final List<ParseObject> list)
+	{
+		if(list == null)
+			return;
+		
+		for(int i=0;i<list.size();i++)
+			updateCache(list.get(i));
+		
+	}
+	
+	private void updateCache(final ParseObject object)
+	{
+		if(object == null)
+			return;
+		
+		cacheOfParseObjectsById.put(object.getObjectId(), object);
+	}
+	
+	
 	
 	/**
 	 * This Callback is used when the user wants to save a place.
@@ -269,12 +292,13 @@ public class PlaceManager {
 	private class PlaceSaveCallback extends SaveCallback
 	{
 		final DefaultSaveCallback<Place> callback;
-		
+		final ParseObject object;
 		final Place place;
 		
 		public PlaceSaveCallback(final DefaultSaveCallback<Place> c, final ParseObject object)
 		{
 			callback = c;
+			this.object = object;
 			place = ParseHelper.parseObjectToPlace(object);
 		}
 
@@ -283,6 +307,7 @@ public class PlaceManager {
 			if(e == null)
 			{
 				updateCache(CACHE_NEARBY_PLACES,place);
+				updateCache(object);
 				callback.onSaveComplete(place);
 			}
 			else
@@ -305,7 +330,7 @@ public class PlaceManager {
 		
 		final DefaultFindCallback<Place> callback;
 		
-		public PlaceFindNearUserCallback(final DefaultFindCallback<Place> callback, boolean c)
+		public PlaceFindNearUserCallback(final DefaultFindCallback<Place> callback)
 		{
 			this.callback = callback;
 		}
@@ -314,7 +339,6 @@ public class PlaceManager {
 		public void done(final List<ParseObject> list, final ParseException e) {
 			
 			Log.d(TAG,"Retrieved Places");
-			
 			if(e != null)
 			{
 				Log.e(TAG,"Error retrieving places: ",e);
@@ -322,12 +346,10 @@ public class PlaceManager {
 				
 				return;
 			}
-			
-			ParseObject.pinAllInBackground(list);
-			preferenceManager.setLastPlaceSavedTime();
+			updateCache(list);
 			
 			/**
-			 ** Thread to convert ParseObjects to PLaces and retrieve comments from place.
+			 ** Thread to convert ParseObjects to Places and retrieve comments from place.
 			 */
 			new Thread(new Runnable(){
 
@@ -340,12 +362,9 @@ public class PlaceManager {
 					{
 						Place place = ParseHelper.parseObjectToPlace(list.get(i));
 						place.setComments(commentManager.getCommentsByPlace(list.get(i)));
-						//Log.d(TAG,"TEST: "+place);
 						placesList.add(place);
 					}
 					
-					Log.d(TAG,"callback.onComplete");
-				
 					Handler mainHandler = new Handler(mContext.getMainLooper());
 					
 					//Update Cache
@@ -386,12 +405,15 @@ public class PlaceManager {
 		
 		@Override
 		public void done(final List<ParseObject> list, final ParseException e) {
+			ParseObject.pinAllInBackground(list);
 			if(e != null)
 			{
 				Log.e(TAG,"Error retrieving places: ",e);
 				callback.onError(e.toString());
 				return;
 			}
+			
+			updateCache(list);
 			
 			/**
 			 ** Thread to convert ParseObjects to PLaces and retrieve comments from place.
@@ -401,7 +423,6 @@ public class PlaceManager {
 				@Override
 				public void run() {
 					final ArrayList<Place> placesList = new ArrayList<Place>();
-					
 					
 					for(int i=0;i<list.size();i++)
 					{

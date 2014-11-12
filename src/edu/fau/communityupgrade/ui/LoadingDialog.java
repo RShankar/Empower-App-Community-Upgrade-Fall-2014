@@ -23,9 +23,8 @@ public class LoadingDialog extends ProgressDialog {
 	public LoadingDialog(final Context context, final String title, final String message )
 	{
 		super(context);
-		
 		setTitle(title);
 		setMessage(message);
-		
+		setCancelable(false);
 	}
 }

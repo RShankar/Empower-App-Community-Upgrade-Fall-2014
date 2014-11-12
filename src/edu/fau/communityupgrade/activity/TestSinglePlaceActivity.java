@@ -145,8 +145,6 @@ public class TestSinglePlaceActivity extends BaseActivity {
 	
 	private class AddCommentOnClickListener implements OnClickListener
 	{
-
-
 		@Override
 		public void onClick(View v) {
 			String commentContent = addCommentContent.getText().toString();
