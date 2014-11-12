@@ -3,7 +3,7 @@ package edu.fau.communityupgrade.activity;
 import android.app.ActionBar;
 import android.content.Intent;
 import android.os.Bundle;
-import android.support.v7.app.ActionBarActivity;
+import android.support.v4.app.FragmentActivity;
 import android.util.Log;
 import android.view.MenuItem;
 import edu.fau.communityupgrade.auth.Auth;
@@ -15,7 +15,7 @@ import edu.fau.communityupgrade.callback.AuthCallback;
  * other than the user login and user sign up pages.
  * @author kyle
  */
-public class BaseActivity extends ActionBarActivity {
+public class BaseActivity extends FragmentActivity {
 
 	private static final String TAG = "BaseActivity";
 	private ActionBar actionBar;

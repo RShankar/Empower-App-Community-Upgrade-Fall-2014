@@ -16,14 +16,15 @@
 
 package edu.fau.communityupgrade.maps;
 
+import android.os.Bundle;
+
 import com.google.android.gms.maps.GoogleMap;
 import com.google.android.gms.maps.SupportMapFragment;
 import com.google.android.gms.maps.model.LatLng;
 import com.google.android.gms.maps.model.MarkerOptions;
-import edu.fau.communityupgrade.R;
-import android.os.Bundle;
-import android.support.v4.app.FragmentActivity;
 
+import edu.fau.communityupgrade.R;
+import edu.fau.communityupgrade.activity.BaseActivity;
 
 /**
  * This shows how to create a simple activity with a map and a marker on the map.
@@ -31,21 +32,22 @@ import android.support.v4.app.FragmentActivity;
  * Notice how we deal with the possibility that the Google Play services APK is not
  * installed/enabled/updated on a user's device.
  */
-public class mapActivity extends FragmentActivity {
+public class mapActivity extends BaseActivity {
     /**
      * Note that this may be null if the Google Play services APK is not available.
      */
     private GoogleMap mMap;
 
     @Override
-    protected void onCreate(Bundle savedInstanceState) {
+    public void onCreate(Bundle savedInstanceState) {
+    	getActionBar().setHomeButtonEnabled(true);
         super.onCreate(savedInstanceState);
         setContentView(R.layout.basic_demo);
         setUpMapIfNeeded();
     }
 
     @Override
-    protected void onResume() {
+    public void onResume() {
         super.onResume();
         setUpMapIfNeeded();
     }
