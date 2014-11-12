@@ -42,7 +42,7 @@ public class mapActivity extends BaseActivity {
     public void onCreate(Bundle savedInstanceState) {
     	getActionBar().setHomeButtonEnabled(true);
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.basic_demo);
+        setContentView(R.layout.map_layout);
         setUpMapIfNeeded();
     }
 
