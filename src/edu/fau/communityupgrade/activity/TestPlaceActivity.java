@@ -24,6 +24,7 @@ import edu.fau.communityupgrade.R;
 import edu.fau.communityupgrade.callback.DefaultFindCallback;
 import edu.fau.communityupgrade.callback.DefaultSaveCallback;
 import edu.fau.communityupgrade.database.PlaceManager;
+import edu.fau.communityupgrade.maps.mapActivity;
 import edu.fau.communityupgrade.models.Place;
 import edu.fau.communityupgrade.ui.LoadingDialog;
 
@@ -52,6 +53,7 @@ public class TestPlaceActivity extends BaseActivity {
 	
 	EditText placeName,placeDescription,placeContactPhone,placeAddress;
 	Button addPlaceBtn;
+	Button mapBtn;
 	
 	private static final double MAX_DISTANCE = 60.0;
 	private static final String TAG = "TestPlaceActivity";
@@ -75,6 +77,7 @@ public class TestPlaceActivity extends BaseActivity {
 		
 		//Set Button Object
 		addPlaceBtn = (Button)findViewById(R.id.add_place_btn);
+		mapBtn = (Button)findViewById(R.id.map_btn);
 		
 		placeListView = (ListView) findViewById(R.id.test_place_list_view);
 		
@@ -83,6 +86,16 @@ public class TestPlaceActivity extends BaseActivity {
 				TestPlaceActivity.this, arrayOfPlaces);
 		
 		addPlaceBtn.setOnClickListener(new AddPlaceClickListener());
+		
+		
+		mapBtn.setOnClickListener(new OnClickListener(){
+			@Override
+			public void onClick(View v) {
+				Intent intent = new Intent(TestPlaceActivity.this,mapActivity.class);
+				startActivity(intent);
+			}		
+		});
+		
 		
 		// Attach the adapter to a ListView
 		placeListView.setAdapter(placesAdapter);
@@ -247,6 +260,18 @@ public class TestPlaceActivity extends BaseActivity {
 					new PlaceSaveCallback());
 		}
 	}
+/*	
+	private class mapViewClickListener implements OnClickListener
+	{
+		@Override
+		public void onClick(View v) {
+			//Intent to start next activity
+			Intent intent = new Intent(TestPlaceActivity.this,mapActivity.class);
+			startActivity(intent);	
+		}
+	}
+*/	
+	
 	
 	private void clearPlaceInput()
 	{
