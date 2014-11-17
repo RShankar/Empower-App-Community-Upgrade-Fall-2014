@@ -5,6 +5,9 @@ import android.os.Parcelable;
 
 public class Comment implements Parcelable, Comparable<Comment> {
 
+	//Used for status of currentUser on comment
+	public enum VoteStatus {NONE,UPVOTE,DOWNVOTE};
+	
 	private final String objectId;
 	private final String comment_content;
 	private final String placeId;
@@ -12,18 +15,28 @@ public class Comment implements Parcelable, Comparable<Comment> {
 	private final String parentId;
 	private final double score;
 	
+	private final Vote userVote;
+	
 	
 	public Comment(String objectId, String comment_content, String placeId,
-			User createdBy, String parentId,double score) {
+			User createdBy, String parentId,double score, final Vote uVote) {
 		
 		this.objectId = objectId;
 		this.comment_content = comment_content;
 		this.placeId = placeId;
 		this.createdBy = createdBy;
 		this.parentId = parentId;
+		
+		if(uVote == null){
+			this.userVote = new Vote(createdBy.getObjectId(),this.objectId);
+		}
+		else
+		{
+			this.userVote = uVote;
+		}
 		this.score = score;
 	}
-
+  
 
 	public double getScore() {
 		return score;
@@ -40,6 +53,10 @@ public class Comment implements Parcelable, Comparable<Comment> {
 		return comment_content;
 	}
 
+	public Vote getUserVote()
+	{
+		return userVote;
+	}
 
 
 	public String getPlaceId() {
@@ -60,7 +77,7 @@ public class Comment implements Parcelable, Comparable<Comment> {
 	
 	public String toString()
 	{
-		return "ObjectId:"+objectId+", "+comment_content+" by "+createdBy.getUsername()+", parentID: "+parentId;
+		return "ObjectId:"+objectId+", "+comment_content+", score:"+score+" by "+createdBy.getUsername()+", parentID: "+parentId;
 	}
 
 	@Override
@@ -77,7 +94,7 @@ public class Comment implements Parcelable, Comparable<Comment> {
 		dest.writeString(placeId);
 		dest.writeDouble(score);
 		dest.writeParcelable(createdBy, 0);
-		
+		dest.writeParcelable(userVote, 0);
 	}
 	
 	//Parcel input Constructor
@@ -89,6 +106,7 @@ public class Comment implements Parcelable, Comparable<Comment> {
 		placeId = in.readString();
 		score = in.readDouble();
 		createdBy = in.readParcelable(User.class.getClassLoader());
+		userVote = in.readParcelable(Vote.class.getClassLoader());
 	}
 	
 	/**

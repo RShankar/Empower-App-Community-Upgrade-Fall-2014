@@ -2,7 +2,9 @@
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
-    android:orientation="horizontal" >
+    android:orientation="horizontal"
+    android:focusable="false"
+     >
     
     <!-- Comment Indentation: set background color to desired line color  -->  
     <View android:id="@+id/left_indent1"
@@ -99,22 +101,25 @@
 	        android:layout_height="wrap_content"
 	        android:layout_width="match_parent"
 	        android:orientation="horizontal"
+	        android:focusable="false"
 	        >
-	        <Button
+	        <ImageButton
 	            android:layout_width="wrap_content"
 	            android:layout_height="wrap_content"
 	            android:id="@+id/upvote_btn"
 	            android:padding="2dp"
+	            android:clickable="true"
 	            android:focusable="false"
-	            android:text="+1"/>
-	        <Button
+	            android:src="@drawable/arrow_up"/>
+	        <ImageButton
 	            android:layout_width="wrap_content"
 	            android:layout_height="wrap_content"
 	            android:id="@+id/downvote_btn"
 	            android:padding="2dp"
-	            android:focusable="false"
-	            android:text="-1"/>
-	    </LinearLayout>"
+	           android:clickable="true"
+	           android:focusable="false"
+	            android:src="@drawable/arrow_down"/>
+	    </LinearLayout>
 	    
 	</LinearLayout>
     

@@ -11,12 +11,12 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.View.OnClickListener;
 import android.view.ViewGroup;
-import android.view.ViewManager;
 import android.widget.AdapterView;
 import android.widget.AdapterView.OnItemClickListener;
 import android.widget.ArrayAdapter;
 import android.widget.Button;
 import android.widget.EditText;
+import android.widget.ImageButton;
 import android.widget.ListView;
 import android.widget.TextView;
 import android.widget.Toast;
@@ -28,6 +28,7 @@ import edu.fau.communityupgrade.database.UserManager;
 import edu.fau.communityupgrade.models.Comment;
 import edu.fau.communityupgrade.models.Place;
 import edu.fau.communityupgrade.models.User;
+import edu.fau.communityupgrade.models.Vote;
 import edu.fau.communityupgrade.ui.LoadingDialog;
 
 public class SinglePlaceActivity extends BaseActivity {
@@ -37,7 +38,7 @@ public class SinglePlaceActivity extends BaseActivity {
 	
 	
 	private Place currentPlace;
-	private CommentManager commentManager;
+	private CommentManager commentManager; 
 	private LoadingDialog loadingDialog;
 	private ListView commentListView;
 	private View selectedCommentView;
@@ -56,6 +57,7 @@ public class SinglePlaceActivity extends BaseActivity {
 		commentManager = new CommentManager(this);
 		selectedCommentView = null;
 		selectedCommentItem = null;
+		
 		if(currentPlace == null)
 		{
 			Log.e(TAG,"Place is Null. Exiting Activity");
@@ -112,7 +114,8 @@ public class SinglePlaceActivity extends BaseActivity {
 				parentComment = selectedCommentItem.getComment();
 				parentId = parentComment.getObjectId();
 			}
-			Comment comment = new Comment(null, comment_content, currentPlace.getObjectId(), currentUser, parentId, 0);
+			
+			Comment comment = new Comment(null, comment_content, currentPlace.getObjectId(), currentUser, parentId, 0,null);
 			
 			loadingDialog.show();
 			commentManager.saveComment(comment, new DefaultSaveCallback<Comment>(){
@@ -156,7 +159,7 @@ public class SinglePlaceActivity extends BaseActivity {
 		@Override
 		public void onItemClick(final AdapterView<?> parent, final View view, final int position,
 				long id) {
-			
+			Log.d(TAG,"item selected");
 			if(selectedCommentView == view)
 			{
 				selectedCommentView.setBackgroundColor(Color.TRANSPARENT);
@@ -186,6 +189,7 @@ public class SinglePlaceActivity extends BaseActivity {
 				loadingDialog.dismiss();
 			}
 			else{
+				
 			//Load ChildViews if it's empty.
 				commentManager.getChildComments(comment, new DefaultFindCallback<Comment>()
 							{
@@ -235,11 +239,13 @@ public class SinglePlaceActivity extends BaseActivity {
 			//Get data
 			final CommentAdapterItem currentItem = getItem(position);
 			final Comment comment = currentItem.getComment();
+			final Vote vote = comment.getUserVote();
+			
 			// Check if an existing view is being reused, otherwise inflate the view
 		    if (convertView == null) {
 		    	convertView = LayoutInflater.from(getContext()).inflate(R.layout.place_comment_list_item, parent, false);
 		    }
-		    
+		    convertView.setClickable(true);
 		    View indents[] = {
 		    		convertView.findViewById(R.id.left_indent1),
 		    		convertView.findViewById(R.id.left_indent2),
@@ -262,25 +268,104 @@ public class SinglePlaceActivity extends BaseActivity {
 		    		indents[i].setVisibility(View.GONE);
 		    	}
 		    }
+		    
 			final TextView scoreView = (TextView)convertView.findViewById(R.id.score);
+			Log.d(TAG,comment.toString());
 			scoreView.setText(""+comment.getScore());
 		    
 		    final TextView commentContent = (TextView)convertView.findViewById(R.id.comment_content);
 		    commentContent.setText(comment.getComment_content()+" by "+comment.getCreatedBy().getUsername());
 		    
-		    final Button upvoteButton = (Button)convertView.findViewById(R.id.upvote_btn);
+		    final ImageButton upvoteButton = (ImageButton)convertView.findViewById(R.id.upvote_btn);
+		    final ImageButton downvoteButton = (ImageButton)convertView.findViewById(R.id.downvote_btn);
+		    
+		    
+		    final int transparent = Color.TRANSPARENT;
+		    final int selectedVote = Color.parseColor("#dcdcdc");
+		    
+		    if(!vote.isSet())
+		    {
+		    	upvoteButton.setBackgroundColor(transparent);
+		    	downvoteButton.setBackgroundColor(transparent);
+		    }	
+		    else if(vote.isUpvote())
+		    {
+		    	upvoteButton.setBackgroundColor(selectedVote);
+		    	downvoteButton.setBackgroundColor(transparent);
+		    }
+		    else
+		    {
+		    	upvoteButton.setBackgroundColor(transparent);
+		    	downvoteButton.setBackgroundColor(selectedVote);
+		    }
+		    
+		    downvoteButton.setOnClickListener(new OnClickListener(){
+		    	@Override
+				public void onClick(View v) {
+		    		
+		    		double score = Double.parseDouble(scoreView.getText().toString());
+		    		
+		    		//Log.d(TAG,"VoteIsSet: "+vote.isSet()+" VoteIsUpvote: "+vote.isUpvote());
+		    		if(!vote.isSet() || vote.isUpvote()){
+		    			
+		    			if(vote.isSet() && vote.isUpvote())
+		    			{
+		    				score--;
+		    			}
+		    			
+		    			commentManager.addVote(comment.getObjectId(), false);
+		    			vote.setVoteType(false);
+		    			downvoteButton.setBackgroundColor(selectedVote);
+						upvoteButton.setBackgroundColor(transparent);
+						
+						score--;
+		    		}
+		    		else
+		    		{
+		    			//TODO: Delete Vote
+		    			vote.removeVote();
+		    			score++;
+		    			downvoteButton.setBackgroundColor(transparent);
+		    		}
+
+					scoreView.setText(""+score);
+				}
+		    	
+		    });
 		    
 		    upvoteButton.setOnClickListener(new OnClickListener(){
 		    	
 				@Override
 				public void onClick(View v) {
-					commentManager.addVote(comment.getObjectId(), true);
-					upvoteButton.setBackgroundColor(Color.GREEN);
 					double score = Double.parseDouble(scoreView.getText().toString());
-					score++;
+					//Log.d(TAG,"VoteIsSet: "+vote.isSet()+" VoteIsUpvote: "+vote.isUpvote());
+					if(!vote.isSet() || !vote.isUpvote()){
+						
+						if(vote.isSet() && !vote.isUpvote())
+							score++;
+						
+						commentManager.addVote(comment.getObjectId(), true);
+						upvoteButton.setBackgroundColor(selectedVote);
+						vote.setVoteType(true);
+						downvoteButton.setBackgroundColor(transparent);
+						
+						score++;
+						
+					}
+					else
+					{ 
+						//TODO: Delete Vote
+		    			vote.removeVote();
+		    			score--;
+						upvoteButton.setBackgroundColor(transparent);
+					}
+					
 					scoreView.setText(""+score);
 				}
 		    });
+		    
+		    upvoteButton.setFocusable(false);
+		    downvoteButton.setFocusable(false);
 		    
 		    return convertView; 
 		}
@@ -301,7 +386,6 @@ public class SinglePlaceActivity extends BaseActivity {
 		
 		public CommentAdapterItem(final Comment c, final CommentAdapterItem p)
 		{
-			
 			comment = c;
 			childViews = new ArrayList<CommentAdapterItem>();
 			parentItem = p;
@@ -312,8 +396,6 @@ public class SinglePlaceActivity extends BaseActivity {
 			else{
 				level = 0;
 			}
-			
-			
 		}
 		public Comment getComment()
 		{

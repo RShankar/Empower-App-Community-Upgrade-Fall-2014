@@ -153,7 +153,7 @@ public class TestSinglePlaceActivity extends BaseActivity {
 			if(selectedComment != null)
 				parentId = selectedComment.getObjectId();
 			
-			Comment comment = new Comment(null, commentContent,place.getObjectId(),createdBy, parentId, 0.0);
+			Comment comment = new Comment(null, commentContent,place.getObjectId(),createdBy, parentId, 0.0,null);
 			commentManager.saveComment(comment, new DefaultSaveCallback<Comment>(){
 
 				@Override

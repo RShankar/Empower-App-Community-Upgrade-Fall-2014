@@ -1,12 +1,5 @@
 package edu.fau.communityupgrade.helper;
 
-import java.util.ArrayList;
-import java.util.List;
-
-import android.util.Log;
-
-import com.parse.FindCallback;
-import com.parse.ParseException;
 import com.parse.ParseGeoPoint;
 import com.parse.ParseObject;
 import com.parse.ParseQuery;
@@ -19,6 +12,7 @@ import edu.fau.communityupgrade.database.UserManager;
 import edu.fau.communityupgrade.models.Comment;
 import edu.fau.communityupgrade.models.Place;
 import edu.fau.communityupgrade.models.User;
+import edu.fau.communityupgrade.models.Vote;
 
 /**
  * This Helper class is used to convert ParseObjects 
@@ -43,12 +37,30 @@ public class ParseHelper {
 		return user;
 	}
 	
+	public static Vote parseObjectToVote(final ParseObject parseObject)
+	{
+		if(parseObject == null)
+			return null;
+		
+		String objectId = parseObject.getObjectId();
+		String commentId = parseObject.getString(CommentManager.VOTE_COMMENT_ID);
+		String userId = parseObject.getString(CommentManager.VOTE_USER_ID);
+		boolean isUpvote = parseObject.getBoolean(CommentManager.VOTE_IS_UPVOTE);
+		
+		return new Vote(objectId,userId,commentId,isUpvote);
+	}
+	
+	public static Comment parseObjectToComment(final ParseObject parseObject)
+	{
+		return parseObjectToComment(parseObject,null);
+	}
+	
 	/**
 	 * Converts ParseObject to Comment Model Object
 	 * @param parseObject
 	 * @return
 	 */
-	public static Comment parseObjectToComment(final ParseObject parseObject)
+	public static Comment parseObjectToComment(final ParseObject parseObject, final ParseObject voteStatusObject)
 	{
 		String objectId = parseObject.getObjectId();
 		String comment_content = parseObject.getString(CommentManager.COMMENT_CONTENT);
@@ -69,7 +81,9 @@ public class ParseHelper {
 			parentId = parseObject.getString(CommentManager.PARENT_ID);
 		}
 		
-		Comment comment = new Comment(objectId,comment_content,placeId,createdBy,parentId,score);
+		Vote vote = parseObjectToVote(voteStatusObject);
+		
+		Comment comment = new Comment(objectId,comment_content,placeId,createdBy,parentId,score,vote);
 		return comment;
 	}
 	
@@ -84,7 +98,7 @@ public class ParseHelper {
 		User user = parseUserToUser(parseUser);
 		
 		
-		String name = parseObject.getString(PlaceManager.NAME);
+		String name = parseObject.getString(PlaceManager.NAME); 
 		String description = parseObject.getString(PlaceManager.DESCRIPTION);
 		String address = parseObject.getString(PlaceManager.ADDRESS);
 		String cNumber = parseObject.getString(PlaceManager.CONTACT_NUMBER);
@@ -92,24 +106,10 @@ public class ParseHelper {
 		
 		ParseGeoPoint point = parseObject.getParseGeoPoint(PlaceManager.LOCATION);
 		
-		final ArrayList<Comment> comments = new ArrayList<Comment>();
 		
 		ParseRelation<ParseObject> relation = parseObject.getRelation(CommentManager.TABLE);
 		ParseQuery<ParseObject> query = relation.getQuery();
 		
-		query.findInBackground(new FindCallback<ParseObject>(){
-			
-			@Override
-			public void done(List<ParseObject> list, ParseException arg1) {
-
-				if(list == null)
-					return;
-				for(int i=0;i<list.size();i++)
-				{
-					comments.add(parseObjectToComment(list.get(i)));
-				}
-			}
-		});
 		
 		
 		//Create Place

@@ -207,6 +207,7 @@ public class PlaceManager {
 			
 			@Override
 			public void onLocationUpdate(final Location location) {
+				
 				ParseGeoPoint point = new ParseGeoPoint();
 				point.setLatitude(location.getLatitude());
 				point.setLongitude(location.getLongitude());

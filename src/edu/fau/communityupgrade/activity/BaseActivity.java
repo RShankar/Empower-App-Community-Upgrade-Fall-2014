@@ -29,6 +29,11 @@ public class BaseActivity extends FragmentActivity {
 		super.onCreate(bundle);
 		actionBar = getActionBar();
 		actionBar.setHomeButtonEnabled(true);
+		auth = new Auth(this);
+		if(firstRun || auth.isUserAuthenticationExpired()){
+			firstRun = false;
+			auth.authenticateUser(new BaseAuthCallback());
+		}
 	}
 	
 	@Override
@@ -62,7 +67,9 @@ public class BaseActivity extends FragmentActivity {
 		public void onAuthenticationFailure() {
 			
 			//Go to Login Page
+			
 			Intent intent = new Intent(getApplicationContext(), LoginActivity.class);
+			finish();
 			startActivity(intent);
 		}
 
