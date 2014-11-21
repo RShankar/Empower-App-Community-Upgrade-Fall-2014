@@ -16,12 +16,13 @@
 
 package edu.fau.communityupgrade.maps;
 
+import java.util.ArrayList;
+
 import android.content.Context;
 import android.location.Location;
 import android.location.LocationManager;
 import android.os.Bundle;
 import android.view.View;
-import android.widget.TextView;
 import android.widget.Toast;
 
 import com.google.android.gms.common.ConnectionResult;
@@ -34,13 +35,17 @@ import com.google.android.gms.location.LocationServices;
 import com.google.android.gms.maps.CameraUpdate;
 import com.google.android.gms.maps.CameraUpdateFactory;
 import com.google.android.gms.maps.GoogleMap;
-import com.google.android.gms.maps.SupportMapFragment;
 import com.google.android.gms.maps.GoogleMap.OnMyLocationButtonClickListener;
+import com.google.android.gms.maps.SupportMapFragment;
 import com.google.android.gms.maps.model.LatLng;
 import com.google.android.gms.maps.model.MarkerOptions;
 
 import edu.fau.communityupgrade.R;
 import edu.fau.communityupgrade.activity.BaseActivity;
+import edu.fau.communityupgrade.callback.DefaultFindCallback;
+import edu.fau.communityupgrade.database.PlaceManager;
+import edu.fau.communityupgrade.models.Place;
+import edu.fau.communityupgrade.ui.LoadingDialog;
 
 /**
  * This shows how to create a simple activity with a map and a marker on the map.
@@ -65,6 +70,10 @@ public class mapActivity extends BaseActivity
     
     //LocationManager test
     private LocationManager locationManager;
+    private PlaceManager placeManager;
+    private ArrayList<Place> places;
+    private LoadingDialog loadingDialog;
+    
     private static final long MIN_TIME = 400;
     private static final float MIN_DISTANCE = 1000;
     
@@ -75,14 +84,14 @@ public class mapActivity extends BaseActivity
             .setFastestInterval(16)    // 16ms = 60fps
             .setPriority(LocationRequest.PRIORITY_HIGH_ACCURACY);
     
-    
-
     @Override
     public void onCreate(Bundle savedInstanceState) {
     	getActionBar().setHomeButtonEnabled(true);
         super.onCreate(savedInstanceState);
         setContentView(R.layout.map_layout);
         setUpMapIfNeeded();
+        placeManager = new PlaceManager(this);
+        loadingDialog = new LoadingDialog(this);
         
         //Variables for LocationManager Test
         locationManager = (LocationManager) getSystemService(Context.LOCATION_SERVICE);
@@ -95,6 +104,46 @@ public class mapActivity extends BaseActivity
         setUpMapIfNeeded();
         setUpGoogleApiClientIfNeeded();
         mGoogleApiClient.connect();
+        
+        loadingDialog.show();
+        placeManager.getAllPlacesNearUser(50.0, new DefaultFindCallback<Place>(){
+
+			@Override
+			public void onComplete(ArrayList<Place> list) {
+				loadingDialog.dismiss();
+				places = list;
+				setMarkers();
+			}
+
+			@Override
+			public void onProviderNotAvailable() {
+				// TODO Auto-generated method stub
+				
+			}
+
+			@Override
+			public void onError(String error) {
+				// TODO Auto-generated method stub
+				
+			}
+        	
+        	
+        	
+        });
+    }
+    
+    public void setMarkers()
+    {
+    	for(int i=0;i<places.size();i++)
+    	{
+    		Place place = places.get(i);
+    		LatLng lt = new LatLng(place.getLatitude(),place.getLongitude());
+    		mMap.addMarker(new MarkerOptions().position(lt)
+    				.title(place.getName())
+    				.snippet(place.getName()+", created by: "+place.getCreatedBy().getUsername())
+    				);
+    	}
+    	
     }
 
     /**
