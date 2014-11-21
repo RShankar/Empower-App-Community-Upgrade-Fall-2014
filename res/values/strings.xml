@@ -6,7 +6,7 @@
     <string name="client_key">EN8CwyUYZ9HmRRQ10zxWS2lZIrq1j7DpQSeq5YNX</string>
     
     
-    <string name="app_name">CommunityUpgrade</string>
+    <string name="app_name">Community Upgrade</string>
     <string name="hello_world">Hello world!</string>
     <string name="action_settings">Settings</string>
 
@@ -55,5 +55,8 @@
     <!-- Dialog Strings -->
     <string name="dialog_saving_title">Saving</string>
     <string name="dialog_saving_message">Your information is being saved.</string>
+    <string name="refresh_title">Refresh</string>
+    <string name="logout">Logout</string>
+    <string name="action_add_comment">Add Comment</string>
 </resources>
 

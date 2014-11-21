@@ -88,4 +88,11 @@ public class Auth {
 		}
 		
 	}
+	
+	public void logout()
+	{
+		preferenceManager.removeUserSession();
+		mUserManager.Logout(context);
+		
+	}
 }

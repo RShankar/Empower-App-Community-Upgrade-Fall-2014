@@ -145,6 +145,15 @@ public class ApplicationPreferenceManager {
 		
 		return location;
 	}
+	
+	public void removeUserSession()
+	{
+		SharedPreferences.Editor editor = mUserPreferences.edit();
+		
+		editor.remove(USER_PREFERENCE_SESSION_ID);
+		editor.remove(USER_PREFERENCE_SESSION_SET_TIME);
+		editor.commit();
+	}
 
 	
 	public long getLastPlaceSavedTime()

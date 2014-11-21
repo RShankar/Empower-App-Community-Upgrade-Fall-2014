@@ -72,14 +72,15 @@ public class ParseHelper {
 		if(user!= null)
 		{
 			createdBy = parseUserToUser(user);
-		}
-			
+		}			
 		
 		String parentId = null;
 		
 		if(parseObject.containsKey(CommentManager.PARENT_ID)){
 			parentId = parseObject.getString(CommentManager.PARENT_ID);
 		}
+		
+		
 		
 		Vote vote = parseObjectToVote(voteStatusObject);
 		
@@ -103,13 +104,7 @@ public class ParseHelper {
 		String address = parseObject.getString(PlaceManager.ADDRESS);
 		String cNumber = parseObject.getString(PlaceManager.CONTACT_NUMBER);
 		String objectId = parseObject.getObjectId();
-		
 		ParseGeoPoint point = parseObject.getParseGeoPoint(PlaceManager.LOCATION);
-		
-		
-		ParseRelation<ParseObject> relation = parseObject.getRelation(CommentManager.TABLE);
-		ParseQuery<ParseObject> query = relation.getQuery();
-		
 		
 		
 		//Create Place

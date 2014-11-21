@@ -9,6 +9,9 @@ import android.content.Intent;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.LayoutInflater;
+import android.view.Menu;
+import android.view.MenuInflater;
+import android.view.MenuItem;
 import android.view.View;
 import android.view.View.OnClickListener;
 import android.view.ViewGroup;
@@ -24,6 +27,7 @@ import edu.fau.communityupgrade.R;
 import edu.fau.communityupgrade.callback.DefaultFindCallback;
 import edu.fau.communityupgrade.callback.DefaultSaveCallback;
 import edu.fau.communityupgrade.database.PlaceManager;
+import edu.fau.communityupgrade.database.UserManager;
 import edu.fau.communityupgrade.maps.mapActivity;
 import edu.fau.communityupgrade.models.Place;
 import edu.fau.communityupgrade.ui.LoadingDialog;
@@ -143,6 +147,28 @@ public class TestPlaceActivity extends BaseActivity {
 		placeManager.getAllPlacesNearUser(maxDistance,new PlaceFindCallback());
 		
 	}
+	
+	@Override
+	public boolean onCreateOptionsMenu(Menu menu) {
+	  MenuInflater inflater = getMenuInflater();
+	  inflater.inflate(R.menu.main, menu);
+	  return true;
+	} 
+	
+	@Override
+	public boolean onOptionsItemSelected(MenuItem item)
+	{
+		switch(item.getItemId()){
+			case R.id.refresh:
+				placeManager.clearCache();
+				updatePlaces(MAX_DISTANCE);
+				break;
+			case R.id.logout:
+				logout();
+		}
+		return true;
+		
+	}
 
 	/**
 	 * This callback is used after the places have been found. 
@@ -154,7 +180,8 @@ public class TestPlaceActivity extends BaseActivity {
 		@Override
 		public void onComplete(ArrayList<Place> list) {
 			
-			Log.d(TAG,"Downloaded Places");
+			Log.d(TAG,"Downloaded Places: "+list.toString());
+			
 			if(list == null)
 			{
 				addPlaceBtn.setText("Uh Oh!");
