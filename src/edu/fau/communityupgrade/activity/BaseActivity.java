@@ -42,6 +42,14 @@ public class BaseActivity extends FragmentActivity {
 	    return true;
 	}
 	
+	protected void logout()
+	{
+		auth.logout();
+		Intent intent = new Intent(getApplicationContext(), LoginActivity.class);
+		finish();
+		startActivity(intent);
+	}
+	
 	@Override
 	public void onResume()
 	{

@@ -3,36 +3,39 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:orientation="vertical" >
-    
+    <LinearLayout
+        android:layout_width="fill_parent"
+        android:layout_height="wrap_content"
+        android:paddingStart="45dp"
+        android:paddingEnd="20dp"
+        android:paddingTop="10dp"
+        android:paddingBottom="10dp"
+        android:orientation="vertical">
+        <!-- Going to be for Place Information -->
+        <LinearLayout
+            android:layout_width="fill_parent"
+            android:layout_height="wrap_content"
+            android:orientation="horizontal">
+            <TextView 
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:id="@+id/single_place_title"
+               	style="@style/DefaultTitle"
+                />
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:id="@+id/single_place_number_comments" />
+        </LinearLayout>
+        
+    </LinearLayout>
     <ListView
     android:layout_width="match_parent"
     android:layout_height="0dp"
     android:layout_weight="1"
-    android:id="@+id/comment_list_view"
-  
-     ></ListView>
+    android:id="@+id/comment_list_view" ></ListView>
     
-    <!-- Add Comment  -->
-    <TableLayout
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:orientation="vertical"
-        android:stretchColumns="1">
-        <TableRow>
-		    <TextView
-		        android:labelFor="@+id/add_comment" 
-		        android:text="@string/add_comment_label"
-		        style="@style/DefaultLabel"
-		        />
-		    <EditText
-		        android:id="@+id/add_comment_content"
-		        style="@style/DefaultInput"/>
-	        <Button
-	            android:id="@+id/add_comment_button"
-	            android:text="@string/add_comment_button_text"
-	            style="@style/DefaultButton" />
-	    </TableRow>
-    </TableLayout>
     
     
 </LinearLayout>
+

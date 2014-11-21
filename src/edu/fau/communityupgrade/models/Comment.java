@@ -13,7 +13,7 @@ public class Comment implements Parcelable, Comparable<Comment> {
 	private final String placeId;
 	private final User createdBy;
 	private final String parentId;
-	private final double score;
+	private double score;
 	
 	private final Vote userVote;
 	
@@ -40,6 +40,11 @@ public class Comment implements Parcelable, Comparable<Comment> {
 
 	public double getScore() {
 		return score;
+	}
+	
+	public void setScore(final double s)
+	{
+		score = s;
 	}
 
 

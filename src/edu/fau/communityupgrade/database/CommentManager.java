@@ -20,6 +20,7 @@ import edu.fau.communityupgrade.callback.DefaultFindFirstCallback;
 import edu.fau.communityupgrade.callback.DefaultSaveCallback;
 import edu.fau.communityupgrade.helper.ParseHelper;
 import edu.fau.communityupgrade.models.Comment;
+import edu.fau.communityupgrade.models.Vote;
 import edu.fau.communityupgrade.preferences.ApplicationPreferenceManager;
 /**
  * This class connects to the Parse Database
@@ -36,6 +37,7 @@ public class CommentManager {
 	public final static String VOTE_IS_UPVOTE = "isUpvote";
 	public final static String VOTE_COMMENT_ID = "commentId";
 	public final static String VOTE_USER_ID = "userId";
+	public final static String VOTE_OBJECT_ID = "objectId";
 	public final static String OBJECT_ID = "objectId";
 	public final static String COMMENT_CONTENT = "comment_content";
 	public final static String PLACE_ID = "placeId";
@@ -46,11 +48,12 @@ public class CommentManager {
 	private final static String TAG = "CommentManager";
 	
 	//For current user
-	private final HashMap<String,ParseObject> cacheOfParseVoteObjectsByCommentId;
+	/*private final HashMap<String,ParseObject> cacheOfParseVoteObjectsByCommentId;
 	
 	private final HashMap<String,ArrayList<Comment>> cacheOfCommentsByPlaceId;
 	private final HashMap<String,ArrayList<Comment>> cacheOfCommentsByParentId;
-	private final HashMap<String,ParseObject> cacheOfParseObjectsById;
+	private final HashMap<String,ParseObject> cacheOfParseObjectsById;*/
+	private CacheManager cacheManager;
 	private ApplicationPreferenceManager preferenceManager;
 	private UserManager userManager;
 	private final Context mContext;
@@ -61,19 +64,28 @@ public class CommentManager {
 		preferenceManager = new ApplicationPreferenceManager(context);
 		preferenceManager.clearrAllCommentsSavedTimes();
 		userManager = UserManager.getInstance();
-		cacheOfCommentsByParentId = new HashMap<String,ArrayList<Comment>>();
+		cacheManager = CacheManager.getInstance();
+		/*cacheOfCommentsByParentId = new HashMap<String,ArrayList<Comment>>();
 		cacheOfCommentsByPlaceId = new HashMap<String, ArrayList<Comment>>();
 		cacheOfParseObjectsById = new HashMap<String,ParseObject>();
 		cacheOfParseVoteObjectsByCommentId = new HashMap<String,ParseObject>();
+		*/
 	}
 	
-	
+	public void clearCache()
+	{
+		/*cacheOfCommentsByParentId.clear();
+		cacheOfCommentsByPlaceId.clear();
+		cacheOfParseObjectsById.clear();
+		cacheOfParseVoteObjectsByCommentId.clear();*/
+	}
 	
 	protected void getCommentById(final String objectId, final DefaultFindFirstCallback<ParseObject> callback)
 	{
-		if(useCacheForParseObject(objectId))
+		if(cacheManager.containsParseObjectId(objectId))
 		{
-			callback.onComplete(this.getCacheForParseObject(objectId));
+			Log.d(TAG,"returning cached object");
+			callback.onComplete(cacheManager.getParseObjectById(objectId));
 			return;
 		}
 		ParseQuery<ParseObject> query = ParseQuery.getQuery(TABLE);
@@ -95,6 +107,7 @@ public class CommentManager {
 					callback.onError("ID Does not exist.");
 					return;
 				}
+				Log.d(TAG,"returning queried object");
 				callback.onComplete(c);
 			}
 		});
@@ -111,31 +124,42 @@ public class CommentManager {
 	public ArrayList<Comment> getCommentsByPlace(ParseObject parseObject)
 	{
 		setVotesForUser();
-		if(this.useCacheForPlace(parseObject))
-		{
-			return this.getCacheForPlace(parseObject);
-		}
-		ParseQuery<ParseObject> commentQuery = ParseQuery.getQuery(TABLE);
-		commentQuery.include(CREATED_BY);
-		commentQuery.whereEqualTo(PLACE_ID, parseObject);
-		commentQuery.whereDoesNotExist(PARENT_ID);
-		commentQuery.addDescendingOrder(SCORE);
-		commentQuery.addAscendingOrder(CREATED_AT);
+		String placeId = parseObject.getObjectId();
 		List<ParseObject> parseObjects;
 		
-		
-		
-		try {
-			parseObjects = commentQuery.find();
-		} 
-		catch (ParseException e) {
-			e.printStackTrace();
-			return null;
+		if(cacheManager.hasCommentsForPlaceId(placeId))
+		{
+			Log.d(TAG,"getCommentsByPlaceId: Using Cache.");
+			parseObjects = cacheManager.getCommentsByPlaceId(parseObject.getObjectId()); 
 		}
-
+		else
+		{
+			ParseQuery<ParseObject> commentQuery = ParseQuery.getQuery(TABLE);
+			commentQuery.include(CREATED_BY);
+			commentQuery.include(PLACE_ID);
+			commentQuery.whereEqualTo(PLACE_ID, parseObject);
+			commentQuery.whereDoesNotExist(PARENT_ID);
+			commentQuery.addDescendingOrder(SCORE);
+			commentQuery.addAscendingOrder(CREATED_AT);
+			
+			try {
+				parseObjects = commentQuery.find();
+				if(parseObjects.isEmpty())
+				{
+					Log.d(TAG,"adding empty cache for place id: "+placeId);
+					cacheManager.addEmptyCommentsForPlaceId(placeId);
+				}
+				cacheManager.addCommentParseObject(parseObjects);
+			} 
+			catch (ParseException e) {
+				Log.e(TAG,"Error getting comment objects:",e);
+				e.printStackTrace();
+				return null;
+			}
+		}
+		
 		ParseObject.pinAllInBackground(parseObject.getObjectId(),parseObjects);
 		ArrayList<Comment> list = new ArrayList<Comment>();
-		
 		
 		for(int i=0;i<parseObjects.size();i++)
 		{
@@ -150,7 +174,7 @@ public class CommentManager {
 			}
 			catch(ParseException e)
 			{
-				Log.e(TAG,"Error retrieving vote: ",e);
+				//Log.e(TAG,"Error retrieving vote: ",e);
 				vote = null;
 			}
 			
@@ -168,14 +192,18 @@ public class CommentManager {
 	public void getChildComments(final Comment comment, final DefaultFindCallback<Comment> callback)
 	{
 		setVotesForUser();
-		if(this.useCacheForParent(comment))
+		
+		final CommentFindCallback commentCallback = new CommentFindCallback(callback);
+		
+		if(cacheManager.hasCommentChildObjects(comment.getObjectId()))
 		{
-			callback.onComplete(getCacheForParent(comment));
+			commentCallback.done(cacheManager.getCommentChildObjects(comment.getObjectId()), null);
 			return;
 		}
 		
+		
 		ParseQuery<ParseObject> parentQuery = new ParseQuery<ParseObject>(TABLE);
-		Log.d(TAG,"getChildComments: "+comment.toString());
+		//Log.d(TAG,"getChildComments: "+comment.toString());
 		parentQuery.whereEqualTo(OBJECT_ID, comment.getObjectId());
 		parentQuery.fromLocalDatastore();
 		parentQuery.getFirstInBackground(new GetCallback<ParseObject>(){
@@ -188,8 +216,9 @@ public class CommentManager {
 				final ParseQuery<ParseObject> query = new ParseQuery<ParseObject>(TABLE);
 				query.orderByDescending(SCORE);
 				query.include(CREATED_BY);
+				query.include(PLACE_ID);
 				query.whereEqualTo(PARENT_ID, parent);
-				query.findInBackground(new CommentFindCallback(callback));	
+				query.findInBackground(commentCallback);	
 			}
 		});
 	}
@@ -197,42 +226,63 @@ public class CommentManager {
 	
 	public void addVote(final String commentId, final boolean isUpvote)
 	{
+		//Log.d(TAG,"addVote: ");
 		final ParseUser user = UserManager.getInstance().getParseUser();
-		
 		
 		this.getCommentById(commentId, new DefaultFindFirstCallback<ParseObject>(){
 			@Override
 			public void onComplete(final ParseObject commentObject) {
 				
-				if(cacheOfParseVoteObjectsByCommentId.containsKey(commentId))
+				//Vote already exists, updating value and incre/decre menting by 2s
+				if(cacheManager.hasVoteByCommentId(commentId))
 				{ 
-					ParseObject vote = cacheOfParseVoteObjectsByCommentId.get(commentId);
+					ParseObject vote = cacheManager.getVoteByCommentId(commentId);
+					double score = commentObject.getDouble(SCORE);
+					if(isUpvote)
+					{
+						score += 2;
+					}
+					else
+					{
+						score -= 2;
+					}
+					commentObject.put(SCORE, score);
+					
 					vote.put(VOTE_IS_UPVOTE, isUpvote);
+					commentObject.saveEventually();
 					vote.saveEventually();
 					return;
 				}
 				else {
-					ParseObject saveObject = new ParseObject(VOTE_TABLE);
+					final ParseObject saveObject = new ParseObject(VOTE_TABLE);
 					saveObject.put(VOTE_USER_ID, user);
 					saveObject.put(VOTE_COMMENT_ID, commentObject);
 					saveObject.put(VOTE_IS_UPVOTE, isUpvote);
-					saveObject.saveEventually();
-					cacheOfParseVoteObjectsByCommentId.put(commentObject.getObjectId(), saveObject);
-				}
+					saveObject.saveEventually(new SaveCallback(){
+
+						@Override
+						public void done(ParseException arg0) {
+							cacheManager.addVoteParseObject(saveObject);
+						}
+						
+						
+					});
 					
-				int score = commentObject.getInt(SCORE);
-				if(isUpvote)
-				{
-					score++;
-				}
-				else
-				{  
-					score--;
+					double score = commentObject.getDouble(SCORE);
+					
+					if(isUpvote)
+					{
+						score++;
+					}
+					else
+					{  
+						score--;
+					}
+					
+					commentObject.put(SCORE, score);
+					commentObject.saveEventually();
 				}
 				
-				commentObject.put(SCORE, score);
-				commentObject.saveEventually();
-				updateCache(commentObject);
 				
 			}
 
@@ -247,7 +297,7 @@ public class CommentManager {
 		
 	}
 	
-	public void saveComment(final Comment comment, final DefaultSaveCallback<Comment> Callback)
+	public void saveComment(final Comment comment, final DefaultSaveCallback<Comment> saveCallback)
 	{
 		PlaceManager placeManager = new PlaceManager(mContext);
 		final ParseObject saveObject = new ParseObject(TABLE);
@@ -262,27 +312,30 @@ public class CommentManager {
 				saveObject.put(PLACE_ID,object);
 				if(comment.getParentId() != null){
 					getCommentById(comment.getParentId(), new DefaultFindFirstCallback<ParseObject>(){
-
+						
 						@Override
 						public void onComplete(ParseObject object) {
+							Log.d(TAG,"Saving: Parent Id.");
 							saveObject.put(PARENT_ID, object);
-							saveObject.saveEventually(new CommentSaveCallback(Callback, saveObject));
+							saveObject.saveInBackground(new CommentSaveCallback(saveCallback, saveObject));
 						}
-
 						@Override
 						public void onProviderNotAvailable() {
 						}
 
 						@Override
 						public void onError(String error) {
-							Callback.onError(error);
-							Log.e(TAG,error);
+							
+							saveCallback.onError(error);
+							Log.e(TAG,"getParseObjectByPlaceId: "+error);
 						}
 					});
+					
 				}
 				else
 				{
-					saveObject.saveEventually(new CommentSaveCallback(Callback, saveObject));
+					Log.d(TAG,"Saving: no Parent Id.");
+					saveObject.saveInBackground(new CommentSaveCallback(saveCallback, saveObject));
 				}
 			}
 
@@ -292,68 +345,94 @@ public class CommentManager {
 
 			@Override
 			public void onError(String error) {
-				Callback.onError(error.toString());
+				saveCallback.onError(error.toString());
 				Log.e(TAG,error);
 			}
 		});
 	}
 	
-	private boolean useCacheForPlace(ParseObject parseObject)
-	{
-		if(parseObject == null || parseObject.getObjectId() == null)
-			return false;
-		return cacheOfCommentsByPlaceId.containsKey(parseObject.getObjectId());
 	
-	}
-	
-	private ArrayList<Comment> getCacheForPlace(ParseObject parseObject)
+	public void deleteVote(final Vote vote)
 	{
-		if(parseObject == null || parseObject.getObjectId() == null)
-			return null;
-		return cacheOfCommentsByPlaceId.get(parseObject.getObjectId());
-	}
-	
-	private boolean useCacheForParseObject(String id)
-	{
-		if(id == null || id == "")
-		{
-			return false;
+		
+		if(vote == null){
+			Log.e(TAG,"Cannot delete null Vote.");
+			return;
 		}
 		
-		return cacheOfParseObjectsById.containsKey(id);
-	}
-	
-	private ParseObject getCacheForParseObject(String id)
-	{
-		if(id == null || id == "")
+		
+		this.getCommentById(vote.getCommentId(), new DefaultFindFirstCallback<ParseObject>(){
+
+			@Override
+			public void onComplete(final ParseObject object) {
+				if(object == null)
+				{
+					Log.e(TAG,"Error changing score.");
+					return;
+				}
+				
+				double score = object.getDouble(SCORE);
+				
+				if(vote.isUpvote())
+				{
+					score--;
+				}
+				else
+				{
+					score++;
+				}
+				object.put(SCORE, score);
+				Log.d(TAG,"updated Score: "+object.getObjectId()+" to "+score);
+				object.saveEventually();
+			}
+
+			@Override
+			public void onProviderNotAvailable() {
+			}
+
+			@Override
+			public void onError(String error) {
+				Log.e(TAG,"Unable to retrieve Comment Parse Object: "+error);
+			}
+			
+			
+		});
+		Log.d(TAG,"Deleting Vote: "+vote.getObjectId());
+		
+		
+		ParseObject object = cacheManager.getVoteByCommentId(vote.getCommentId());
+		
+		cacheManager.removeVoteParseObject(object);
+		if(object != null)
 		{
-			return null;
+			object.deleteEventually();
+			return;
 		}
 		
-		return cacheOfParseObjectsById.get(id);
+		ParseQuery<ParseObject> query = new ParseQuery<ParseObject>(VOTE_TABLE);
+		query.whereEqualTo(VOTE_OBJECT_ID, vote.getObjectId());
+		query.getFirstInBackground(new GetCallback<ParseObject>(){
+
+			@Override
+			public void done(ParseObject parseObject, ParseException e) {
+				if(e != null)
+				{
+					Log.e(TAG,"Could not delete vote: ",e);
+					return;
+				}
+				else if(parseObject != null)
+				{
+					parseObject.deleteEventually();
+				}
+			}
+			
+		});
+		
 	}
 	
-	private boolean useCacheForParent(Comment comment)
-	{
-		if(comment.getObjectId() == null || comment.getObjectId().isEmpty()){
-			return false;
-		}
-		return cacheOfCommentsByParentId.containsKey(comment.getObjectId());
-	}
-	
-	private ArrayList<Comment> getCacheForParent(Comment comment)
-	{
-		if(comment.getObjectId() == null || comment.getObjectId().isEmpty()){
-			return null;
-		}
-		return cacheOfCommentsByParentId.get(comment.getObjectId());
-	}
 	
 	private void setVotesForUser()
-	{
-		if(!cacheOfParseVoteObjectsByCommentId.isEmpty())
-			return;
-		
+	{	
 		ParseUser currentUser = userManager.getParseUser();
 		
 		ParseQuery<ParseObject> votesQuery = new ParseQuery<ParseObject>(VOTE_TABLE);
@@ -372,7 +451,7 @@ public class CommentManager {
 				{
 					ParseObject currentVote =  votes.get(i);
 					//Update Cache with Votes
-					cacheOfParseVoteObjectsByCommentId.put(currentVote.getParseObject(VOTE_COMMENT_ID).getObjectId(), currentVote);
+					cacheManager.addVoteParseObject(currentVote);
 				}
 				
 			}
@@ -384,44 +463,7 @@ public class CommentManager {
 	/**
 		Updates Cache for a collection of comments.
 	*/
-	private void updateCache(List<ParseObject> comments)
-	{
-		for(int i=0;i<comments.size();i++)
-		{
-			updateCache(comments.get(i));
-		}
-	}
 	
-	/**
-
-	*/
-	private void updateCache(ParseObject object)
-	{
-		if(object == null || object.getObjectId() == null)
-			return;
-		Comment comment = ParseHelper.parseObjectToComment(object);
-		
-		this.cacheOfParseObjectsById.put(object.getObjectId(), object);
-		if(comment.getParentId() != null)
-		{
-			if(!cacheOfCommentsByParentId.containsKey(comment.getParentId()))
-			{
-				cacheOfCommentsByParentId.put(comment.getParentId(), new ArrayList<Comment>());
-			}
-			if(!cacheOfCommentsByParentId.get(comment.getParentId()).contains(comment))
-				cacheOfCommentsByParentId.get(comment.getParentId()).add(comment);
-		}
-		else if(comment.getPlaceId() != null && !comment.getPlaceId().isEmpty())
-		{
-			if(!cacheOfCommentsByPlaceId.containsKey(comment.getPlaceId()))
-			{
-				cacheOfCommentsByPlaceId.put(comment.getPlaceId(), new ArrayList<Comment>());
-			}
-			if(!cacheOfCommentsByPlaceId.get(comment.getPlaceId()).contains(comment))
-				cacheOfCommentsByPlaceId.get(comment.getPlaceId()).add(comment);
-		
-		}
-	}
 	
 	
 	private class CommentSaveCallback extends SaveCallback
@@ -441,8 +483,10 @@ public class CommentManager {
 		@Override
 		public void done(ParseException e) {
 		
+			Log.d(TAG,"Comment Saved.");
 			
-			updateCache(parseComment);
+			cacheManager.addCommentParseObject(parseComment, null);
+			
 			this.comment = ParseHelper.parseObjectToComment(parseComment);
 			List<ParseObject> list = new ArrayList<ParseObject>();
 			list.add(parseComment);
@@ -477,12 +521,12 @@ public class CommentManager {
 				return;
 			}
 			
-			updateCache(list);
-			ParseObject.pinAllInBackground(list);
 			ArrayList<Comment> comments = new ArrayList<Comment>();
 			for(int i=0;i<list.size();i++)
 			{
-				ParseObject VoteObject = cacheOfParseVoteObjectsByCommentId.get(list.get(i).getObjectId());
+				ParseObject VoteObject = cacheManager.getVoteByCommentId(list.get(i).getObjectId());
+
+				cacheManager.addCommentParseObject(list.get(i), null);
 				Comment comment = ParseHelper.parseObjectToComment(list.get(i),VoteObject);
 				comments.add(comment);
 				

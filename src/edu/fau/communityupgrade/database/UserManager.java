@@ -1,5 +1,6 @@
 package edu.fau.communityupgrade.database;
 
+import android.content.Context;
 import android.util.Log;
 
 import com.parse.ParseException;
@@ -83,6 +84,11 @@ public class UserManager {
 			callback.onFailure();
 		}
 		
+	}
+	
+	public void Logout(Context context)
+	{
+		currentUser.logOut();
 	}
 	
 	/**
