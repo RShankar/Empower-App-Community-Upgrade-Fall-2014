@@ -53,6 +53,10 @@ public class Place implements Parcelable {
 		return address;
 	}
 
+	public String getDescription()
+	{
+		return this.description;
+	}
 
 	public String getContactName() {
 		return description;

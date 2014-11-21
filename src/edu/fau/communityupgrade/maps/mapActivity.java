@@ -18,9 +18,7 @@ package edu.fau.communityupgrade.maps;
 
 import java.util.ArrayList;
 
-import android.content.Context;
 import android.location.Location;
-import android.location.LocationManager;
 import android.os.Bundle;
 import android.view.View;
 import android.widget.Toast;
@@ -43,7 +41,9 @@ import com.google.android.gms.maps.model.MarkerOptions;
 import edu.fau.communityupgrade.R;
 import edu.fau.communityupgrade.activity.BaseActivity;
 import edu.fau.communityupgrade.callback.DefaultFindCallback;
+import edu.fau.communityupgrade.callback.LocationHandlerCallback;
 import edu.fau.communityupgrade.database.PlaceManager;
+import edu.fau.communityupgrade.location.LocationHandler;
 import edu.fau.communityupgrade.models.Place;
 import edu.fau.communityupgrade.ui.LoadingDialog;
 
@@ -69,10 +69,12 @@ public class mapActivity extends BaseActivity
     
     
     //LocationManager test
-    private LocationManager locationManager;
+    //private LocationManager locationManager;
     private PlaceManager placeManager;
     private ArrayList<Place> places;
     private LoadingDialog loadingDialog;
+    private LocationHandler locationHandler;
+    
     
     private static final long MIN_TIME = 400;
     private static final float MIN_DISTANCE = 1000;
@@ -92,10 +94,10 @@ public class mapActivity extends BaseActivity
         setUpMapIfNeeded();
         placeManager = new PlaceManager(this);
         loadingDialog = new LoadingDialog(this);
-        
+        locationHandler = new LocationHandler(this);
         //Variables for LocationManager Test
-        locationManager = (LocationManager) getSystemService(Context.LOCATION_SERVICE);
-        locationManager.requestLocationUpdates(LocationManager.NETWORK_PROVIDER, MIN_TIME, MIN_DISTANCE, this); //You can also use LocationManager.GPS_PROVIDER and LocationManager.PASSIVE_PROVIDER
+        //locationManager = (LocationManager) getSystemService(Context.LOCATION_SERVICE);
+        //locationManager.requestLocationUpdates(LocationManager.NETWORK_PROVIDER, MIN_TIME, MIN_DISTANCE, this); //You can also use LocationManager.GPS_PROVIDER and LocationManager.PASSIVE_PROVIDER
     }
 
     @Override
@@ -104,6 +106,24 @@ public class mapActivity extends BaseActivity
         setUpMapIfNeeded();
         setUpGoogleApiClientIfNeeded();
         mGoogleApiClient.connect();
+        
+        
+        locationHandler.updateLocation(new LocationHandlerCallback(){
+
+			@Override
+			public void onLocationUpdate(Location location) {
+				onLocationChanged(location);
+				
+			}
+
+			@Override
+			public void onProviderNotAvailable() {
+				// TODO Auto-generated method stub
+				
+			}
+        	
+        	
+        });
         
         loadingDialog.show();
         placeManager.getAllPlacesNearUser(50.0, new DefaultFindCallback<Place>(){
@@ -140,7 +160,7 @@ public class mapActivity extends BaseActivity
     		LatLng lt = new LatLng(place.getLatitude(),place.getLongitude());
     		mMap.addMarker(new MarkerOptions().position(lt)
     				.title(place.getName())
-    				.snippet(place.getName()+", created by: "+place.getCreatedBy().getUsername())
+    				.snippet(place.getName()+": "+place.getDescription()+", created by "+place.getCreatedBy().getUsername())
     				);
     	}
     	
@@ -269,7 +289,7 @@ public class mapActivity extends BaseActivity
         LatLng latLng = new LatLng(location.getLatitude(), location.getLongitude());
         CameraUpdate cameraUpdate = CameraUpdateFactory.newLatLngZoom(latLng, 10);
         mMap.animateCamera(cameraUpdate);
-        locationManager.removeUpdates(this);
+       // locationManager.removeUpdates(this);
     }
 
     @Override
