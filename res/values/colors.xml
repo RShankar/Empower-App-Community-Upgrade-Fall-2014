@@ -1,0 +1,8 @@
+<resources>
+
+    <color name="selected_item">#def0fd</color>
+    <color name="basic_button_bg">#68c4ea</color>
+    <color name="basic_button_text">#ffffff</color>
+    
+    <color name="basic_input_shadow">#000000</color>
+</resources>

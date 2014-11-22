@@ -137,6 +137,7 @@ public class CommentManager {
 			ParseQuery<ParseObject> commentQuery = ParseQuery.getQuery(TABLE);
 			commentQuery.include(CREATED_BY);
 			commentQuery.include(PLACE_ID);
+			commentQuery.include(CREATED_AT);
 			commentQuery.whereEqualTo(PLACE_ID, parseObject);
 			commentQuery.whereDoesNotExist(PARENT_ID);
 			commentQuery.addDescendingOrder(SCORE);
@@ -216,6 +217,7 @@ public class CommentManager {
 				final ParseQuery<ParseObject> query = new ParseQuery<ParseObject>(TABLE);
 				query.orderByDescending(SCORE);
 				query.include(CREATED_BY);
+				query.include(CREATED_AT);
 				query.include(PLACE_ID);
 				query.whereEqualTo(PARENT_ID, parent);
 				query.findInBackground(commentCallback);	

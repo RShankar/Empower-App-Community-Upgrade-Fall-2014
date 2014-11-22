@@ -32,6 +32,7 @@ import edu.fau.communityupgrade.callback.DefaultSaveCallback;
 import edu.fau.communityupgrade.database.CommentManager;
 import edu.fau.communityupgrade.database.UserManager;
 import edu.fau.communityupgrade.models.Comment;
+import edu.fau.communityupgrade.models.CommentBuilder;
 import edu.fau.communityupgrade.models.Place;
 import edu.fau.communityupgrade.models.User;
 import edu.fau.communityupgrade.models.Vote;
@@ -43,7 +44,7 @@ public class SinglePlaceActivity extends BaseActivity {
 	private static final String TAG = "SinglePlaceActivity";
 	
 	private final int COLOR_TRANSPARENT = Color.TRANSPARENT;
-	private final int COLOR_COMMENT_SELECTED = Color.parseColor("#def0fd");
+	private int COLOR_COMMENT_SELECTED;
 	
 	private final int ARROW_UP = R.drawable.arrow_up2;
 	private final int ARROW_UP_SELECTED = R.drawable.arrow_up_selected;
@@ -58,6 +59,7 @@ public class SinglePlaceActivity extends BaseActivity {
 	private AlertDialog addCommentDialog;
 	
 	private TextView placeTitle;
+	private TextView placeDescription;
 	private ListView commentListView;
 	private View selectedCommentView;
 	private CommentAdapterItem selectedCommentItem;
@@ -75,6 +77,7 @@ public class SinglePlaceActivity extends BaseActivity {
 		selectedCommentView = null;
 		selectedCommentItem = null;
 		
+		COLOR_COMMENT_SELECTED = getResources().getColor(R.color.selected_item);
 		if(currentPlace == null)
 		{
 			Log.e(TAG,"Place is Null. Exiting Activity");
@@ -89,6 +92,9 @@ public class SinglePlaceActivity extends BaseActivity {
 		commentListView = (ListView)findViewById(R.id.comment_list_view);
 		placeTitle = (TextView)findViewById(R.id.single_place_title);
 		placeTitle.setText(currentPlace.getName());
+		
+		placeDescription = (TextView)findViewById(R.id.single_place_description);
+		placeDescription.setText(currentPlace.getDescription());
 		
 		commentItemArray = CommentAdapterItem.commentListToItemList(currentPlace.getComments(),null);
 		commentListView.setOnItemClickListener(new CommentItemClickListener());	
@@ -198,7 +204,15 @@ public class SinglePlaceActivity extends BaseActivity {
 			parentId = parentComment.getObjectId();
 		}
 		
-		Comment comment = new Comment(null, comment_content, currentPlace.getObjectId(), currentUser, parentId, 0,null);
+		//Comment comment = new Comment(null, comment_content, currentPlace.getObjectId(), currentUser, parentId, 0,null);
+		
+		Comment comment = new CommentBuilder()
+						.setContent(comment_content)
+						.setPlaceId(currentPlace.getObjectId())
+						.setCreatedBy(currentUser)
+						.setParentId(parentId)
+						.setScore(0)
+						.build();
 		
 		savingDialog.show();
 		commentManager.saveComment(comment, new DefaultSaveCallback<Comment>(){
@@ -320,6 +334,63 @@ public class SinglePlaceActivity extends BaseActivity {
 		}
 	}
 	
+	private String getTimeSinceAsString(long time)
+	{
+		long currentTime = System.currentTimeMillis();
+		
+		long milliSince = currentTime - time;
+		
+		long seconds = milliSince/1000;
+		
+		if(seconds < 60)
+		{
+			return seconds+" seconds ago";
+		}
+			
+		long minutes = seconds / 60;
+		
+		if(minutes < 60)
+		{
+			return ""+minutes+" minutes ago";
+		}
+		
+		long hours = minutes /60;
+		
+		if(hours < 24)
+		{
+			return ""+hours+" hours ago";
+		}
+		
+		long days = hours/24;
+		
+		if(days < 7)
+		{
+			return ""+days+" days ago";
+		}
+		
+		long weeks = days/7;
+		
+		if(days < 30)
+		{
+			if(weeks == 1)
+				return "1 week ago";
+			else
+				return ""+weeks+" weeks ago";
+		}
+		
+		long months = days/30;
+		
+		if(months <= 12)
+		{
+			if(months == 1)
+				return "1 month ago";
+			else
+				return ""+months+" months ago";
+		}
+		
+		return " NO WAY YOU MADE IT THIS LONG";
+	}
+	
 	/**
 	 * This Adapter is used to list each comment on the list view in the layout
 	 * @author kyle
@@ -385,8 +456,10 @@ public class SinglePlaceActivity extends BaseActivity {
 		    commentContent.setText(comment.getComment_content());
 		    
 		    final TextView commentUserName = (TextView)convertView.findViewById(R.id.comment_by);
-		    
 		    commentUserName.setText(comment.getCreatedBy().getUsername());
+		    
+		    final TextView commentDateCreated = (TextView)convertView.findViewById(R.id.createdAt);
+		    commentDateCreated.setText(getTimeSinceAsString(comment.getCreatedAt().getTime()));
 		    
 		    final ImageView upvoteButton = (ImageView)convertView.findViewById(R.id.upvote_btn);
 		    final ImageView downvoteButton = (ImageView)convertView.findViewById(R.id.downvote_btn);

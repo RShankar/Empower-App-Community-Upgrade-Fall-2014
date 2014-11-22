@@ -28,16 +28,18 @@
     <string name="signup_textview_text">Sign Up Instead?</string>
     
     
-    <!-- Test Places Layout Text -->
+    <!-- Places Layout Text -->
     <string name="add_place_btn_label">Add Place</string>
     <string name="add_place_name_label">Place Name:</string>
     <string name="add_place_address_label">Address:</string>
-    <string name="add_place_description_label">Description:</string>
+    <string name="add_place_description_label">Description</string>
     <string name="add_place_contact_number_label">Contact Number:</string>
     
     <string name="validate_data_title">Invalid Input</string>
     <string name="validate_data_message">No fields can be empty!</string>
     
+    <string name="add_place_success">Place Saved!</string>
+    <string name="add_place_error">There was an error saving. Please try again later.</string>
     <!--  Place Single Text -->
     <string name="add_comment_label">Comment: </string>
     <string name="add_comment_button_text">Add Comment</string>
@@ -58,5 +60,8 @@
     <string name="refresh_title">Refresh</string>
     <string name="logout">Logout</string>
     <string name="action_add_comment">Add Comment</string>
+    <string name="action_map">Go To Map</string>
+    <string name="action_refresh">Refresh</string>
+    <string name="action_add_place">Add Place</string>
 </resources>
 
