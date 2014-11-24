@@ -1,0 +1,19 @@
+<?xml version="1.0" encoding="utf-8"?>
+<menu xmlns:android="http://schemas.android.com/apk/res/android" >
+	
+    <item android:id="@+id/action_map"
+          android:icon="@drawable/map_button"
+          android:title="@string/action_map"
+          android:showAsAction="ifRoom" 
+          />
+    <item 
+        android:id="@+id/action_refresh"
+        android:icon="@drawable/refresh"
+        android:title="@string/action_refresh"
+        android:showAsAction="ifRoom" />
+    <item
+        android:id="@+id/action_add_place"
+        android:icon="@drawable/add_button"
+        android:title="@string/action_add_place"
+        android:showAsAction="ifRoom" />
+</menu>

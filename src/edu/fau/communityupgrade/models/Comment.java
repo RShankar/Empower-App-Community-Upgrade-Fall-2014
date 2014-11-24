@@ -1,5 +1,7 @@
 package edu.fau.communityupgrade.models;
 
+import java.util.Date;
+
 import android.os.Parcel;
 import android.os.Parcelable;
 
@@ -8,25 +10,26 @@ public class Comment implements Parcelable, Comparable<Comment> {
 	//Used for status of currentUser on comment
 	public enum VoteStatus {NONE,UPVOTE,DOWNVOTE};
 	
-	private final String objectId;
-	private final String comment_content;
-	private final String placeId;
-	private final User createdBy;
-	private final String parentId;
+	private String objectId;
+	private String comment_content;
+	private String placeId;
+	private User createdBy;
+	private String parentId;
 	private double score;
+	private Date createdAt;
 	
-	private final Vote userVote;
+	private Vote userVote;
 	
 	
 	public Comment(String objectId, String comment_content, String placeId,
-			User createdBy, String parentId,double score, final Vote uVote) {
+			User createdBy, String parentId,double score, Date created, final Vote uVote) {
 		
 		this.objectId = objectId;
 		this.comment_content = comment_content;
 		this.placeId = placeId;
 		this.createdBy = createdBy;
 		this.parentId = parentId;
-		
+		this.createdAt = created;
 		if(uVote == null){
 			this.userVote = new Vote(createdBy.getObjectId(),this.objectId);
 		}
@@ -36,8 +39,24 @@ public class Comment implements Parcelable, Comparable<Comment> {
 		}
 		this.score = score;
 	}
+	
+	protected Comment()
+	{
+		this.objectId = null;
+		this.comment_content = null;
+		this.placeId = null;
+		this.createdBy = null;
+		this.parentId = null;
+		this.createdAt = null;
+			this.userVote = null;
+		this.score = 0;
+	}
   
-
+	public Date getCreatedAt()
+	{
+		return this.createdAt;
+	}
+	
 	public double getScore() {
 		return score;
 	}
@@ -98,6 +117,7 @@ public class Comment implements Parcelable, Comparable<Comment> {
 		dest.writeString(parentId);
 		dest.writeString(placeId);
 		dest.writeDouble(score);
+		dest.writeLong(createdAt.getTime());
 		dest.writeParcelable(createdBy, 0);
 		dest.writeParcelable(userVote, 0);
 	}
@@ -110,6 +130,7 @@ public class Comment implements Parcelable, Comparable<Comment> {
 		parentId = in.readString();
 		placeId = in.readString();
 		score = in.readDouble();
+		createdAt = new Date(in.readLong());
 		createdBy = in.readParcelable(User.class.getClassLoader());
 		userVote = in.readParcelable(Vote.class.getClassLoader());
 	}
@@ -143,4 +164,35 @@ public class Comment implements Parcelable, Comparable<Comment> {
 	public int compareTo(Comment another) {
 		return this.getObjectId().compareTo(another.getObjectId());
 	}
+
+	protected void setObjectId(String objectId) {
+		this.objectId = objectId;
+	}
+
+	protected void setComment_content(String comment_content) {
+		this.comment_content = comment_content;
+	}
+
+	protected void setPlaceId(String placeId) {
+		this.placeId = placeId;
+	}
+
+	protected void setCreatedBy(User createdBy) {
+		this.createdBy = createdBy;
+	}
+
+	protected void setParentId(String parentId) {
+		this.parentId = parentId;
+	}
+
+	protected void setCreatedAt(Date createdAt) {
+		this.createdAt = createdAt;
+	}
+
+	protected void setUserVote(Vote userVote) {
+		this.userVote = userVote;
+	}
+	
+	
+	
 }

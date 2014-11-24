@@ -1,35 +1,39 @@
 package edu.fau.communityupgrade.models;
 
 import java.util.ArrayList;
+import java.util.Date;
 
 import android.os.Parcel;
 import android.os.Parcelable;
 
 public class Place implements Parcelable {
 
-	private final String objectId;
+	private String objectId;
 	
-	private final double latitude, longitude;
+	private double latitude, longitude;
 	
-	private final String name;
+	private String name;
 	
-	private final User createdBy;
+	private User createdBy;
 	
-	private final String description;
+	private String description;
 	
-	private final String address;
+	private String address;
 	
-	private final String contactNumber;
+	private String contactNumber;
 	
-	private final ArrayList<Comment> comments;
+	private ArrayList<Comment> comments;
 	
-	public Place(final String objectId,final String name, User user, String description, String cNumber, String address, double latitude, double longitude, final ArrayList<Comment> comments)
+	private Date createdAt;
+	
+	public Place(final String objectId,final String name, User user, String description, String cNumber, String address, Date cAt, double latitude, double longitude, final ArrayList<Comment> comments)
 	{
 		this.objectId = objectId;
 		this.name = name;
 		this.createdBy = user;
 		this.latitude = latitude;
 		this.longitude = longitude;
+		createdAt = cAt;
 		if(comments == null)
 		{
 			this.comments = new ArrayList<Comment>();
@@ -44,6 +48,20 @@ public class Place implements Parcelable {
 		contactNumber = cNumber;
 	}
 
+	protected Place()
+	{
+		this.objectId = null;
+		this.name = null;
+		this.createdBy = null;
+		this.latitude = 0;
+		this.longitude = 0;
+			this.comments = new ArrayList<Comment>();
+		
+		this.description = null;
+		this.address = null;
+		contactNumber = null;
+	}
+	
 	public String getObjectId() {
 		return objectId;
 	}
@@ -53,6 +71,10 @@ public class Place implements Parcelable {
 		return address;
 	}
 
+	public String getDescription()
+	{
+		return this.description;
+	}
 
 	public String getContactName() {
 		return description;
@@ -94,6 +116,43 @@ public class Place implements Parcelable {
 		comments.addAll(c);
 	}
 	
+	protected void setObjectId(String objectId) {
+		this.objectId = objectId;
+	}
+
+	protected void setLatitude(double latitude) {
+		this.latitude = latitude;
+	}
+
+	protected void setLongitude(double longitude) {
+		this.longitude = longitude;
+	}
+
+	protected void setName(String name) {
+		this.name = name;
+	}
+
+	protected void setCreatedBy(User createdBy) {
+		this.createdBy = createdBy;
+	}
+
+	protected void setDescription(String description) {
+		this.description = description;
+	}
+
+	protected void setAddress(String address) {
+		this.address = address;
+	}
+
+	protected void setContactNumber(String contactNumber) {
+		this.contactNumber = contactNumber;
+	}
+
+	protected void setCreatedAt(Date createdAt) {
+		this.createdAt = createdAt;
+	}
+
+	
 	public String toString()
 	{
 		String toString = "";
@@ -133,6 +192,7 @@ public class Place implements Parcelable {
 		dest.writeDouble(latitude);
 		dest.writeDouble(longitude);
 		dest.writeList(comments);
+		dest.writeLong(createdAt.getTime());
 		dest.writeParcelable(createdBy, 0);
 		
 	}
@@ -155,6 +215,7 @@ public class Place implements Parcelable {
 			comments.addAll(d);
 		}
 		
+		Date createdAt = new Date(in.readLong());
 		createdBy = in.readParcelable(User.class.getClassLoader());
 	}
 	

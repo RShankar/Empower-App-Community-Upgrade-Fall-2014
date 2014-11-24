@@ -1,16 +1,20 @@
 package edu.fau.communityupgrade.helper;
 
+import java.util.Date;
+
+import android.util.Log;
+
 import com.parse.ParseGeoPoint;
 import com.parse.ParseObject;
-import com.parse.ParseQuery;
-import com.parse.ParseRelation;
 import com.parse.ParseUser;
 
 import edu.fau.communityupgrade.database.CommentManager;
 import edu.fau.communityupgrade.database.PlaceManager;
 import edu.fau.communityupgrade.database.UserManager;
 import edu.fau.communityupgrade.models.Comment;
+import edu.fau.communityupgrade.models.CommentBuilder;
 import edu.fau.communityupgrade.models.Place;
+import edu.fau.communityupgrade.models.PlaceBuilder;
 import edu.fau.communityupgrade.models.User;
 import edu.fau.communityupgrade.models.Vote;
 
@@ -35,6 +39,17 @@ public class ParseHelper {
 		User user = new User(parseUser.getString(UserManager.USERNAME),
 				parseUser.getObjectId());	
 		return user;
+	}
+	
+	public static Vote parseObjectToVote(final ParseObject parseObject, String commentId, String userId)
+	{
+		if(parseObject != null)
+		{
+			return parseObjectToVote(parseObject);
+		}
+		
+		return new Vote(userId,commentId);
+		
 	}
 	
 	public static Vote parseObjectToVote(final ParseObject parseObject)
@@ -65,6 +80,7 @@ public class ParseHelper {
 		String objectId = parseObject.getObjectId();
 		String comment_content = parseObject.getString(CommentManager.COMMENT_CONTENT);
 		String placeId = parseObject.getParseObject(CommentManager.PLACE_ID).getObjectId();
+		Date createdAt = parseObject.getCreatedAt();
 		double score = parseObject.getDouble(CommentManager.SCORE);
 		User createdBy = null;
 		
@@ -82,9 +98,19 @@ public class ParseHelper {
 		
 		
 		
-		Vote vote = parseObjectToVote(voteStatusObject);
+		Vote vote = parseObjectToVote(voteStatusObject,objectId,user.getObjectId());
 		
-		Comment comment = new Comment(objectId,comment_content,placeId,createdBy,parentId,score,vote);
+		//Comment comment = new Comment(objectId,comment_content,placeId,createdBy,parentId,score,vote);
+		Comment comment = new CommentBuilder()
+						.setObjectId(objectId)
+						.setContent(comment_content)
+						.setPlaceId(placeId)
+						.setCreatedBy(createdBy)
+						.setCreatedAt(createdAt)
+						.setParentId(parentId)
+						.setScore(score)
+						.setUserVote(vote)
+						.build();
 		return comment;
 	}
 	
@@ -105,11 +131,21 @@ public class ParseHelper {
 		String cNumber = parseObject.getString(PlaceManager.CONTACT_NUMBER);
 		String objectId = parseObject.getObjectId();
 		ParseGeoPoint point = parseObject.getParseGeoPoint(PlaceManager.LOCATION);
-		
+		Date createdAt = parseObject.getCreatedAt();
 		
 		//Create Place
-		Place place = new Place(objectId,name,user,description,cNumber,address,point.getLatitude(),point.getLongitude(),null);
-		
+		//Place place = new Place(objectId,name,user,description,cNumber,address,point.getLatitude(),point.getLongitude(),null);
+		Place place = new PlaceBuilder()
+						.setObjectId(objectId)
+						.setName(name)
+						.setCreatedAt(createdAt)
+						.setCreatedBy(user)
+						.setDescription(description)
+						.setAddress(address)
+						.setLatitude(point.getLatitude())
+						.setLongitude(point.getLongitude())
+						.setContactNumber(cNumber)
+						.build();
 		return place;
 	}
 	

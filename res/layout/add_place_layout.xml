@@ -1,0 +1,88 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:padding="5dp"
+    android:orientation="vertical" >
+    <TableLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="vertical"
+        android:stretchColumns="1"
+        android:id="@+id/add_place"
+        >
+        <!-- Place Name -->
+        <TableRow
+            android:layout_marginTop="10dp"
+            android:layout_marginBottom="10dp">
+		    <TextView
+		        android:labelFor="@+id/add_place_name" 
+		        android:text="@string/add_place_name_label"
+		        style="@style/DefaultLabel"
+		        />
+	    
+		    <EditText
+		        android:id="@+id/add_place_name"
+		        style="@style/DefaultInput"/>
+	    </TableRow>
+	    <TableRow android:layout_marginTop="10dp"
+            android:layout_marginBottom="10dp">
+		    <TextView
+		        android:labelFor="@+id/add_place_address" 
+		        android:text="@string/add_place_address_label"
+		        style="@style/DefaultLabel"
+		        />
+		    <EditText
+		        android:id="@+id/add_place_address"
+		        style="@style/DefaultInput"/>
+	    </TableRow>
+	     <TableRow 
+	        android:layout_marginTop="10dp"
+            android:layout_marginBottom="10dp">
+		    <TextView
+		        android:labelFor="@+id/add_place_contact_number" 
+		        android:text="@string/add_place_contact_number_label"
+		        style="@style/DefaultLabel"
+		        />
+		    <EditText
+		        android:id="@+id/add_place_contact_number"
+		        style="@style/DefaultInput"/>
+	    </TableRow>
+	    
+	    <!-- Place Description -->
+	    <TableRow android:layout_marginTop="10dp"
+            >
+		    <TextView
+		        android:labelFor="@+id/add_place_description" 
+		        android:text="@string/add_place_description_label"
+		        style="@style/DefaultLabel"
+		        />
+	    </TableRow>
+	    <TableRow android:layout_marginBottom="10dp">
+		    <EditText
+		        android:id="@+id/add_place_description"
+		        style="@style/DefaultInput"
+		        android:inputType="textMultiLine"
+			    android:lines="8" 
+			    android:gravity="top|left"
+			    android:layout_height="wrap_content" 
+			    android:layout_width="fill_parent"
+			    android:layout_span="2"
+			    android:scrollbars="vertical" 
+			    />
+	    </TableRow>
+	    
+	   
+	    <TableRow
+	        android:layout_marginTop="10dp"
+            android:layout_marginBottom="10dp">
+		    <Button
+		        style="@style/DefaultButton"
+		        android:id="@+id/add_place_btn"
+		        android:layout_span="2"
+		        android:text="@string/add_place_btn_label" />
+	    </TableRow>
+    </TableLayout>
+    
+
+</LinearLayout>

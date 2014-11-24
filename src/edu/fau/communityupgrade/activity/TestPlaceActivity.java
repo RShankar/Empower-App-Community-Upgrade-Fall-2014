@@ -283,8 +283,8 @@ public class TestPlaceActivity extends BaseActivity {
 			String description = placeDescription.getText().toString();
 			String contactNum = placeContactPhone.getText().toString();
 			SaveDialog.show();
-			placeManager.SavePlaceFromUserLocation(new Place(null,name,null,description,contactNum,address, 0, 0,null), 
-					new PlaceSaveCallback());
+			//placeManager.SavePlaceFromUserLocation(new Place(null,name,null,description,contactNum,address, 0, 0,null), 
+			//		new PlaceSaveCallback());
 		}
 	}
 /*	

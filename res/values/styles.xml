@@ -36,16 +36,20 @@
     <style name="DefaultButton">
         <item name="android:layout_width">match_parent</item>
         <item name="android:layout_height">wrap_content</item>
-        <item name="android:textColor">#7f7f7f</item>
+        <item name="android:textColor">@color/basic_button_text</item>
         <item name="android:textSize">20sp</item>
         <item name="android:typeface">monospace</item>
-        <item name="android:background">#d7d7d7</item>
+        <item name="android:background">@color/basic_button_bg</item>
         <item name="android:paddingTop">3dp</item>
     </style>
     <style name="DefaultInput">
         <item name="android:layout_width">wrap_content</item>
         <item name="android:layout_height">wrap_content</item>
         <item name="android:inputType">text</item>
+        <item name="android:padding">5dp</item>
+        <item name="android:background">#ffffff</item>
+        <item name="android:shadowColor">#000000</item>
+        <item name="android:layout_marginLeft">7dp</item>
     </style>
     
     <style name="CommentText">
@@ -61,6 +65,11 @@
     <style name="DefaultCommentUserName">
         <item name="android:textColor">#6c6c6c</item>
         <item name="android:textStyle">bold</item>
+    </style>
+    
+    <style name="DefaultCreatedAt">
+        <item name="android:textColor">#a4a4a4</item>
+        <item name="android:layout_marginLeft">5dp</item>
     </style>
     
     <style name="DefaultCommentContent">
