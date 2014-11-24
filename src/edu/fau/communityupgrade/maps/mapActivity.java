@@ -19,10 +19,14 @@ package edu.fau.communityupgrade.maps;
 import java.util.ArrayList;
 
 import android.content.Context;
+import android.content.Intent;
 import android.location.Location;
 import android.location.LocationManager;
 import android.os.Bundle;
+import android.util.Log;
 import android.view.View;
+import android.view.View.OnClickListener;
+import android.widget.TextView;
 import android.widget.Toast;
 
 import com.google.android.gms.common.ConnectionResult;
@@ -35,13 +39,17 @@ import com.google.android.gms.location.LocationServices;
 import com.google.android.gms.maps.CameraUpdate;
 import com.google.android.gms.maps.CameraUpdateFactory;
 import com.google.android.gms.maps.GoogleMap;
+import com.google.android.gms.maps.GoogleMap.OnMarkerClickListener;
 import com.google.android.gms.maps.GoogleMap.OnMyLocationButtonClickListener;
 import com.google.android.gms.maps.SupportMapFragment;
 import com.google.android.gms.maps.model.LatLng;
+import com.google.android.gms.maps.model.Marker;
 import com.google.android.gms.maps.model.MarkerOptions;
 
 import edu.fau.communityupgrade.R;
 import edu.fau.communityupgrade.activity.BaseActivity;
+import edu.fau.communityupgrade.activity.SinglePlaceActivity;
+import edu.fau.communityupgrade.activity.TestPlaceActivity;
 import edu.fau.communityupgrade.callback.DefaultFindCallback;
 import edu.fau.communityupgrade.database.PlaceManager;
 import edu.fau.communityupgrade.models.Place;
@@ -57,6 +65,7 @@ public class mapActivity extends BaseActivity
 		implements
 		ConnectionCallbacks,
 		OnConnectionFailedListener,
+		OnMarkerClickListener,
 		LocationListener,
 		OnMyLocationButtonClickListener, android.location.LocationListener{
     /**
@@ -67,21 +76,26 @@ public class mapActivity extends BaseActivity
     private GoogleApiClient mGoogleApiClient;
    // private TextView mMessageView;
     
-    
+    //Setting the marker displays
+    private TextView mMarkerInfoTitle;
+    private TextView mMarkerDescription;
+    private TextView mMarkerCreator;
     //LocationManager test
     private LocationManager locationManager;
     private PlaceManager placeManager;
     private ArrayList<Place> places;
     private LoadingDialog loadingDialog;
     
-    private static final long MIN_TIME = 400;
-    private static final float MIN_DISTANCE = 1000;
+    //private static final long MIN_TIME = 1000; //test changed to 4,000 from 400
+    //private static final float MIN_DISTANCE = 1000;
+    
+    private static final String TAG = "mapActivity";
     
     // These settings are the same as the settings for the map. They will in fact give you updates
     // at the maximal rates currently possible.
     private static final LocationRequest REQUEST = LocationRequest.create()
-            .setInterval(5000)         // 5 seconds
-            .setFastestInterval(16)    // 16ms = 60fps
+            .setInterval(50000)         // 50,000 = 50 seconds
+            .setFastestInterval(25000)    // 25,000 means 25 secs for each location update
             .setPriority(LocationRequest.PRIORITY_HIGH_ACCURACY);
     
     @Override
@@ -89,13 +103,64 @@ public class mapActivity extends BaseActivity
     	getActionBar().setHomeButtonEnabled(true);
         super.onCreate(savedInstanceState);
         setContentView(R.layout.map_layout);
+        
+        //setting the views for the marker display
+        mMarkerInfoTitle = (TextView) findViewById(R.id.marker_info_title);
+        mMarkerDescription = (TextView) findViewById(R.id.marker_description);
+        mMarkerCreator = (TextView) findViewById(R.id.marker_id);
+        
+        mMarkerInfoTitle.setOnClickListener(new OnClickListener(){
+			@Override
+			public void onClick(View v) {
+
+				Log.d(TAG,"mark_info_title: test");
+				
+				/*Get current Place
+				Place place;
+				place.
+				this.objectId = objectId;
+				this.name = name;
+				this.createdBy = user;
+				this.latitude = latitude;
+				this.longitude = longitude;
+				*/
+
+				
+				//Intent to start next activity
+				Intent intent = new Intent(mapActivity.this,SinglePlaceActivity.class);
+				for(int i=0;i<places.size();i++)
+		    	{
+					Log.d(TAG,"mark_info_title: test INSIDE LOOP");
+					Place place = places.get(i);
+					Log.d(TAG,"mark_info_title place ID = " + place.getObjectId() + "; Marker = " + mMarkerCreator.getText());
+					LatLng latLng = new LatLng(place.getLatitude(),place.getLongitude());
+					if( place.getName().equals(mMarkerInfoTitle.getText().toString()) && 
+							latLng.toString().equals(mMarkerCreator.getText().toString()) )
+					{
+						Log.d(TAG,"mark_info_title: test INSIDE LOOP - IF!");
+						//bundle to hold current Place
+						Bundle mBundle = new Bundle();  
+				        mBundle.putParcelable(SinglePlaceActivity.PLACE_OBJECT_EXTRA_KEY, place);  
+						intent.putExtras(mBundle);
+						startActivity(intent);
+					}
+
+		    	}
+				
+	
+			}		
+		});
+        
+        
         setUpMapIfNeeded();
         placeManager = new PlaceManager(this);
         loadingDialog = new LoadingDialog(this);
         
-        //Variables for LocationManager Test
+        //Variables for LocationManager Test locationManager is currently needed but
+        //maybe because others are calling it when it isn't initialized
         locationManager = (LocationManager) getSystemService(Context.LOCATION_SERVICE);
-        locationManager.requestLocationUpdates(LocationManager.NETWORK_PROVIDER, MIN_TIME, MIN_DISTANCE, this); //You can also use LocationManager.GPS_PROVIDER and LocationManager.PASSIVE_PROVIDER
+        //locationManager.requestLocationUpdates(LocationManager.NETWORK_PROVIDER, MIN_TIME, MIN_DISTANCE, this); //You can also use LocationManager.GPS_PROVIDER and LocationManager.PASSIVE_PROVIDER
+        locationManager.requestSingleUpdate(LocationManager.NETWORK_PROVIDER, this, null);
     }
 
     @Override
@@ -104,7 +169,7 @@ public class mapActivity extends BaseActivity
         setUpMapIfNeeded();
         setUpGoogleApiClientIfNeeded();
         mGoogleApiClient.connect();
-        
+        findViewById(R.id.marker_title).setVisibility(View.INVISIBLE);
         loadingDialog.show();
         placeManager.getAllPlacesNearUser(50.0, new DefaultFindCallback<Place>(){
 
@@ -113,6 +178,7 @@ public class mapActivity extends BaseActivity
 				loadingDialog.dismiss();
 				places = list;
 				setMarkers();
+				
 			}
 
 			@Override
@@ -125,10 +191,7 @@ public class mapActivity extends BaseActivity
 			public void onError(String error) {
 				// TODO Auto-generated method stub
 				
-			}
-        	
-        	
-        	
+			}       	
         });
     }
     
@@ -140,7 +203,7 @@ public class mapActivity extends BaseActivity
     		LatLng lt = new LatLng(place.getLatitude(),place.getLongitude());
     		mMap.addMarker(new MarkerOptions().position(lt)
     				.title(place.getName())
-    				.snippet(place.getName()+", created by: "+place.getCreatedBy().getUsername())
+    				.snippet(place.getAddress()+", created by: "+place.getCreatedBy().getUsername())
     				);
     	}
     	
@@ -172,8 +235,7 @@ public class mapActivity extends BaseActivity
                 //setUpMap(); replaced by the following
                 mMap.setMyLocationEnabled(true);
                 mMap.setOnMyLocationButtonClickListener(this);
-               // mMap.animateCamera(LocationServices.FusedLocationApi.getLastLocation(mGoogleApiClient));
-               // mMap.moveCamera(CameraUpdateFactory.newLatLngZoom(new LatLng(-33.87365, 151.20689), 10));
+                mMap.setOnMarkerClickListener(this);
             }
         }
     }
@@ -266,6 +328,7 @@ public class mapActivity extends BaseActivity
     //New test for camera update
     @Override
     public void onLocationChanged(Location location) {
+    	Log.d(TAG,"onLocationChanged every 5 sec?");
         LatLng latLng = new LatLng(location.getLatitude(), location.getLongitude());
         CameraUpdate cameraUpdate = CameraUpdateFactory.newLatLngZoom(latLng, 10);
         mMap.animateCamera(cameraUpdate);
@@ -281,7 +344,18 @@ public class mapActivity extends BaseActivity
     @Override
     public void onProviderDisabled(String provider) { }
     
-    
+    @Override
+    public boolean onMarkerClick(final Marker marker) {
+    	findViewById(R.id.marker_title).setVisibility(View.VISIBLE);
+    	
+    	//Once a marker has been clicked a Display pops up
+    	//This fill the displays
+    	mMarkerInfoTitle.setText(marker.getTitle());
+    	mMarkerDescription.setText(marker.getSnippet());
+    	mMarkerCreator.setText(marker.getPosition().toString());
+		return false;
+    	
+    }
 
 }
 
