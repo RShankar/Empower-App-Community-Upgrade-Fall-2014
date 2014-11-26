@@ -65,6 +65,7 @@ public class CommentManager {
 		preferenceManager.clearrAllCommentsSavedTimes();
 		userManager = UserManager.getInstance();
 		cacheManager = CacheManager.getInstance();
+		setVotesForUser();
 		/*cacheOfCommentsByParentId = new HashMap<String,ArrayList<Comment>>();
 		cacheOfCommentsByPlaceId = new HashMap<String, ArrayList<Comment>>();
 		cacheOfParseObjectsById = new HashMap<String,ParseObject>();
@@ -90,7 +91,6 @@ public class CommentManager {
 		}
 		ParseQuery<ParseObject> query = ParseQuery.getQuery(TABLE);
 		query.whereEqualTo(OBJECT_ID, objectId);
-		setVotesForUser();
 		query.getFirstInBackground(new GetCallback<ParseObject>(){
 
 			@Override
@@ -192,9 +192,7 @@ public class CommentManager {
 	 */
 	public void getChildComments(final Comment comment, final DefaultFindCallback<Comment> callback)
 	{
-		
 		setVotesForUser();
-		
 		final CommentFindCallback commentCallback = new CommentFindCallback(callback);
 		
 		if(cacheManager.hasCommentChildObjects(comment.getObjectId()))
@@ -202,7 +200,6 @@ public class CommentManager {
 			commentCallback.done(cacheManager.getCommentChildObjects(comment.getObjectId()), null);
 			return;
 		}
-		
 		
 		ParseQuery<ParseObject> parentQuery = new ParseQuery<ParseObject>(TABLE);
 		//Log.d(TAG,"getChildComments: "+comment.toString());
@@ -262,6 +259,7 @@ public class CommentManager {
 					saveObject.put(VOTE_COMMENT_ID, commentObject);
 					saveObject.put(VOTE_IS_UPVOTE, isUpvote);
 					saveObject.saveEventually(new SaveCallback(){
+
 						@Override
 						public void done(ParseException arg0) {
 							cacheManager.addVoteParseObject(saveObject);
@@ -407,7 +405,7 @@ public class CommentManager {
 		cacheManager.removeVoteParseObject(object);
 		if(object != null)
 		{
-			object.deleteEventually();
+			object.deleteInBackground();
 			return;
 		}
 		
@@ -424,7 +422,7 @@ public class CommentManager {
 				}
 				else if(parseObject != null)
 				{
-					parseObject.deleteEventually();
+					parseObject.deleteInBackground();
 				}
 			}
 			
@@ -436,7 +434,6 @@ public class CommentManager {
 	private void setVotesForUser()
 	{	
 		ParseUser currentUser = userManager.getParseUser();
-		
 		ParseQuery<ParseObject> votesQuery = new ParseQuery<ParseObject>(VOTE_TABLE);
 		votesQuery.whereEqualTo(VOTE_USER_ID, currentUser);
 		votesQuery.include(VOTE_COMMENT_ID);
@@ -527,7 +524,8 @@ public class CommentManager {
 			for(int i=0;i<list.size();i++)
 			{
 				ParseObject VoteObject = cacheManager.getVoteByCommentId(list.get(i).getObjectId());
-				cacheManager.addCommentParseObject(list.get(i), VoteObject);
+				Log.d(TAG,"voteObject for:"+list.get(i).getObjectId());
+				cacheManager.addCommentParseObject(list.get(i), null);
 				Comment comment = ParseHelper.parseObjectToComment(list.get(i),VoteObject);
 				comments.add(comment);
 				

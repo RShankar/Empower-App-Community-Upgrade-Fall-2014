@@ -45,6 +45,7 @@ public class ParseHelper {
 	{
 		if(parseObject != null)
 		{
+			Log.d(TAG,"parsEObjectToVote");
 			return parseObjectToVote(parseObject);
 		}
 		

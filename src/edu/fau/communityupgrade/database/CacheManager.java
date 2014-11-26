@@ -130,7 +130,7 @@ public class CacheManager {
 		}
 		
 		this.parseObjectById.remove(parseObject.getObjectId());
-		this.voteStatusIdByCommentId.remove(parseObject.getString(CommentManager.VOTE_COMMENT_ID));
+		this.voteStatusIdByCommentId.remove(parseObject.getParseObject(CommentManager.VOTE_COMMENT_ID).getObjectId());
 	}
 	
 	public void addVoteParseObject(final ParseObject parseObject)
@@ -146,7 +146,7 @@ public class CacheManager {
 		}
 		
 		parseObjectById.put(parseObject.getObjectId(), parseObject);
-		voteStatusIdByCommentId.put(parseObject.getString(CommentManager.VOTE_COMMENT_ID), parseObject.getObjectId());
+		voteStatusIdByCommentId.put(parseObject.getParseObject(CommentManager.VOTE_COMMENT_ID).getObjectId(), parseObject.getObjectId());
 		
 	}
 	
