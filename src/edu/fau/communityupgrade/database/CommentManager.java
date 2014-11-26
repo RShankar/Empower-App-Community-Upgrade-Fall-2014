@@ -192,6 +192,7 @@ public class CommentManager {
 	 */
 	public void getChildComments(final Comment comment, final DefaultFindCallback<Comment> callback)
 	{
+		
 		setVotesForUser();
 		
 		final CommentFindCallback commentCallback = new CommentFindCallback(callback);
@@ -261,7 +262,6 @@ public class CommentManager {
 					saveObject.put(VOTE_COMMENT_ID, commentObject);
 					saveObject.put(VOTE_IS_UPVOTE, isUpvote);
 					saveObject.saveEventually(new SaveCallback(){
-
 						@Override
 						public void done(ParseException arg0) {
 							cacheManager.addVoteParseObject(saveObject);
@@ -527,8 +527,7 @@ public class CommentManager {
 			for(int i=0;i<list.size();i++)
 			{
 				ParseObject VoteObject = cacheManager.getVoteByCommentId(list.get(i).getObjectId());
-
-				cacheManager.addCommentParseObject(list.get(i), null);
+				cacheManager.addCommentParseObject(list.get(i), VoteObject);
 				Comment comment = ParseHelper.parseObjectToComment(list.get(i),VoteObject);
 				comments.add(comment);
 				

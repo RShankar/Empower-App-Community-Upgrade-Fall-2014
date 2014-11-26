@@ -114,9 +114,10 @@ public class mapActivity extends BaseActivity
     
     @Override
     public void onCreate(Bundle savedInstanceState) {
-    	getActionBar().setHomeButtonEnabled(true);
         super.onCreate(savedInstanceState);
         setContentView(R.layout.map_layout);
+        
+        getActionBar().setTitle(R.string.action_bar_title_map);
         
         //setting the views for the marker display
         mMarkerInfoTitle = (TextView) findViewById(R.id.marker_info_title);
@@ -203,6 +204,9 @@ public class mapActivity extends BaseActivity
 	
 	@Override
 	public boolean onOptionsItemSelected(MenuItem item) {
+		
+		Log.d(TAG,getResources().getResourceEntryName(item.getItemId()));
+		
 	    // Handle presses on the action bar items
 	    switch (item.getItemId()) {
 	        case R.id.action_list:
@@ -217,6 +221,10 @@ public class mapActivity extends BaseActivity
 	        	Intent addPlaceIntent = new Intent(this,AddPlaceActivity.class);
 	        	startActivity(addPlaceIntent);
 	        	return true;
+	        case R.id.action_logout:
+	        	Log.d(TAG,"LOGOUT");
+	        	logout();
+	            return true;
 	        default:
 	            return super.onOptionsItemSelected(item);
 	    }

@@ -69,7 +69,6 @@ public class CacheManager {
 	 */
 	public List<ParseObject> getCommentsByPlaceId(final String id)
 	{
-		
 		HashSet<String> ids = commentIdsByPlaceId.get(id);
 		
 		if(ids == null)
@@ -138,8 +137,12 @@ public class CacheManager {
 	{
 		if(parseObject == null)
 		{
-			//Log.e(TAG,"addVoteParseObject: Invalid Object");
+			Log.e(TAG,"addVoteParseObject: Invalid Object");
 			return;
+		}
+		else
+		{
+			Log.d(TAG,"addVoteParseObject:"+parseObject.getObjectId());
 		}
 		
 		parseObjectById.put(parseObject.getObjectId(), parseObject);
@@ -189,12 +192,7 @@ public class CacheManager {
 		
 		parseObjectById.put(commentObject.getObjectId(), commentObject);
 		
-		if(!this.commentIdsByPlaceId.containsKey(placeId))
-		{
-			Log.d(TAG,"Adding placeId HashSet: "+placeId);
-			commentIdsByPlaceId.put(placeId, new HashSet<String>());
-		}
-		commentIdsByPlaceId.get(placeId).add(commentObject.getObjectId());
+		
 		
 		if(commentObject.has(CommentManager.PARENT_ID))
 		{
@@ -203,6 +201,17 @@ public class CacheManager {
 			if(!this.commentIdsByParentId.containsKey(parentId))
 				this.commentIdsByParentId.put(parentId, new HashSet<String>());
 			this.commentIdsByParentId.get(parentId).add(commentObject.getObjectId());
+		}
+		else
+		{
+			if(!this.commentIdsByPlaceId.containsKey(placeId))
+			{
+				Log.d(TAG,"Adding placeId HashSet: "+placeId);
+				commentIdsByPlaceId.put(placeId, new HashSet<String>());
+			}
+			
+			commentIdsByPlaceId.get(placeId).add(commentObject.getObjectId());
+			
 		}
 		
 		addVoteParseObject(voteObject);

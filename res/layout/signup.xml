@@ -4,22 +4,68 @@
     android:layout_height="match_parent"
     android:orientation="vertical" >
     
-    <EditText
+    <TableLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:inputType="text"
-        android:id="@+id/signup_username"
-        />
-    <EditText
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:inputType="textPassword"
-        android:id="@+id/signup_password"
-		/>
+        android:orientation="vertical"
+        android:stretchColumns="1"
+        android:id="@+id/add_place"
+        >
     
-    <Button
+        <TableRow
+            android:layout_margin="10dp">
+        
+         	<TextView 
+		        android:layout_width="wrap_content"
+		        android:layout_height="wrap_content"
+		        android:id="@+id/signup_username_label"
+		        android:text="Username: "
+		        style="@style/DefaultLabel"/>
+		    <EditText
+		        android:layout_width="match_parent"
+		        android:layout_height="wrap_content"
+		        android:inputType="text"
+		        style="@style/DefaultInput"
+		        android:id="@+id/signup_username"
+		        />
+	    </TableRow>
+        
+        <TableRow
+            android:layout_margin="10dp">
+	        <TextView 
+			        android:layout_width="wrap_content"
+			        android:layout_height="wrap_content"
+			        android:id="@+id/signup_password_label"
+			        android:text="Password: "
+			        style="@style/DefaultLabel"/>
+		    <EditText
+		        android:layout_width="match_parent"
+		        android:layout_height="wrap_content"
+		        style="@style/DefaultInput"
+		        android:inputType="textPassword"
+		        android:id="@+id/signup_password"
+				/>
+	    </TableRow>
+	    
+        <TableRow
+            android:layout_margin="10dp">
+		    <Button
+		        android:layout_width="match_parent"
+		        android:layout_height="wrap_content"
+		        android:text="@string/signup_btn_text"
+		        style="@style/DefaultButton"
+		        android:layout_span="2"
+		        android:id="@+id/signup_button" />
+    	</TableRow>
+	    
+    
+    </TableLayout>
+    
+    <TextView 
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:text="@string/signup_btn_text"
-        android:id="@+id/signup_button" />
+        android:gravity="center"
+        android:textColor="#0000FF"
+        android:id="@+id/signup_to_login_page"
+        android:text="@string/login_textview_text" />
 </LinearLayout>

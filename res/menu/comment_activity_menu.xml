@@ -6,4 +6,9 @@
           android:title="@string/action_add_comment"
           android:showAsAction="ifRoom" 
           />
+    <item 
+        android:id="@+id/action_logout"
+        android:icon="@drawable/logout_button"
+        android:title="@string/action_logout"
+        android:showAsAction="ifRoom" />
 </menu>

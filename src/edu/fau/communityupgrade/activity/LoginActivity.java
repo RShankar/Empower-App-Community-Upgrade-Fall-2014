@@ -90,7 +90,9 @@ public class LoginActivity extends Activity {
 	
 	private void GoToMainPage()
 	{
-		Intent intent = new Intent(LoginActivity.this,TestPlaceActivity.class);
+		String packageName = this.getPackageName();
+		Intent intent = this.getPackageManager().getLaunchIntentForPackage(packageName);
+		
 		startActivity(intent);
 	}
 	

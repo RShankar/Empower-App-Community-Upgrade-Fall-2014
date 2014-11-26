@@ -52,6 +52,7 @@ public class ListPlaceActivity extends BaseActivity {
 		RADIUS_IN_MILES = getResources().getInteger(R.integer.radius_in_miles);
 		COLOR_SELECTED_PLACE = getResources().getColor(R.color.selected_item);
 		
+		getActionBar().setTitle(R.string.action_bar_title_list);
 		
 		placeManager = new PlaceManager(this);
 		loadingDialog = new LoadingDialog(this);
@@ -100,6 +101,9 @@ public class ListPlaceActivity extends BaseActivity {
 	        	placeManager.clearCache();
 	        	updateList();
 	        	return true;
+	        case R.id.action_logout:
+	        	logout();
+	            return true;
 	        case R.id.action_add_place:
 	        	Intent addPlaceIntent = new Intent(this,AddPlaceActivity.class);
 	        	startActivity(addPlaceIntent);

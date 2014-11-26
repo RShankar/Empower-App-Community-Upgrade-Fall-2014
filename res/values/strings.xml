@@ -6,6 +6,12 @@
     <string name="client_key">EN8CwyUYZ9HmRRQ10zxWS2lZIrq1j7DpQSeq5YNX</string>
     
     
+    <!-- Action Bar Titles -->
+    <string name="action_bar_title_signup">Sign Up</string>
+    <string name="action_bar_title_login">Log In</string>
+    <string name="action_bar_title_map">@string/app_name</string>
+    <string name="action_bar_title_single_place">Comments for </string>
+    <string name="action_bar_title_list">Places Near Me</string>
     <string name="app_name">Community Upgrade</string>
     <string name="hello_world">Hello world!</string>
     <string name="action_settings">Settings</string>
@@ -25,7 +31,10 @@
     
     <!-- Login Layout Text -->
     <string name="login_btn_text">Log In</string>
+    <string name="login_username_label">Username:</string>
+    <string name="login_password_label">Password:</string>
     <string name="signup_textview_text">Sign Up Instead?</string>
+    <string name="login_textview_text">Log In Instead?</string>
     
     
     <!-- Places Layout Text -->
@@ -65,5 +74,6 @@
     <string name="action_list">List View</string>
     <string name="action_refresh">Refresh</string>
     <string name="action_add_place">Add Place</string>
+    <string name="action_logout">Logout</string>
 </resources>
 

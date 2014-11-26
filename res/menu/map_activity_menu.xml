@@ -1,9 +1,9 @@
 <?xml version="1.0" encoding="utf-8"?>
 <menu xmlns:android="http://schemas.android.com/apk/res/android" >
 	
-    <item android:id="@+id/action_map"
-          android:icon="@drawable/map_button"
-          android:title="@string/action_map"
+    <item android:id="@+id/action_list"
+          android:icon="@drawable/list_button"
+          android:title="@string/action_list"
           android:showAsAction="ifRoom" 
           />
     <item 
@@ -20,5 +20,5 @@
         android:id="@+id/action_logout"
         android:icon="@drawable/logout_button"
         android:title="@string/action_logout"
-        android:showAsAction="ifRoom"/>
+        android:showAsAction="ifRoom" />
 </menu>

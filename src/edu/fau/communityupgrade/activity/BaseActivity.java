@@ -6,6 +6,7 @@ import android.os.Bundle;
 import android.support.v4.app.FragmentActivity;
 import android.util.Log;
 import android.view.MenuItem;
+import edu.fau.communityupgrade.R;
 import edu.fau.communityupgrade.auth.Auth;
 import edu.fau.communityupgrade.callback.AuthCallback;
 
@@ -28,6 +29,7 @@ public class BaseActivity extends FragmentActivity {
 	{
 		super.onCreate(bundle);
 		actionBar = getActionBar();
+		actionBar.setLogo( R.drawable.icon );
 		actionBar.setHomeButtonEnabled(true);
 		auth = new Auth(this);
 		if(firstRun || auth.isUserAuthenticationExpired()){
@@ -46,7 +48,6 @@ public class BaseActivity extends FragmentActivity {
 	{
 		auth.logout();
 		Intent intent = new Intent(getApplicationContext(), LoginActivity.class);
-		finish();
 		startActivity(intent);
 	}
 	

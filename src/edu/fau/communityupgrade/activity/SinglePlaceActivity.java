@@ -72,6 +72,8 @@ public class SinglePlaceActivity extends BaseActivity {
 	{
 		super.onCreate(savedInstance);
 		setContentView(R.layout.place_single_layout);
+		
+		
 		currentPlace = (Place)getIntent().getParcelableExtra(PLACE_OBJECT_EXTRA_KEY);
 		commentManager = new CommentManager(this);
 		selectedCommentView = null;
@@ -83,6 +85,8 @@ public class SinglePlaceActivity extends BaseActivity {
 			Log.e(TAG,"Place is Null. Exiting Activity");
 			this.finish();
 		}
+		
+		getActionBar().setTitle(currentPlace.getName());
 
 		//Initialize Loading Dialog
 		savingDialog = new LoadingDialog(this,"Saving Comment","Saving Comment.");
@@ -121,6 +125,9 @@ public class SinglePlaceActivity extends BaseActivity {
 	    switch (item.getItemId()) {
 	        case R.id.action_add_comment:
 	        	addComment();
+	            return true;
+	        case R.id.action_logout:
+	        	logout();
 	            return true;
 	        case R.id.action_settings:
 	            return true;
