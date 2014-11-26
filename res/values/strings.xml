@@ -52,15 +52,17 @@
     
     <!-- Errors -->
     <string name="error_no_provider_title">No Provider Available.</string>
-    <string name="error_no_provider_message">No Provider Available. Have you turned on location access?</string>
-    
+    <string name="error_no_provider_message">No Provider Available. Turn on Location Access?</string>
+    <string name="go_to_location_settings">Turn On Location Access</string>
+    <string name="close_app">Close App</string>
     <!-- Dialog Strings -->
     <string name="dialog_saving_title">Saving</string>
     <string name="dialog_saving_message">Your information is being saved.</string>
     <string name="refresh_title">Refresh</string>
     <string name="logout">Logout</string>
     <string name="action_add_comment">Add Comment</string>
-    <string name="action_map">Go To Map</string>
+    <string name="action_map">Map View</string>
+    <string name="action_list">List View</string>
     <string name="action_refresh">Refresh</string>
     <string name="action_add_place">Add Place</string>
 </resources>

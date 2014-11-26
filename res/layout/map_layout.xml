@@ -25,39 +25,26 @@
 	        android:padding="5dp"
 	        android:visibility="visible" >
 
-	        <EditText
+	        <TextView
 	            android:id="@+id/marker_info_title"
+	            style="@style/DefaultTitle"
 	            android:layout_width="match_parent"
 	            android:layout_height="wrap_content"
-	            android:ems="10"
-	            android:focusable="false"
-	            android:focusableInTouchMode="false"
 	            android:inputType="none" >
+	        </TextView>
 
-	            <requestFocus />
-	        </EditText>
-
-	        <EditText
+	        <TextView
+	            android:id="@+id/marker_number_comments"
+	            style="@style/DefaultCommentUserName"
+	            android:layout_width="match_parent"
+	            android:layout_height="wrap_content"
+            />
+	        
+	        <TextView
 	            android:id="@+id/marker_description"
 	            android:layout_width="match_parent"
 	            android:layout_height="wrap_content"
-	            android:layout_weight="0.50"
-	            android:ems="10"
-	            android:focusable="false"
-	            android:focusableInTouchMode="false"
-	            android:inputType="textMultiLine" />
-
-	        <EditText
-	            android:id="@+id/marker_id"
-	            android:layout_width="match_parent"
-	            android:layout_height="wrap_content"
-	            android:layout_gravity="bottom|right"
-	            android:ems="10"
-	            android:focusable="false"
-	            android:focusableInTouchMode="false"
-	            android:inputType="none" />
-
-"
+	            android:layout_weight="0.50"/>
 	    </LinearLayout>
 
 	</FrameLayout>

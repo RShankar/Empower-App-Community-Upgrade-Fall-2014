@@ -17,13 +17,21 @@
 package edu.fau.communityupgrade.maps;
 
 import java.util.ArrayList;
+import java.util.HashMap;
 
+import android.app.AlertDialog;
+import android.app.AlertDialog.Builder;
 import android.content.Context;
+import android.content.DialogInterface;
 import android.content.Intent;
 import android.location.Location;
 import android.location.LocationManager;
 import android.os.Bundle;
+import android.provider.Settings;
 import android.util.Log;
+import android.view.Menu;
+import android.view.MenuInflater;
+import android.view.MenuItem;
 import android.view.View;
 import android.view.View.OnClickListener;
 import android.widget.TextView;
@@ -42,14 +50,16 @@ import com.google.android.gms.maps.GoogleMap;
 import com.google.android.gms.maps.GoogleMap.OnMarkerClickListener;
 import com.google.android.gms.maps.GoogleMap.OnMyLocationButtonClickListener;
 import com.google.android.gms.maps.SupportMapFragment;
+import com.google.android.gms.maps.model.BitmapDescriptorFactory;
 import com.google.android.gms.maps.model.LatLng;
 import com.google.android.gms.maps.model.Marker;
 import com.google.android.gms.maps.model.MarkerOptions;
 
 import edu.fau.communityupgrade.R;
+import edu.fau.communityupgrade.activity.AddPlaceActivity;
 import edu.fau.communityupgrade.activity.BaseActivity;
+import edu.fau.communityupgrade.activity.ListPlaceActivity;
 import edu.fau.communityupgrade.activity.SinglePlaceActivity;
-import edu.fau.communityupgrade.activity.TestPlaceActivity;
 import edu.fau.communityupgrade.callback.DefaultFindCallback;
 import edu.fau.communityupgrade.database.PlaceManager;
 import edu.fau.communityupgrade.models.Place;
@@ -79,12 +89,16 @@ public class mapActivity extends BaseActivity
     //Setting the marker displays
     private TextView mMarkerInfoTitle;
     private TextView mMarkerDescription;
-    private TextView mMarkerCreator;
+    private TextView mMarkerNumberComments;
+    
     //LocationManager test
     private LocationManager locationManager;
     private PlaceManager placeManager;
     private ArrayList<Place> places;
     private LoadingDialog loadingDialog;
+    
+    //Keeps reference of Markers to Place
+    private HashMap<LatLng,Place> markerLocationToPlace;
     
     //private static final long MIN_TIME = 1000; //test changed to 4,000 from 400
     //private static final float MIN_DISTANCE = 1000;
@@ -107,49 +121,8 @@ public class mapActivity extends BaseActivity
         //setting the views for the marker display
         mMarkerInfoTitle = (TextView) findViewById(R.id.marker_info_title);
         mMarkerDescription = (TextView) findViewById(R.id.marker_description);
-        mMarkerCreator = (TextView) findViewById(R.id.marker_id);
-        
-        mMarkerInfoTitle.setOnClickListener(new OnClickListener(){
-			@Override
-			public void onClick(View v) {
-
-				Log.d(TAG,"mark_info_title: test");
-				
-				/*Get current Place
-				Place place;
-				place.
-				this.objectId = objectId;
-				this.name = name;
-				this.createdBy = user;
-				this.latitude = latitude;
-				this.longitude = longitude;
-				*/
-
-				
-				//Intent to start next activity
-				Intent intent = new Intent(mapActivity.this,SinglePlaceActivity.class);
-				for(int i=0;i<places.size();i++)
-		    	{
-					Log.d(TAG,"mark_info_title: test INSIDE LOOP");
-					Place place = places.get(i);
-					Log.d(TAG,"mark_info_title place ID = " + place.getObjectId() + "; Marker = " + mMarkerCreator.getText());
-					LatLng latLng = new LatLng(place.getLatitude(),place.getLongitude());
-					if( place.getName().equals(mMarkerInfoTitle.getText().toString()) && 
-							latLng.toString().equals(mMarkerCreator.getText().toString()) )
-					{
-						Log.d(TAG,"mark_info_title: test INSIDE LOOP - IF!");
-						//bundle to hold current Place
-						Bundle mBundle = new Bundle();  
-				        mBundle.putParcelable(SinglePlaceActivity.PLACE_OBJECT_EXTRA_KEY, place);  
-						intent.putExtras(mBundle);
-						startActivity(intent);
-					}
-
-		    	}
-				
-	
-			}		
-		});
+        mMarkerNumberComments = (TextView)findViewById(R.id.marker_number_comments);
+        markerLocationToPlace = new HashMap<LatLng,Place>();
         
         
         setUpMapIfNeeded();
@@ -170,8 +143,13 @@ public class mapActivity extends BaseActivity
         setUpGoogleApiClientIfNeeded();
         mGoogleApiClient.connect();
         findViewById(R.id.marker_title).setVisibility(View.INVISIBLE);
-        loadingDialog.show();
-        placeManager.getAllPlacesNearUser(50.0, new DefaultFindCallback<Place>(){
+        updateList();
+        
+    }
+    
+    private void updateList(){
+    	loadingDialog.show();
+    	placeManager.getAllPlacesNearUser(50.0, new DefaultFindCallback<Place>(){
 
 			@Override
 			public void onComplete(ArrayList<Place> list) {
@@ -183,7 +161,27 @@ public class mapActivity extends BaseActivity
 
 			@Override
 			public void onProviderNotAvailable() {
-				// TODO Auto-generated method stub
+				loadingDialog.dismiss();
+				Builder alert = new AlertDialog.Builder(mapActivity.this);
+				alert.setTitle(getString(R.string.error_no_provider_title));
+				alert.setMessage(getString(R.string.error_no_provider_message));
+				alert.setPositiveButton(getString(R.string.go_to_location_settings),new DialogInterface.OnClickListener(){
+
+					@Override
+					public void onClick(DialogInterface dialog, int which) {
+						Intent intent = new Intent(Settings.ACTION_LOCATION_SOURCE_SETTINGS);
+						startActivity(intent);
+					}
+				});
+				alert.setNegativeButton(getString(R.string.close_app), new DialogInterface.OnClickListener() {
+					
+					@Override
+					public void onClick(DialogInterface dialog, int which) {
+						finish();
+					}
+				});
+				
+				alert.show(); 
 				
 			}
 
@@ -195,18 +193,49 @@ public class mapActivity extends BaseActivity
         });
     }
     
+    @Override
+	public boolean onCreateOptionsMenu(Menu menu) {
+	    // Inflate the menu items for use in the action bar
+	    MenuInflater inflater = getMenuInflater();
+	    inflater.inflate(R.menu.map_activity_menu, menu);
+	    return super.onCreateOptionsMenu(menu);
+	}
+	
+	@Override
+	public boolean onOptionsItemSelected(MenuItem item) {
+	    // Handle presses on the action bar items
+	    switch (item.getItemId()) {
+	        case R.id.action_list:
+	        	Intent intent = new Intent(this,ListPlaceActivity.class);
+	        	startActivity(intent);
+	            return true;
+	        case R.id.action_refresh:
+	        	placeManager.clearCache();
+	        	updateList();
+	        	return true;
+	        case R.id.action_add_place:
+	        	Intent addPlaceIntent = new Intent(this,AddPlaceActivity.class);
+	        	startActivity(addPlaceIntent);
+	        	return true;
+	        default:
+	            return super.onOptionsItemSelected(item);
+	    }
+	}
+    
     public void setMarkers()
     {
+    	mMap.clear();
     	for(int i=0;i<places.size();i++)
     	{
     		Place place = places.get(i);
     		LatLng lt = new LatLng(place.getLatitude(),place.getLongitude());
+    		markerLocationToPlace.put(lt, place);
     		mMap.addMarker(new MarkerOptions().position(lt)
     				.title(place.getName())
-    				.snippet(place.getAddress()+", created by: "+place.getCreatedBy().getUsername())
-    				);
+    				.snippet(place.getDescription()+", created by: "+place.getCreatedBy().getUsername())
+    				)
+                    .setIcon(BitmapDescriptorFactory.fromResource(R.drawable.map_marker));
     	}
-    	
     }
 
     /**
@@ -319,7 +348,7 @@ public class mapActivity extends BaseActivity
     
     @Override
     public boolean onMyLocationButtonClick() {
-        Toast.makeText(this, "MyLocation button clicked", Toast.LENGTH_SHORT).show();
+        //Toast.makeText(this, "MyLocation button clicked", Toast.LENGTH_SHORT).show();
         // Return false so that we don't consume the event and the default behavior still occurs
         // (the camera animates to the user's current position).
         return false;
@@ -328,7 +357,7 @@ public class mapActivity extends BaseActivity
     //New test for camera update
     @Override
     public void onLocationChanged(Location location) {
-    	Log.d(TAG,"onLocationChanged every 5 sec?");
+    	//Log.d(TAG,"onLocationChanged every 5 sec?");
         LatLng latLng = new LatLng(location.getLatitude(), location.getLongitude());
         CameraUpdate cameraUpdate = CameraUpdateFactory.newLatLngZoom(latLng, 10);
         mMap.animateCamera(cameraUpdate);
@@ -348,11 +377,31 @@ public class mapActivity extends BaseActivity
     public boolean onMarkerClick(final Marker marker) {
     	findViewById(R.id.marker_title).setVisibility(View.VISIBLE);
     	
+    	final Place place = this.markerLocationToPlace.get(marker.getPosition());
+    	
     	//Once a marker has been clicked a Display pops up
     	//This fill the displays
-    	mMarkerInfoTitle.setText(marker.getTitle());
-    	mMarkerDescription.setText(marker.getSnippet());
-    	mMarkerCreator.setText(marker.getPosition().toString());
+    	mMarkerInfoTitle.setText(place.getName());
+    	
+    	OnClickListener listener = new OnClickListener(){
+
+			@Override
+			public void onClick(View v) {
+				
+				Intent intent = new Intent(mapActivity.this,SinglePlaceActivity.class);
+				Log.d(TAG,"mark_info_title: test INSIDE LOOP - IF!");
+				//bundle to hold current Place
+				Bundle mBundle = new Bundle();  
+		        mBundle.putParcelable(SinglePlaceActivity.PLACE_OBJECT_EXTRA_KEY, place);  
+				intent.putExtras(mBundle);
+				startActivity(intent);
+			}
+    	};
+    	
+    	mMarkerInfoTitle.setOnClickListener(listener);
+    	mMarkerNumberComments.setOnClickListener(listener);
+    	mMarkerNumberComments.setText(place.getComments().size()+" comments");
+    	mMarkerDescription.setText(place.getDescription());
 		return false;
     	
     }

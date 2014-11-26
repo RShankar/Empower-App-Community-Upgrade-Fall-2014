@@ -5,9 +5,11 @@ import java.util.ArrayList;
 
 import android.app.AlertDialog;
 import android.app.AlertDialog.Builder;
+import android.content.DialogInterface;
 import android.content.Intent;
 import android.graphics.Color;
 import android.os.Bundle;
+import android.provider.Settings;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.Menu;
@@ -59,13 +61,14 @@ public class ListPlaceActivity extends BaseActivity {
 		placeListView = (ListView)findViewById(R.id.place_list_view);
 		placeListView.setAdapter(placeAdapter);
 		placeListView.setOnItemClickListener(new PlaceClickListener());
-		updateList();
+		
 	}
 	
 	@Override
 	public void onResume()
 	{
 		super.onResume();
+		updateList();
 	}
 	
 	
@@ -213,7 +216,26 @@ public class ListPlaceActivity extends BaseActivity {
 			Builder alert = new AlertDialog.Builder(ListPlaceActivity.this);
 			alert.setTitle(getString(R.string.error_no_provider_title));
 			alert.setMessage(getString(R.string.error_no_provider_message));
-			alert.setPositiveButton(getString(R.string.default_confirmation),null);
+			alert.setPositiveButton(getString(R.string.go_to_location_settings),new DialogInterface.OnClickListener(){
+
+				@Override
+				public void onClick(DialogInterface dialog, int which) {
+					
+					Intent intent = new Intent(Settings.ACTION_LOCATION_SOURCE_SETTINGS);
+					startActivity(intent);
+				}
+
+				
+			});
+			alert.setNegativeButton(getString(R.string.close_app), new DialogInterface.OnClickListener() {
+				
+				@Override
+				public void onClick(DialogInterface dialog, int which) {
+					finish();
+					
+				}
+			});
+			
 			alert.show(); 
 			
 		}
