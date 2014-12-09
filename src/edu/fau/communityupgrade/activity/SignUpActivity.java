@@ -9,6 +9,7 @@ import android.view.View;
 import android.view.View.OnClickListener;
 import android.widget.Button;
 import android.widget.EditText;
+import android.widget.TextView;
 import android.widget.Toast;
 import edu.fau.communityupgrade.R;
 import edu.fau.communityupgrade.callback.UserSignUpCallback;
@@ -20,6 +21,7 @@ public class SignUpActivity extends Activity {
 
 	private EditText username;
 	private EditText password;
+	private TextView toLoginPage;
 	private UserManager mUserManager;
 	private Button signupBtn;
 	private LoadingDialog mProgressDialog;
@@ -36,10 +38,22 @@ public class SignUpActivity extends Activity {
 		
 		username = (EditText)findViewById(R.id.signup_username);
 		password = (EditText)findViewById(R.id.signup_password);
+		toLoginPage = (TextView)findViewById(R.id.signup_to_login_page);
 		signupBtn = (Button)findViewById(R.id.signup_button);
 		mUserManager = UserManager.getInstance();
 		signupBtn.setOnClickListener(new SignUpListener());
 		mProgressDialog = new LoadingDialog(this);
+		
+		toLoginPage.setOnClickListener(new OnClickListener(){
+
+			@Override
+			public void onClick(View v) {
+				finish();
+				
+			}
+			
+			
+		});
 	}
 	
 	@Override

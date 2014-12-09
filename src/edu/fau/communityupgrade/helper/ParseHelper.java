@@ -45,7 +45,7 @@ public class ParseHelper {
 	{
 		if(parseObject != null)
 		{
-			Log.d(TAG,"parsEObjectToVote");
+			Log.d(TAG,"ParseObjectToVote");
 			return parseObjectToVote(parseObject);
 		}
 		
@@ -124,7 +124,6 @@ public class ParseHelper {
 	{
 		ParseUser parseUser = parseObject.getParseUser(PlaceManager.CREATED_BY);
 		User user = parseUserToUser(parseUser);
-		
 		
 		String name = parseObject.getString(PlaceManager.NAME); 
 		String description = parseObject.getString(PlaceManager.DESCRIPTION);

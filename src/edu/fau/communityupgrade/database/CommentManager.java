@@ -197,14 +197,17 @@ public class CommentManager {
 		
 		if(cacheManager.hasCommentChildObjects(comment.getObjectId()))
 		{
-			commentCallback.done(cacheManager.getCommentChildObjects(comment.getObjectId()), null);
+			List<ParseObject> objects = cacheManager.getCommentChildObjects(comment.getObjectId());
+			
+			Log.d(TAG,"Children: "+objects.toString());
+			commentCallback.done(objects, null);
 			return;
 		}
 		
 		ParseQuery<ParseObject> parentQuery = new ParseQuery<ParseObject>(TABLE);
-		//Log.d(TAG,"getChildComments: "+comment.toString());
+		Log.d(TAG,"getChildComments: "+comment.toString());
 		parentQuery.whereEqualTo(OBJECT_ID, comment.getObjectId());
-		parentQuery.fromLocalDatastore();
+		//parentQuery.fromLocalDatastore();
 		parentQuery.getFirstInBackground(new GetCallback<ParseObject>(){
 			@Override
 			public void done(ParseObject parent, ParseException e) {

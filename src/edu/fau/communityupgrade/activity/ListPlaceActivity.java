@@ -7,8 +7,10 @@ import android.app.AlertDialog;
 import android.app.AlertDialog.Builder;
 import android.content.DialogInterface;
 import android.content.Intent;
+import android.content.SharedPreferences;
 import android.graphics.Color;
 import android.os.Bundle;
+import android.preference.PreferenceManager;
 import android.provider.Settings;
 import android.util.Log;
 import android.view.LayoutInflater;
@@ -42,14 +44,16 @@ public class ListPlaceActivity extends BaseActivity {
 	
 	private ListView placeListView;
 	private PlaceAdapter placeAdapter;
-	private int RADIUS_IN_MILES;
+	private int RADIUS;
+	private SharedPreferences preferences;
 	
 	@Override
 	public void onCreate(Bundle savedInstance)
 	{
 		super.onCreate(savedInstance);
+		preferences = PreferenceManager.getDefaultSharedPreferences(getApplicationContext());
 		setContentView(R.layout.place_list_layout);
-		RADIUS_IN_MILES = getResources().getInteger(R.integer.radius_in_miles);
+		RADIUS = preferences.getInt(RADIUS_IN_MILES, RADIUS_IN_MILES_DEFAULT);
 		COLOR_SELECTED_PLACE = getResources().getColor(R.color.selected_item);
 		
 		getActionBar().setTitle(R.string.action_bar_title_list);
@@ -76,7 +80,7 @@ public class ListPlaceActivity extends BaseActivity {
 	private void updateList()
 	{
 		loadingDialog.show();
-		placeManager.getAllPlacesNearUser((double)RADIUS_IN_MILES, new PlaceFindCallback());
+		placeManager.getAllPlacesNearUser((double)RADIUS, new PlaceFindCallback());
 	}
 	
 	@Override
@@ -169,13 +173,17 @@ public class ListPlaceActivity extends BaseActivity {
 	       final ImageView goToCommentsView = (ImageView)convertView.findViewById(R.id.go_to_comments);
 	       
 	       
+	       final SharedPreferences preferences = PreferenceManager.getDefaultSharedPreferences(getApplicationContext());
 	       placeNameTextView.setText(place.getName());
+	       
+	       //Update UI From Processing
+	       placeNameTextView.setTextColor(Color.parseColor(preferences.getString(MAIN_COLOR, MAIN_COLOR_DEFAULT)));
+	       
 	       placeDescriptionTextView.setText(place.getDescription());
 	       placeNumberOfCommentsTextView.setText(place.getComments().size()+" comments");
 	       
 	       goToCommentsView.setOnClickListener(new OnClickListener()
 	       {
-
 			@Override
 			public void onClick(View v) {
 				goToSinglePlaceActivity(place);

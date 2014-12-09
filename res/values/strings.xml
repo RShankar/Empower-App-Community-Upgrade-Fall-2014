@@ -41,6 +41,12 @@
     <string name="add_place_btn_label">Add Place</string>
     <string name="add_place_name_label">Place Name:</string>
     <string name="add_place_address_label">Address:</string>
+    <string name="add_place_city_label">City: </string>
+    <string name="add_place_state_label">State: </string>
+    <string name="add_place_zip_label">Zip: </string>
+    
+    <string name="add_place_use_current_location_label">Use Current Location? </string>
+    
     <string name="add_place_description_label">Description</string>
     <string name="add_place_contact_number_label">Contact Number:</string>
     

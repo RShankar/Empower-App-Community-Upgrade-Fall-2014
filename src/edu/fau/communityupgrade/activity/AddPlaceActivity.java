@@ -3,9 +3,13 @@ package edu.fau.communityupgrade.activity;
 import android.app.AlertDialog;
 import android.app.AlertDialog.Builder;
 import android.os.Bundle;
+import android.util.Log;
 import android.view.View;
 import android.view.View.OnClickListener;
 import android.widget.Button;
+import android.widget.CheckBox;
+import android.widget.CompoundButton;
+import android.widget.CompoundButton.OnCheckedChangeListener;
 import android.widget.EditText;
 import android.widget.Toast;
 import edu.fau.communityupgrade.R;
@@ -21,7 +25,13 @@ public class AddPlaceActivity extends BaseActivity {
 	private EditText placeDescriptionText;
 	private EditText placeContactNumberText;
 	private EditText placeAddressText;
+	private EditText placeCityText;
+	private EditText placeStateText;
+	private EditText placeZipText;
+	private CheckBox placeUseLocationCheckbox;
+	
 	private LoadingDialog loadingDialog;
+	
 	
 	private PlaceManager placeManager;
 	private Button addPlaceButton;
@@ -37,6 +47,42 @@ public class AddPlaceActivity extends BaseActivity {
 		placeDescriptionText = (EditText)findViewById(R.id.add_place_description);
 		placeContactNumberText = (EditText)findViewById(R.id.add_place_contact_number);
 		placeAddressText = (EditText)findViewById(R.id.add_place_address);
+		placeCityText = (EditText)findViewById(R.id.add_place_city);
+		placeStateText = (EditText)findViewById(R.id.add_place_state);
+		placeZipText = (EditText)findViewById(R.id.add_place_zip);
+		placeUseLocationCheckbox= (CheckBox)findViewById(R.id.add_place_use_current_location);
+		
+		placeUseLocationCheckbox.setOnCheckedChangeListener(new OnCheckedChangeListener(){
+
+			@Override
+			public void onCheckedChanged(CompoundButton buttonView,
+					boolean isChecked) {
+				if(isChecked)
+				{
+					((View)placeAddressText.getParent()).setVisibility(View.GONE);
+					
+					((View)placeCityText.getParent()).setVisibility(View.GONE);
+					
+					((View)placeStateText.getParent()).setVisibility(View.GONE);
+					
+					((View)placeZipText.getParent()).setVisibility(View.GONE);
+				}
+				else
+				{
+					((View)placeAddressText.getParent()).setVisibility(View.VISIBLE);
+					
+					((View)placeCityText.getParent()).setVisibility(View.VISIBLE);
+					
+					((View)placeStateText.getParent()).setVisibility(View.VISIBLE);
+					
+					((View)placeZipText.getParent()).setVisibility(View.VISIBLE);
+					
+				}
+				
+			}
+			
+		});
+		
 		addPlaceButton = (Button)findViewById(R.id.add_place_btn);
 		loadingDialog = new LoadingDialog(this,getString(R.string.dialog_saving_title),getString(R.string.dialog_saving_message));
 		addPlaceButton.setOnClickListener(new AddPlaceButtonListener());
@@ -47,6 +93,7 @@ public class AddPlaceActivity extends BaseActivity {
 	{
 		super.onResume();
 	}
+	
 	
 	private boolean isInputValid()
 	{
@@ -65,7 +112,6 @@ public class AddPlaceActivity extends BaseActivity {
 		alert.show();
 	}
 	
-	
 	private class AddPlaceButtonListener implements OnClickListener
 	{
 
@@ -80,18 +126,30 @@ public class AddPlaceActivity extends BaseActivity {
 			loadingDialog.show();
 			
 			final String address = placeAddressText.getText().toString();
+			final String city = placeCityText.getText().toString();
+			final String state = placeStateText.getText().toString();
+			final String zip = placeZipText.getText().toString();
+			
 			final String name = placeNameText.getText().toString();
 			final String description = placeDescriptionText.getText().toString();
 			final String contactNumber = placeContactNumberText.getText().toString();
 			
 			Place place = new PlaceBuilder()
-							.setAddress(address)
+							.setAddress(address+" "+city+", "+state+" "+zip)
 							.setName(name)
 							.setDescription(description)
 							.setContactNumber(contactNumber)
 							.build();
 			
-			placeManager.SavePlaceFromUserLocation(place, new SavePlaceCallback());
+			if(!placeUseLocationCheckbox.isChecked())
+			{
+				Log.d("AddPlaceActivity","Saving with address");
+				placeManager.SavePlace(place, new SavePlaceCallback());	
+			}
+			else
+			{
+				placeManager.SavePlaceFromUserLocation(place, new SavePlaceCallback());
+			}
 			
 		}
 		

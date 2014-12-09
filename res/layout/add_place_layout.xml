@@ -1,9 +1,8 @@
 <?xml version="1.0" encoding="utf-8"?>
-<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<ScrollView xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:padding="5dp"
-    android:orientation="vertical" >
+    android:padding="5dp" >
     <TableLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
@@ -25,6 +24,31 @@
 		        android:id="@+id/add_place_name"
 		        style="@style/DefaultInput"/>
 	    </TableRow>
+	    
+	    <TableRow android:layout_marginTop="10dp"
+            android:layout_marginBottom="10dp"
+            android:layout_width="0dp"
+            >
+		    <LinearLayout
+		        android:layout_width="fill_parent"
+		        android:layout_height="wrap_content"
+		        android:layout_span="2"
+		        android:orientation="horizontal">
+			    <CheckBox
+			        android:id="@+id/add_place_use_current_location"
+					android:layout_width="wrap_content"
+					android:layout_height="wrap_content"
+					android:layout_gravity="left"
+					/>
+			    <TextView
+			        android:labelFor="@+id/add_place_use_current_location" 
+			        android:text="@string/add_place_use_current_location_label"
+			        android:layout_gravity="left"
+			        style="@style/DefaultLabel"
+			        />
+		    </LinearLayout>
+	    </TableRow>
+        
 	    <TableRow android:layout_marginTop="10dp"
             android:layout_marginBottom="10dp">
 		    <TextView
@@ -34,6 +58,41 @@
 		        />
 		    <EditText
 		        android:id="@+id/add_place_address"
+		        style="@style/DefaultInput"/>
+	    </TableRow>
+	    <TableRow android:layout_marginTop="10dp"
+            android:layout_marginBottom="10dp">
+		    <TextView
+		        android:labelFor="@+id/add_place_city" 
+		        android:text="@string/add_place_city_label"
+		        style="@style/DefaultLabel"
+		        />
+		    <EditText
+		        android:id="@+id/add_place_city"
+		        style="@style/DefaultInput"/>
+	    </TableRow>
+	    
+	    <TableRow android:layout_marginTop="10dp"
+            android:layout_marginBottom="10dp">
+		    <TextView
+		        android:labelFor="@+id/add_place_state" 
+		        android:text="@string/add_place_state_label"
+		        style="@style/DefaultLabel"
+		        />
+		    <EditText
+		        android:id="@+id/add_place_state"
+		        style="@style/DefaultInput"/>
+	    </TableRow>
+	    
+	    <TableRow android:layout_marginTop="10dp"
+            android:layout_marginBottom="10dp">
+		    <TextView
+		        android:labelFor="@+id/add_place_zip" 
+		        android:text="@string/add_place_zip_label"
+		        style="@style/DefaultLabel"
+		        />
+		    <EditText
+		        android:id="@+id/add_place_zip"
 		        style="@style/DefaultInput"/>
 	    </TableRow>
 	     <TableRow 
@@ -85,4 +144,4 @@
     </TableLayout>
     
 
-</LinearLayout>
+</ScrollView>

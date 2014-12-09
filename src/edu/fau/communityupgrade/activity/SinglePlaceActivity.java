@@ -6,8 +6,10 @@ import java.util.List;
 import android.app.AlertDialog;
 import android.content.Context;
 import android.content.DialogInterface;
+import android.content.SharedPreferences;
 import android.graphics.Color;
 import android.os.Bundle;
+import android.preference.PreferenceManager;
 import android.util.Log;
 import android.view.Gravity;
 import android.view.LayoutInflater;
@@ -96,6 +98,9 @@ public class SinglePlaceActivity extends BaseActivity {
 		commentListView = (ListView)findViewById(R.id.comment_list_view);
 		placeTitle = (TextView)findViewById(R.id.single_place_title);
 		placeTitle.setText(currentPlace.getName());
+		SharedPreferences preferences = PreferenceManager.getDefaultSharedPreferences(getApplicationContext());
+		
+		placeTitle.setTextColor(Color.parseColor(preferences.getString(MAIN_COLOR, MAIN_COLOR_DEFAULT)));
 		
 		placeDescription = (TextView)findViewById(R.id.single_place_description);
 		placeDescription.setText(currentPlace.getDescription());

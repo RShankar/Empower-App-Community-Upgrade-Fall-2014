@@ -24,9 +24,12 @@ import android.app.AlertDialog.Builder;
 import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
+import android.content.SharedPreferences;
+import android.graphics.Color;
 import android.location.Location;
 import android.location.LocationManager;
 import android.os.Bundle;
+import android.preference.PreferenceManager;
 import android.provider.Settings;
 import android.util.Log;
 import android.view.Menu;
@@ -103,6 +106,9 @@ public class mapActivity extends BaseActivity
     //private static final long MIN_TIME = 1000; //test changed to 4,000 from 400
     //private static final float MIN_DISTANCE = 1000;
     
+    private int RADIUS;
+    private SharedPreferences preferences;
+    
     private static final String TAG = "mapActivity";
     
     // These settings are the same as the settings for the map. They will in fact give you updates
@@ -117,10 +123,20 @@ public class mapActivity extends BaseActivity
         super.onCreate(savedInstanceState);
         setContentView(R.layout.map_layout);
         
-        getActionBar().setTitle(R.string.action_bar_title_map);
+        
+        
+        preferences = PreferenceManager.getDefaultSharedPreferences(getApplicationContext());
+        RADIUS = preferences.getInt(RADIUS_IN_MILES, RADIUS_IN_MILES_DEFAULT);
+        String mapTitle = preferences.getString(MAP_PAGE_TITLE,MAP_PAGE_TITLE_DEFAULT);
+        getActionBar().setTitle(mapTitle);
         
         //setting the views for the marker display
         mMarkerInfoTitle = (TextView) findViewById(R.id.marker_info_title);
+        
+        final SharedPreferences preferences = PreferenceManager.getDefaultSharedPreferences(getApplicationContext());
+        
+        mMarkerInfoTitle.setTextColor(Color.parseColor(preferences.getString(MAIN_COLOR,MAIN_COLOR_DEFAULT)));
+        
         mMarkerDescription = (TextView) findViewById(R.id.marker_description);
         mMarkerNumberComments = (TextView)findViewById(R.id.marker_number_comments);
         markerLocationToPlace = new HashMap<LatLng,Place>();
@@ -150,7 +166,7 @@ public class mapActivity extends BaseActivity
     
     private void updateList(){
     	loadingDialog.show();
-    	placeManager.getAllPlacesNearUser(50.0, new DefaultFindCallback<Place>(){
+    	placeManager.getAllPlacesNearUser(RADIUS, new DefaultFindCallback<Place>(){
 
 			@Override
 			public void onComplete(ArrayList<Place> list) {

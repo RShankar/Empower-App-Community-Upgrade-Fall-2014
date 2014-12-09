@@ -1,15 +1,17 @@
 package edu.fau.communityupgrade.database;
 
 import java.util.ArrayList;
-import java.util.Collection;
-import java.util.HashMap;
 import java.util.List;
 
 import android.content.Context;
+import android.location.Address;
+import android.location.Geocoder;
 import android.location.Location;
+import android.os.AsyncTask;
 import android.os.Handler;
 import android.util.Log;
 
+import com.google.android.maps.GeoPoint;
 import com.parse.FindCallback;
 import com.parse.GetCallback;
 import com.parse.ParseException;
@@ -193,6 +195,45 @@ public class PlaceManager {
 		cacheManager.clearCache();
 	}
 	
+	public void SavePlace(final Place place, final DefaultSaveCallback<Place> callback)
+	{
+		final UserManager userManager  = UserManager.getInstance();
+		
+		new AsyncTask<Void,Void,ParseObject>(){
+
+			@Override
+			protected ParseObject doInBackground(Void... params) {
+				final Address location = getLocationFromAddress(place.getAddress());
+				
+				Log.d(TAG,"Address2Location: "+location);
+				ParseGeoPoint point = new ParseGeoPoint();
+				
+				point.setLatitude(location.getLatitude());
+				point.setLongitude(location.getLongitude());
+				
+				ParseObject saveObject = new ParseObject(TABLE);
+				saveObject.put(LOCATION, point);
+				saveObject.put(CREATED_BY, userManager.getParseUser());
+				saveObject.put(NAME, place.getName());
+				saveObject.put(DESCRIPTION, place.getContactName());
+				saveObject.put(ADDRESS, place.getAddress());
+				saveObject.put(CONTACT_NUMBER, place.getContactNumber());
+				
+				return saveObject;
+			}
+			
+			@Override
+			protected void onPostExecute(ParseObject saveObject)
+			{
+				super.onPostExecute(saveObject);
+				saveObject.saveInBackground(new PlaceSaveCallback(callback,saveObject));
+			}
+			
+			
+		}.execute();
+		
+	}
+	
 	/**
 	 * Adds a place based on the users current location
 	 * @param place
@@ -349,6 +390,39 @@ public class PlaceManager {
 			
 		}
 		
+	}
+	
+	/**
+	 * Returns Address with Lat/Long from Address String 
+	 * @param strAddress
+	 * @return
+	 */
+	public Address  getLocationFromAddress(String strAddress){
+
+		Geocoder coder = new Geocoder(mContext);
+		List<Address> address;
+
+		GeoPoint  p1 = null;
+		
+		try {
+		    address = coder.getFromLocationName(strAddress,5);
+		    if (address == null) {
+		        return null;
+		    }
+		    
+		    
+		    Address location = address.get(0);
+		    location.getLatitude();
+		    location.getLongitude();
+		    Log.d(TAG,"ADdress: "+location.toString());
+		    return location;
+		}
+		catch(Exception e)
+		{
+			Log.e(TAG,"Error converting address to location: ",e);
+			return null;
+		}
+	
 	}
 	
 	/**
