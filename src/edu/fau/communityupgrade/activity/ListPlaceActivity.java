@@ -12,6 +12,8 @@ import android.graphics.Color;
 import android.os.Bundle;
 import android.preference.PreferenceManager;
 import android.provider.Settings;
+import android.support.v4.view.MenuItemCompat;
+import android.support.v7.widget.SearchView;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.Menu;
@@ -56,7 +58,7 @@ public class ListPlaceActivity extends BaseActivity {
 		RADIUS = preferences.getInt(RADIUS_IN_MILES, RADIUS_IN_MILES_DEFAULT);
 		COLOR_SELECTED_PLACE = getResources().getColor(R.color.selected_item);
 		
-		getActionBar().setTitle(R.string.action_bar_title_list);
+		getActionBar().setTitle(preferences.getString(LIST_PAGE_TITLE, LIST_PAGE_TITLE_DEFAULT));
 		
 		placeManager = new PlaceManager(this);
 		loadingDialog = new LoadingDialog(this);
@@ -67,6 +69,7 @@ public class ListPlaceActivity extends BaseActivity {
 		placeListView.setAdapter(placeAdapter);
 		placeListView.setOnItemClickListener(new PlaceClickListener());
 		
+
 	}
 	
 	@Override
@@ -166,7 +169,6 @@ public class ListPlaceActivity extends BaseActivity {
 	          convertView = LayoutInflater.from(getContext()).inflate(R.layout.place_list_item_view, parent, false);
 	       }
 	       
-	       
 	       final TextView placeNameTextView = (TextView)convertView.findViewById(R.id.place_name);
 	       final TextView placeDescriptionTextView = (TextView)convertView.findViewById(R.id.place_description);
 	       final TextView placeNumberOfCommentsTextView = (TextView)convertView.findViewById(R.id.place_number_comments);
@@ -178,8 +180,11 @@ public class ListPlaceActivity extends BaseActivity {
 	       
 	       //Update UI From Processing
 	       placeNameTextView.setTextColor(Color.parseColor(preferences.getString(MAIN_COLOR, MAIN_COLOR_DEFAULT)));
+	       placeNameTextView.setTextSize(preferences.getInt(TITLE_TEXT_SIZE,TITLE_TEXT_SIZE_DEFAULT));
 	       
 	       placeDescriptionTextView.setText(place.getDescription());
+	       placeDescriptionTextView.setTextSize(preferences.getInt(DEFAULT_TEXT_SIZE,DEFAULT_TEXT_SIZE_DEFAULT));
+	       
 	       placeNumberOfCommentsTextView.setText(place.getComments().size()+" comments");
 	       
 	       goToCommentsView.setOnClickListener(new OnClickListener()

@@ -67,7 +67,7 @@ public class SinglePlaceActivity extends BaseActivity {
 	private CommentAdapterItem selectedCommentItem;
 	private ArrayList<CommentAdapterItem> commentItemArray;
 	private CommentsAdapter commentsAdapter;
-	
+	private SharedPreferences preferences;
 	
 	@Override
 	public void onCreate(final Bundle savedInstance)
@@ -98,13 +98,14 @@ public class SinglePlaceActivity extends BaseActivity {
 		commentListView = (ListView)findViewById(R.id.comment_list_view);
 		placeTitle = (TextView)findViewById(R.id.single_place_title);
 		placeTitle.setText(currentPlace.getName());
-		SharedPreferences preferences = PreferenceManager.getDefaultSharedPreferences(getApplicationContext());
+		preferences = PreferenceManager.getDefaultSharedPreferences(getApplicationContext());
 		
 		placeTitle.setTextColor(Color.parseColor(preferences.getString(MAIN_COLOR, MAIN_COLOR_DEFAULT)));
+		placeTitle.setTextSize(preferences.getInt(TITLE_TEXT_SIZE, TITLE_TEXT_SIZE_DEFAULT));
 		
 		placeDescription = (TextView)findViewById(R.id.single_place_description);
 		placeDescription.setText(currentPlace.getDescription());
-		
+		placeDescription.setTextSize(preferences.getInt(DEFAULT_TEXT_SIZE, DEFAULT_TEXT_SIZE_DEFAULT));
 		commentItemArray = CommentAdapterItem.commentListToItemList(currentPlace.getComments(),null);
 		commentListView.setOnItemClickListener(new CommentItemClickListener());	
 		
@@ -272,7 +273,7 @@ public class SinglePlaceActivity extends BaseActivity {
 			
 			final ImageView upvoteButton = (ImageView)view.findViewById(R.id.upvote_btn);
 		    final ImageView downvoteButton = (ImageView)view.findViewById(R.id.downvote_btn);
-			final ImageView replyButton = (ImageView)view.findViewById(R.id.comment_reply);
+			final ImageView replyButton = (ImageView)view.findViewById(R.id.comment_reply); 	
 			if(selectedCommentView == view)
 			{
 				selectedCommentView.setBackgroundColor(COLOR_TRANSPARENT);

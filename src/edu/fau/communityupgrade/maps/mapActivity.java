@@ -137,7 +137,12 @@ public class mapActivity extends BaseActivity
         
         mMarkerInfoTitle.setTextColor(Color.parseColor(preferences.getString(MAIN_COLOR,MAIN_COLOR_DEFAULT)));
         
+        mMarkerInfoTitle.setTextSize(preferences.getInt(TITLE_TEXT_SIZE,TITLE_TEXT_SIZE_DEFAULT));
+        
         mMarkerDescription = (TextView) findViewById(R.id.marker_description);
+        
+        mMarkerDescription.setTextSize(preferences.getInt(DEFAULT_TEXT_SIZE,DEFAULT_TEXT_SIZE_DEFAULT));
+        
         mMarkerNumberComments = (TextView)findViewById(R.id.marker_number_comments);
         markerLocationToPlace = new HashMap<LatLng,Place>();
         

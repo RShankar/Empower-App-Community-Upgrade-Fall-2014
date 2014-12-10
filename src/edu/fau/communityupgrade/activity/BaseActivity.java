@@ -31,9 +31,19 @@ public class BaseActivity extends FragmentActivity {
 								APPLICATION_NAME = "APPLICATION_NAME",
 								APPLICATION_NAME_DEFAULT = "Community Upgrade",
 								MAP_PAGE_TITLE = "MAP_PAGE_TITLE",
-								MAP_PAGE_TITLE_DEFAULT = "Places Map";
+								MAP_PAGE_TITLE_DEFAULT = "Places Map",
+								LIST_PAGE_TITLE = "LIST_PAGE_TITLE",
+								LIST_PAGE_TITLE_DEFAULT = "Places Near You",
+								DEFAULT_TEXT_SIZE = "DEFAULT_TEXT_SIZE",
+								TITLE_TEXT_SIZE = "TITLE_TEXT_SIZE",
+								UPVOTE_COLOR = "UPVOTE_COLOR",
+								UPVOTE_COLOR_DEFAULT = "#F24E4E",
+								DOWNVOTE_COLOR = "DOWNVOTE_COLOR",
+								DOWNVOTE_COLOR_DEFAULT = "#F24ECC";
 	
-	protected static final int RADIUS_IN_MILES_DEFAULT = 45;
+	protected static final int RADIUS_IN_MILES_DEFAULT = 45,
+								DEFAULT_TEXT_SIZE_DEFAULT=35,
+								TITLE_TEXT_SIZE_DEFAULT = 35;
 	private ActionBar actionBar;
 	
 	private boolean firstRun = true;
@@ -59,10 +69,21 @@ public class BaseActivity extends FragmentActivity {
 				editor.putString(MAIN_COLOR, mainColor);
 			}
 			
-			
 			if(extras.containsKey(RADIUS_IN_MILES)){
 				int radiusInMiles = extras.getInt(RADIUS_IN_MILES);
 				editor.putInt(RADIUS_IN_MILES, radiusInMiles);
+			}
+			
+			if(extras.containsKey(DEFAULT_TEXT_SIZE))
+			{
+				int size = extras.getInt(DEFAULT_TEXT_SIZE);
+				editor.putInt(DEFAULT_TEXT_SIZE, size);
+			}
+			
+			if(extras.containsKey(TITLE_TEXT_SIZE))
+			{
+				int size = extras.getInt(TITLE_TEXT_SIZE);
+				editor.putInt(TITLE_TEXT_SIZE, size);
 			}
 			
 			if(extras.containsKey(MAP_PAGE_TITLE))

@@ -4,6 +4,8 @@ import android.app.AlertDialog;
 import android.app.AlertDialog.Builder;
 import android.os.Bundle;
 import android.util.Log;
+import android.view.Menu;
+import android.view.MenuInflater;
 import android.view.View;
 import android.view.View.OnClickListener;
 import android.widget.Button;
@@ -87,6 +89,15 @@ public class AddPlaceActivity extends BaseActivity {
 		loadingDialog = new LoadingDialog(this,getString(R.string.dialog_saving_title),getString(R.string.dialog_saving_message));
 		addPlaceButton.setOnClickListener(new AddPlaceButtonListener());
 	}
+	
+	@Override
+	public boolean onCreateOptionsMenu(Menu menu) {
+	    // Inflate the menu items for use in the action bar
+	    MenuInflater inflater = getMenuInflater();
+	    inflater.inflate(R.menu.add_place_menu, menu);
+	    return super.onCreateOptionsMenu(menu);
+	}
+	
 	
 	@Override
 	public void onResume()
