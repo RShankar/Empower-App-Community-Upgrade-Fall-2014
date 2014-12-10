@@ -30,9 +30,6 @@ void setup() {
   titleTextSize = 22;
   defaultTextSize = 15;
 
-  upvoteButtonColor = "#F24E4E";
-  downvoteButtonColor = "#F24ECC";
-
   runApplication();
 }
 

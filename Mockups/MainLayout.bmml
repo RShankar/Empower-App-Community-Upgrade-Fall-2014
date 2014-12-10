@@ -1,0 +1,654 @@
+<mockup version="1.0" skin="sketch" fontFace="Balsamiq Sans" measuredW="2329" measuredH="2705" mockupW="919" mockupH="2659">
+  <controls>
+    <control controlID="9" controlTypeID="com.balsamiq.mockups::Label" x="1504" y="2131" w="-1" h="-1" measuredW="116" measuredH="21" zOrder="0" locked="false" isInGroup="-1">
+      <controlProperties>
+        <text>Comments%20Activity</text>
+      </controlProperties>
+    </control>
+    <control controlID="10" controlTypeID="com.balsamiq.mockups::Label" x="2036" y="2146" w="-1" h="-1" measuredW="71" measuredH="21" zOrder="1" locked="false" isInGroup="-1">
+      <controlProperties>
+        <text>Add%20Places</text>
+      </controlProperties>
+    </control>
+    <control controlID="38" controlTypeID="com.balsamiq.mockups::Arrow" x="1674" y="2278" w="256" h="93" measuredW="150" measuredH="100" zOrder="12" locked="false" isInGroup="-1">
+      <controlProperties>
+        <text>Add%20Place%20Button</text>
+      </controlProperties>
+    </control>
+    <control controlID="94" controlTypeID="__group__" x="1904" y="706" w="282" h="510" measuredW="282" measuredH="510" zOrder="6" locked="false" isInGroup="-1">
+      <groupChildrenDescriptors>
+        <control controlID="0" controlTypeID="com.balsamiq.mockups::iPhone" x="0" y="0" w="-1" h="-1" measuredW="282" measuredH="510" zOrder="0" locked="false" isInGroup="94"/>
+        <control controlID="1" controlTypeID="com.balsamiq.mockups::Button" x="101" y="316" w="-1" h="-1" measuredW="68" measuredH="27" zOrder="1" locked="false" isInGroup="94">
+          <controlProperties>
+            <text>Sign%20Up</text>
+          </controlProperties>
+        </control>
+        <control controlID="2" controlTypeID="com.balsamiq.mockups::TextInput" x="127" y="169" w="-1" h="-1" measuredW="79" measuredH="27" zOrder="2" locked="false" isInGroup="94">
+          <controlProperties>
+            <text/>
+          </controlProperties>
+        </control>
+        <control controlID="3" controlTypeID="com.balsamiq.mockups::TextInput" x="127" y="236" w="-1" h="-1" measuredW="79" measuredH="27" zOrder="3" locked="false" isInGroup="94">
+          <controlProperties>
+            <text/>
+          </controlProperties>
+        </control>
+        <control controlID="4" controlTypeID="com.balsamiq.mockups::Label" x="47" y="172" w="-1" h="-1" measuredW="65" measuredH="21" zOrder="4" locked="false" isInGroup="94">
+          <controlProperties>
+            <text>Username</text>
+          </controlProperties>
+        </control>
+        <control controlID="5" controlTypeID="com.balsamiq.mockups::Label" x="47" y="239" w="-1" h="-1" measuredW="60" measuredH="21" zOrder="5" locked="false" isInGroup="94">
+          <controlProperties>
+            <text>Password</text>
+          </controlProperties>
+        </control>
+        <control controlID="6" controlTypeID="com.balsamiq.mockups::Button" x="23" y="127" w="226" h="27" measuredW="195" measuredH="27" zOrder="6" locked="false" isInGroup="94">
+          <controlProperties>
+            <color>10470904</color>
+            <text>Community%20Upgrade%20-%20Sign%20Up</text>
+          </controlProperties>
+        </control>
+        <control controlID="7" controlTypeID="com.balsamiq.mockups::ButtonBar" x="23" y="99" w="-1" h="-1" measuredW="119" measuredH="29" zOrder="7" locked="false" isInGroup="94">
+          <controlProperties>
+            <text>%3C-%20Back</text>
+          </controlProperties>
+        </control>
+      </groupChildrenDescriptors>
+    </control>
+    <control controlID="95" controlTypeID="__group__" x="1410" y="571" w="282" h="510" measuredW="282" measuredH="510" zOrder="5" locked="false" isInGroup="-1">
+      <groupChildrenDescriptors>
+        <control controlID="0" controlTypeID="com.balsamiq.mockups::iPhone" x="0" y="0" w="-1" h="-1" measuredW="282" measuredH="510" zOrder="0" locked="false" isInGroup="95"/>
+        <control controlID="1" controlTypeID="com.balsamiq.mockups::Button" x="29" y="99" w="226" h="27" measuredW="181" measuredH="27" zOrder="1" locked="false" isInGroup="95">
+          <controlProperties>
+            <color>10470904</color>
+            <text>Community%20Upgrade%20-%20Login</text>
+          </controlProperties>
+        </control>
+        <control controlID="2" controlTypeID="__group__" x="51" y="141" w="159" h="210" measuredW="159" measuredH="210" zOrder="2" locked="false" isInGroup="95">
+          <groupChildrenDescriptors>
+            <control controlID="0" controlTypeID="com.balsamiq.mockups::Button" x="54" y="147" w="-1" h="-1" measuredW="58" measuredH="27" zOrder="0" locked="false" isInGroup="2">
+              <controlProperties>
+                <text>Log%20in</text>
+              </controlProperties>
+            </control>
+            <control controlID="1" controlTypeID="com.balsamiq.mockups::TextInput" x="80" y="0" w="-1" h="-1" measuredW="79" measuredH="27" zOrder="1" locked="false" isInGroup="2">
+              <controlProperties>
+                <text/>
+              </controlProperties>
+            </control>
+            <control controlID="2" controlTypeID="com.balsamiq.mockups::TextInput" x="80" y="67" w="-1" h="-1" measuredW="79" measuredH="27" zOrder="2" locked="false" isInGroup="2">
+              <controlProperties>
+                <text/>
+              </controlProperties>
+            </control>
+            <control controlID="3" controlTypeID="com.balsamiq.mockups::Label" x="0" y="3" w="-1" h="-1" measuredW="65" measuredH="21" zOrder="3" locked="false" isInGroup="2">
+              <controlProperties>
+                <text>Username</text>
+              </controlProperties>
+            </control>
+            <control controlID="4" controlTypeID="com.balsamiq.mockups::Label" x="0" y="70" w="-1" h="-1" measuredW="60" measuredH="21" zOrder="4" locked="false" isInGroup="2">
+              <controlProperties>
+                <text>Password</text>
+              </controlProperties>
+            </control>
+            <control controlID="5" controlTypeID="com.balsamiq.mockups::Link" x="54" y="189" w="-1" h="-1" measuredW="48" measuredH="21" zOrder="5" locked="false" isInGroup="2">
+              <controlProperties>
+                <text>Sign%20Up</text>
+              </controlProperties>
+            </control>
+          </groupChildrenDescriptors>
+        </control>
+      </groupChildrenDescriptors>
+    </control>
+    <control controlID="97" controlTypeID="__group__" x="1928" y="2195" w="282" h="510" measuredW="282" measuredH="510" zOrder="2" locked="false" isInGroup="-1">
+      <groupChildrenDescriptors>
+        <control controlID="0" controlTypeID="com.balsamiq.mockups::iPhone" x="0" y="0" w="-1" h="-1" measuredW="282" measuredH="510" zOrder="0" locked="false" isInGroup="97"/>
+        <control controlID="1" controlTypeID="com.balsamiq.mockups::ButtonBar" x="27" y="100" w="-1" h="-1" measuredW="119" measuredH="29" zOrder="1" locked="false" isInGroup="97">
+          <controlProperties>
+            <text>%3C-%20Back</text>
+          </controlProperties>
+        </control>
+        <control controlID="2" controlTypeID="com.balsamiq.mockups::Button" x="27" y="127" w="221" h="27" measuredW="82" measuredH="27" zOrder="2" locked="false" isInGroup="97">
+          <controlProperties>
+            <color>10470904</color>
+            <text>Add%20Place</text>
+          </controlProperties>
+        </control>
+        <control controlID="3" controlTypeID="com.balsamiq.mockups::Button" x="34" y="214" w="214" h="27" measuredW="123" measuredH="27" zOrder="3" locked="false" isInGroup="97">
+          <controlProperties>
+            <align>left</align>
+            <text>Address%20of%20Place</text>
+          </controlProperties>
+        </control>
+        <control controlID="4" controlTypeID="com.balsamiq.mockups::Button" x="99" y="389" w="84" h="29" measuredW="82" measuredH="27" zOrder="4" locked="false" isInGroup="97">
+          <controlProperties>
+            <text>Add%20Place</text>
+          </controlProperties>
+        </control>
+        <control controlID="5" controlTypeID="com.balsamiq.mockups::TextInput" x="37" y="179" w="211" h="-1" measuredW="100" measuredH="27" zOrder="5" locked="false" isInGroup="97">
+          <controlProperties>
+            <text>Name%20of%20Place</text>
+          </controlProperties>
+        </control>
+        <control controlID="6" controlTypeID="com.balsamiq.mockups::TextInput" x="34" y="249" w="211" h="-1" measuredW="169" measuredH="27" zOrder="6" locked="false" isInGroup="97">
+          <controlProperties>
+            <text>Phone%20Number%20to%20call%20Place</text>
+          </controlProperties>
+        </control>
+        <control controlID="7" controlTypeID="com.balsamiq.mockups::TextArea" x="34" y="282" w="214" h="98" measuredW="200" measuredH="140" zOrder="7" locked="false" isInGroup="97">
+          <controlProperties>
+            <text>Description%20of%20Place...</text>
+          </controlProperties>
+        </control>
+      </groupChildrenDescriptors>
+    </control>
+    <control controlID="98" controlTypeID="__group__" x="1418" y="2167" w="282" h="510" measuredW="282" measuredH="510" zOrder="4" locked="false" isInGroup="-1">
+      <groupChildrenDescriptors>
+        <control controlID="0" controlTypeID="com.balsamiq.mockups::iPhone" x="0" y="0" w="-1" h="-1" measuredW="282" measuredH="510" zOrder="0" locked="false" isInGroup="98"/>
+        <control controlID="1" controlTypeID="com.balsamiq.mockups::ButtonBar" x="27" y="99" w="-1" h="-1" measuredW="119" measuredH="29" zOrder="1" locked="false" isInGroup="98">
+          <controlProperties>
+            <text>%3C-%20Back</text>
+          </controlProperties>
+        </control>
+        <control controlID="2" controlTypeID="com.balsamiq.mockups::Button" x="27" y="388" w="225" h="34" measuredW="105" measuredH="27" zOrder="2" locked="false" isInGroup="98">
+          <controlProperties>
+            <color>0</color>
+            <text>Add%20Comment</text>
+          </controlProperties>
+        </control>
+        <control controlID="3" controlTypeID="com.balsamiq.mockups::Button" x="202" y="100" w="50" h="27" measuredW="33" measuredH="27" zOrder="3" locked="false" isInGroup="98">
+          <controlProperties>
+            <color>7317724</color>
+            <text>+</text>
+          </controlProperties>
+        </control>
+        <control controlID="4" controlTypeID="com.balsamiq.mockups::TextInput" x="29" y="361" w="223" h="-1" measuredW="170" measuredH="27" zOrder="4" locked="false" isInGroup="98">
+          <controlProperties>
+            <text>Type%20your%20comment%20here...</text>
+          </controlProperties>
+        </control>
+        <control controlID="5" controlTypeID="com.balsamiq.mockups::Button" x="27" y="129" w="221" h="27" measuredW="93" measuredH="27" zOrder="5" locked="false" isInGroup="98">
+          <controlProperties>
+            <color>10470904</color>
+            <text>Single%20Place</text>
+          </controlProperties>
+        </control>
+        <control controlID="6" controlTypeID="com.balsamiq.mockups::Title" x="56" y="157" w="-1" h="-1" measuredW="90" measuredH="26" zOrder="6" locked="false" isInGroup="98">
+          <controlProperties>
+            <size>18</size>
+            <text>Place%20Title</text>
+          </controlProperties>
+        </control>
+        <control controlID="7" controlTypeID="__group__" x="33" y="160" w="23" h="61" measuredW="23" measuredH="61" zOrder="7" locked="false" isInGroup="98">
+          <groupChildrenDescriptors>
+            <control controlID="0" controlTypeID="com.balsamiq.mockups::Label" x="0" y="22" w="-1" h="-1" measuredW="23" measuredH="21" zOrder="0" locked="false" isInGroup="7">
+              <controlProperties>
+                <text>34</text>
+              </controlProperties>
+            </control>
+            <control controlID="1" controlTypeID="com.balsamiq.mockups::Image" x="0" y="0" w="19" h="24" measuredW="222" measuredH="227" zOrder="1" locked="false" isInGroup="7">
+              <controlProperties>
+                <src>../../../../../../../../E%3A/Kyles-PC/Downloads/assets/upvote.png</src>
+                <text/>
+              </controlProperties>
+            </control>
+            <control controlID="2" controlTypeID="com.balsamiq.mockups::Image" x="0" y="41" w="19" h="20" measuredW="219" measuredH="231" zOrder="2" locked="false" isInGroup="7">
+              <controlProperties>
+                <src>../../../../../../../../E%3A/Kyles-PC/Downloads/assets/downvote.png</src>
+                <text/>
+              </controlProperties>
+            </control>
+          </groupChildrenDescriptors>
+        </control>
+        <control controlID="8" controlTypeID="com.balsamiq.mockups::HRule" x="27" y="223" w="225" h="-1" measuredW="100" measuredH="10" zOrder="8" locked="false" isInGroup="98"/>
+        <control controlID="9" controlTypeID="__group__" x="27" y="225" w="225" h="59" measuredW="225" measuredH="59" zOrder="9" locked="false" isInGroup="98">
+          <groupChildrenDescriptors>
+            <control controlID="0" controlTypeID="com.balsamiq.mockups::TextArea" x="0" y="0" w="225" h="59" measuredW="200" measuredH="140" zOrder="0" locked="false" isInGroup="9">
+              <controlProperties>
+                <text/>
+              </controlProperties>
+            </control>
+            <control controlID="1" controlTypeID="__group__" x="6" y="17" w="16" h="27" measuredW="16" measuredH="27" zOrder="1" locked="false" isInGroup="9">
+              <groupChildrenDescriptors>
+                <control controlID="0" controlTypeID="com.balsamiq.mockups::Label" x="0" y="6" w="16" h="15" measuredW="16" measuredH="15" zOrder="0" locked="false" isInGroup="1">
+                  <controlProperties>
+                    <size>8</size>
+                    <text>34</text>
+                  </controlProperties>
+                </control>
+                <control controlID="1" controlTypeID="com.balsamiq.mockups::Image" x="2" y="0" w="10" h="10" measuredW="222" measuredH="227" zOrder="1" locked="false" isInGroup="1">
+                  <controlProperties>
+                    <src>../../../../../../../../E%3A/Kyles-PC/Downloads/assets/upvote.png</src>
+                    <text/>
+                  </controlProperties>
+                </control>
+                <control controlID="2" controlTypeID="com.balsamiq.mockups::Image" x="2" y="17" w="10" h="10" measuredW="219" measuredH="231" zOrder="2" locked="false" isInGroup="1">
+                  <controlProperties>
+                    <src>../../../../../../../../E%3A/Kyles-PC/Downloads/assets/downvote.png</src>
+                    <text/>
+                  </controlProperties>
+                </control>
+              </groupChildrenDescriptors>
+            </control>
+            <control controlID="2" controlTypeID="com.balsamiq.mockups::Paragraph" x="21" y="5" w="198" h="54" measuredW="200" measuredH="80" zOrder="2" locked="false" isInGroup="9">
+              <controlProperties>
+                <text>A%20paragraph%20of%20text.%20Lorem%20ipsum%20dolor%20sit%20amet%2C%20consectetur%20adipisicing%20elit%2C%20sed%20do%20eiusmod%20tempor%20incididunt%20ut%20labore%20et%20dolore%20magna%20aliqua.%20</text>
+              </controlProperties>
+            </control>
+          </groupChildrenDescriptors>
+        </control>
+        <control controlID="10" controlTypeID="__group__" x="49" y="283" w="203" h="59" measuredW="203" measuredH="59" zOrder="10" locked="false" isInGroup="98">
+          <groupChildrenDescriptors>
+            <control controlID="0" controlTypeID="com.balsamiq.mockups::TextArea" x="0" y="0" w="203" h="59" measuredW="200" measuredH="140" zOrder="0" locked="false" isInGroup="10">
+              <controlProperties>
+                <text/>
+              </controlProperties>
+            </control>
+            <control controlID="1" controlTypeID="__group__" x="5" y="17" w="20" h="27" measuredW="20" measuredH="27" zOrder="1" locked="false" isInGroup="10">
+              <groupChildrenDescriptors>
+                <control controlID="0" controlTypeID="com.balsamiq.mockups::Label" x="0" y="6" w="20" h="15" measuredW="16" measuredH="15" zOrder="0" locked="false" isInGroup="1">
+                  <controlProperties>
+                    <size>8</size>
+                    <text>34</text>
+                  </controlProperties>
+                </control>
+                <control controlID="1" controlTypeID="com.balsamiq.mockups::Image" x="1" y="0" w="13" h="10" measuredW="222" measuredH="227" zOrder="1" locked="false" isInGroup="1">
+                  <controlProperties>
+                    <src>../../../../../../../../E%3A/Kyles-PC/Downloads/assets/upvote.png</src>
+                    <text/>
+                  </controlProperties>
+                </control>
+                <control controlID="2" controlTypeID="com.balsamiq.mockups::Image" x="1" y="17" w="13" h="10" measuredW="219" measuredH="231" zOrder="2" locked="false" isInGroup="1">
+                  <controlProperties>
+                    <src>../../../../../../../../E%3A/Kyles-PC/Downloads/assets/downvote.png</src>
+                    <text/>
+                  </controlProperties>
+                </control>
+              </groupChildrenDescriptors>
+            </control>
+            <control controlID="2" controlTypeID="com.balsamiq.mockups::Paragraph" x="19" y="5" w="179" h="54" measuredW="200" measuredH="80" zOrder="2" locked="false" isInGroup="10">
+              <controlProperties>
+                <text>A%20paragraph%20of%20text.%20Lorem%20ipsum%20dolor%20sit%20amet%2C%20consectetur%20adipisicing%20elit%2C%20sed%20do%20eiusmod%20tempor%20incididunt%20ut%20labore%20et%20dolore%20magna%20aliqua.%20</text>
+              </controlProperties>
+            </control>
+          </groupChildrenDescriptors>
+        </control>
+        <control controlID="11" controlTypeID="com.balsamiq.mockups::Paragraph" x="57" y="181" w="195" h="40" measuredW="200" measuredH="80" zOrder="11" locked="false" isInGroup="98">
+          <controlProperties>
+            <text>Description%20of%20Place.%20Lorem%20ipsum%20dolor%20sit%20amet%2C%20consectetur%20adipisicing%20elit%2C%20sed%20do%20eiusmod%20tempor%20incididunt%20ut%20labore%20et%20dolore%20magna%20aliqua.%20Ut%20enim%20ad%20minim%20veniam%2C%20quis%20nostrud%20exercitation%20ullamco%20laboris%20nisi%20ut%20aliquip%20ex%20ea%20commodo%20consequat.%20Duis%20aute%20irure%20dolor%20in%20reprehenderit%20in%20voluptate%20velit%20esse%20cillum%20dolore%20eu%20fugiat%20nulla%20pariatur.%20Excepteur%20sint%20occaecat%20cupidatat%20non%20proident%2C%20sunt%20in%20culpa%20qui%20officia%20deserunt%20mollit%20anim%20id%20est%20laborum.</text>
+          </controlProperties>
+        </control>
+      </groupChildrenDescriptors>
+    </control>
+    <control controlID="111" controlTypeID="__group__" x="2047" y="1415" w="282" h="510" measuredW="282" measuredH="510" zOrder="3" locked="false" isInGroup="-1">
+      <groupChildrenDescriptors>
+        <control controlID="1" controlTypeID="com.balsamiq.mockups::iPhone" x="0" y="0" w="-1" h="-1" measuredW="282" measuredH="510" zOrder="0" locked="false" isInGroup="111"/>
+        <control controlID="2" controlTypeID="com.balsamiq.mockups::Button" x="29" y="126" w="226" h="27" measuredW="62" measuredH="27" zOrder="1" locked="false" isInGroup="111">
+          <controlProperties>
+            <color>10470904</color>
+            <text>Places</text>
+          </controlProperties>
+        </control>
+        <control controlID="3" controlTypeID="com.balsamiq.mockups::ButtonBar" x="29" y="97" w="-1" h="-1" measuredW="119" measuredH="29" zOrder="2" locked="false" isInGroup="111">
+          <controlProperties>
+            <text>%3C-%20Back</text>
+          </controlProperties>
+        </control>
+        <control controlID="4" controlTypeID="com.balsamiq.mockups::Button" x="205" y="98" w="50" h="27" measuredW="33" measuredH="27" zOrder="3" locked="false" isInGroup="111">
+          <controlProperties>
+            <color>7317724</color>
+            <text>+</text>
+          </controlProperties>
+        </control>
+        <control controlID="5" controlTypeID="com.balsamiq.mockups::Canvas" x="29" y="153" w="226" h="275" measuredW="100" measuredH="70" zOrder="4" locked="false" isInGroup="111"/>
+        <control controlID="6" controlTypeID="__group__" x="29" y="158" w="226" h="72" measuredW="226" measuredH="72" zOrder="5" locked="false" isInGroup="111">
+          <groupChildrenDescriptors>
+            <control controlID="0" controlTypeID="com.balsamiq.mockups::Label" x="25" y="0" w="-1" h="-1" measuredW="57" measuredH="21" zOrder="0" locked="false" isInGroup="6">
+              <controlProperties>
+                <text>Place%20%231</text>
+              </controlProperties>
+            </control>
+            <control controlID="1" controlTypeID="com.balsamiq.mockups::Label" x="26" y="15" w="-1" h="-1" measuredW="53" measuredH="15" zOrder="1" locked="false" isInGroup="6">
+              <controlProperties>
+                <size>8</size>
+                <text>43%20comments</text>
+              </controlProperties>
+            </control>
+            <control controlID="2" controlTypeID="com.balsamiq.mockups::HRule" x="0" y="62" w="226" h="-1" measuredW="100" measuredH="10" zOrder="2" locked="false" isInGroup="6"/>
+            <control controlID="3" controlTypeID="com.balsamiq.mockups::Paragraph" x="25" y="34" w="200" h="26" measuredW="200" measuredH="80" zOrder="3" locked="false" isInGroup="6">
+              <controlProperties>
+                <size>9</size>
+                <text>Description%20of%20place.%20Lorem%20ipsum%20dolor%20sit%20amet%2C%20consectetur%20adipisicing%20elit%2C%20sed%20do%20eiusmod%20tempor%20incididunt%20ut%20labore%20et%20dolore%20magna%20aliqua.%20Ut%20enim%20ad%20minim%20veniam%2C%20quis%20nostrud%20exercitation%20ullamco%20laboris%20nisi%20ut%20aliquip%20ex%20ea%20commodo%20consequat</text>
+              </controlProperties>
+            </control>
+            <control controlID="7" controlTypeID="com.balsamiq.mockups::Label" x="6" y="22" w="-1" h="-1" measuredW="23" measuredH="21" zOrder="4" locked="false" isInGroup="6">
+              <controlProperties>
+                <text>34</text>
+              </controlProperties>
+            </control>
+            <control controlID="9" controlTypeID="com.balsamiq.mockups::Image" x="6" y="0" w="19" h="24" measuredW="222" measuredH="227" zOrder="5" locked="false" isInGroup="6">
+              <controlProperties>
+                <src>../../../../../../../../E%3A/Kyles-PC/Downloads/assets/upvote.png</src>
+                <text/>
+              </controlProperties>
+            </control>
+            <control controlID="10" controlTypeID="com.balsamiq.mockups::Image" x="6" y="41" w="19" h="20" measuredW="219" measuredH="231" zOrder="6" locked="false" isInGroup="6">
+              <controlProperties>
+                <src>../../../../../../../../E%3A/Kyles-PC/Downloads/assets/downvote.png</src>
+                <text/>
+              </controlProperties>
+            </control>
+          </groupChildrenDescriptors>
+        </control>
+        <control controlID="7" controlTypeID="__group__" x="29" y="225" w="226" h="73" measuredW="226" measuredH="73" zOrder="6" locked="false" isInGroup="111">
+          <groupChildrenDescriptors>
+            <control controlID="0" controlTypeID="com.balsamiq.mockups::Label" x="25" y="1" w="-1" h="-1" measuredW="59" measuredH="21" zOrder="0" locked="false" isInGroup="7">
+              <controlProperties>
+                <text>Place%20%232</text>
+              </controlProperties>
+            </control>
+            <control controlID="1" controlTypeID="com.balsamiq.mockups::Label" x="26" y="16" w="56" h="15" measuredW="52" measuredH="15" zOrder="1" locked="false" isInGroup="7">
+              <controlProperties>
+                <size>8</size>
+                <text>28%20comments</text>
+              </controlProperties>
+            </control>
+            <control controlID="2" controlTypeID="com.balsamiq.mockups::HRule" x="0" y="63" w="226" h="-1" measuredW="100" measuredH="10" zOrder="2" locked="false" isInGroup="7"/>
+            <control controlID="3" controlTypeID="com.balsamiq.mockups::Paragraph" x="25" y="35" w="200" h="26" measuredW="200" measuredH="80" zOrder="3" locked="false" isInGroup="7">
+              <controlProperties>
+                <size>9</size>
+                <text>Description%20of%20place.%20Lorem%20ipsum%20dolor%20sit%20amet%2C%20consectetur%20adipisicing%20elit%2C%20sed%20do%20eiusmod%20tempor%20incididunt%20ut%20labore%20et%20dolore%20magna%20aliqua.%20Ut%20enim%20ad%20minim%20veniam%2C%20quis%20nostrud%20exercitation%20ullamco%20laboris%20nisi%20ut%20aliquip%20ex%20ea%20commodo%20consequat</text>
+              </controlProperties>
+            </control>
+            <control controlID="7" controlTypeID="com.balsamiq.mockups::Label" x="6" y="22" w="-1" h="-1" measuredW="22" measuredH="21" zOrder="4" locked="false" isInGroup="7">
+              <controlProperties>
+                <text>28</text>
+              </controlProperties>
+            </control>
+            <control controlID="9" controlTypeID="com.balsamiq.mockups::Image" x="6" y="0" w="19" h="24" measuredW="222" measuredH="227" zOrder="5" locked="false" isInGroup="7">
+              <controlProperties>
+                <src>../../../../../../../../E%3A/Kyles-PC/Downloads/assets/upvote.png</src>
+                <text/>
+              </controlProperties>
+            </control>
+            <control controlID="10" controlTypeID="com.balsamiq.mockups::Image" x="6" y="41" w="19" h="20" measuredW="219" measuredH="231" zOrder="6" locked="false" isInGroup="7">
+              <controlProperties>
+                <src>../../../../../../../../E%3A/Kyles-PC/Downloads/assets/downvote.png</src>
+                <text/>
+              </controlProperties>
+            </control>
+          </groupChildrenDescriptors>
+        </control>
+        <control controlID="8" controlTypeID="__group__" x="29" y="293" w="226" h="73" measuredW="226" measuredH="73" zOrder="7" locked="false" isInGroup="111">
+          <groupChildrenDescriptors>
+            <control controlID="0" controlTypeID="com.balsamiq.mockups::Label" x="25" y="1" w="-1" h="-1" measuredW="58" measuredH="21" zOrder="0" locked="false" isInGroup="8">
+              <controlProperties>
+                <text>Place%20%233</text>
+              </controlProperties>
+            </control>
+            <control controlID="1" controlTypeID="com.balsamiq.mockups::Label" x="26" y="16" w="56" h="15" measuredW="53" measuredH="15" zOrder="1" locked="false" isInGroup="8">
+              <controlProperties>
+                <size>8</size>
+                <text>23%20comments</text>
+              </controlProperties>
+            </control>
+            <control controlID="2" controlTypeID="com.balsamiq.mockups::HRule" x="0" y="63" w="226" h="-1" measuredW="100" measuredH="10" zOrder="2" locked="false" isInGroup="8"/>
+            <control controlID="3" controlTypeID="com.balsamiq.mockups::Paragraph" x="25" y="35" w="200" h="26" measuredW="200" measuredH="80" zOrder="3" locked="false" isInGroup="8">
+              <controlProperties>
+                <size>9</size>
+                <text>Description%20of%20place.%20Lorem%20ipsum%20dolor%20sit%20amet%2C%20consectetur%20adipisicing%20elit%2C%20sed%20do%20eiusmod%20tempor%20incididunt%20ut%20labore%20et%20dolore%20magna%20aliqua.%20Ut%20enim%20ad%20minim%20veniam%2C%20quis%20nostrud%20exercitation%20ullamco%20laboris%20nisi%20ut%20aliquip%20ex%20ea%20commodo%20consequat</text>
+              </controlProperties>
+            </control>
+            <control controlID="7" controlTypeID="com.balsamiq.mockups::Label" x="6" y="22" w="-1" h="-1" measuredW="23" measuredH="21" zOrder="4" locked="false" isInGroup="8">
+              <controlProperties>
+                <text>24</text>
+              </controlProperties>
+            </control>
+            <control controlID="9" controlTypeID="com.balsamiq.mockups::Image" x="6" y="0" w="19" h="24" measuredW="222" measuredH="227" zOrder="5" locked="false" isInGroup="8">
+              <controlProperties>
+                <src>../../../../../../../../E%3A/Kyles-PC/Downloads/assets/upvote.png</src>
+                <text/>
+              </controlProperties>
+            </control>
+            <control controlID="10" controlTypeID="com.balsamiq.mockups::Image" x="6" y="41" w="19" h="20" measuredW="219" measuredH="231" zOrder="6" locked="false" isInGroup="8">
+              <controlProperties>
+                <src>../../../../../../../../E%3A/Kyles-PC/Downloads/assets/downvote.png</src>
+                <text/>
+              </controlProperties>
+            </control>
+          </groupChildrenDescriptors>
+        </control>
+        <control controlID="9" controlTypeID="__group__" x="29" y="361" w="226" h="73" measuredW="226" measuredH="73" zOrder="8" locked="false" isInGroup="111">
+          <groupChildrenDescriptors>
+            <control controlID="0" controlTypeID="com.balsamiq.mockups::Label" x="25" y="1" w="-1" h="-1" measuredW="60" measuredH="21" zOrder="0" locked="false" isInGroup="9">
+              <controlProperties>
+                <text>Place%20%234</text>
+              </controlProperties>
+            </control>
+            <control controlID="1" controlTypeID="com.balsamiq.mockups::Label" x="26" y="16" w="56" h="15" measuredW="53" measuredH="15" zOrder="1" locked="false" isInGroup="9">
+              <controlProperties>
+                <size>8</size>
+                <text>23%20comments</text>
+              </controlProperties>
+            </control>
+            <control controlID="2" controlTypeID="com.balsamiq.mockups::HRule" x="0" y="63" w="226" h="-1" measuredW="100" measuredH="10" zOrder="2" locked="false" isInGroup="9"/>
+            <control controlID="3" controlTypeID="com.balsamiq.mockups::Paragraph" x="25" y="35" w="200" h="26" measuredW="200" measuredH="80" zOrder="3" locked="false" isInGroup="9">
+              <controlProperties>
+                <size>9</size>
+                <text>Description%20of%20place.%20Lorem%20ipsum%20dolor%20sit%20amet%2C%20consectetur%20adipisicing%20elit%2C%20sed%20do%20eiusmod%20tempor%20incididunt%20ut%20labore%20et%20dolore%20magna%20aliqua.%20Ut%20enim%20ad%20minim%20veniam%2C%20quis%20nostrud%20exercitation%20ullamco%20laboris%20nisi%20ut%20aliquip%20ex%20ea%20commodo%20consequat</text>
+              </controlProperties>
+            </control>
+            <control controlID="7" controlTypeID="com.balsamiq.mockups::Label" x="6" y="22" w="-1" h="-1" measuredW="20" measuredH="21" zOrder="4" locked="false" isInGroup="9">
+              <controlProperties>
+                <text>18</text>
+              </controlProperties>
+            </control>
+            <control controlID="9" controlTypeID="com.balsamiq.mockups::Image" x="6" y="0" w="19" h="24" measuredW="222" measuredH="227" zOrder="5" locked="false" isInGroup="9">
+              <controlProperties>
+                <src>../../../../../../../../E%3A/Kyles-PC/Downloads/assets/upvote.png</src>
+                <text/>
+              </controlProperties>
+            </control>
+            <control controlID="10" controlTypeID="com.balsamiq.mockups::Image" x="6" y="41" w="19" h="20" measuredW="219" measuredH="231" zOrder="6" locked="false" isInGroup="9">
+              <controlProperties>
+                <src>../../../../../../../../E%3A/Kyles-PC/Downloads/assets/downvote.png</src>
+                <text/>
+              </controlProperties>
+            </control>
+          </groupChildrenDescriptors>
+        </control>
+        <control controlID="10" controlTypeID="com.balsamiq.mockups::Button" x="155" y="98" w="50" h="27" measuredW="48" measuredH="27" zOrder="9" locked="false" isInGroup="111">
+          <controlProperties>
+            <color>7317724</color>
+            <text>Map</text>
+          </controlProperties>
+        </control>
+      </groupChildrenDescriptors>
+    </control>
+    <control controlID="112" controlTypeID="com.balsamiq.mockups::Arrow" x="1568" y="910" w="336" h="96" measuredW="150" measuredH="100" zOrder="8" locked="false" isInGroup="-1">
+      <controlProperties>
+        <backgroundAlpha>1</backgroundAlpha>
+        <curvature>-1</curvature>
+        <text>Sign%20Up</text>
+      </controlProperties>
+    </control>
+    <control controlID="113" controlTypeID="com.balsamiq.mockups::Arrow" x="1576" y="874" w="200" h="514" measuredW="150" measuredH="100" zOrder="9" locked="false" isInGroup="-1">
+      <controlProperties>
+        <text>Login</text>
+      </controlProperties>
+    </control>
+    <control controlID="114" controlTypeID="com.balsamiq.mockups::Arrow" x="1868" y="1050" w="164" h="324" measuredW="150" measuredH="100" zOrder="10" locked="false" isInGroup="-1">
+      <controlProperties>
+        <curvature>-1</curvature>
+        <direction>bottom</direction>
+        <text>Sign%20Up</text>
+      </controlProperties>
+    </control>
+    <control controlID="115" controlTypeID="com.balsamiq.mockups::Arrow" x="1656" y="604" w="316" h="210" measuredW="150" measuredH="100" zOrder="11" locked="false" isInGroup="-1">
+      <controlProperties>
+        <text/>
+      </controlProperties>
+    </control>
+    <control controlID="116" controlTypeID="com.balsamiq.mockups::Arrow" x="2047" y="1524" w="236" h="671" measuredW="150" measuredH="100" zOrder="13" locked="false" isInGroup="-1">
+      <controlProperties>
+        <direction>bottom</direction>
+        <text>Add%20Place</text>
+      </controlProperties>
+    </control>
+    <control controlID="133" controlTypeID="__group__" x="1658" y="1380" w="282" h="510" measuredW="282" measuredH="510" zOrder="7" locked="false" isInGroup="-1">
+      <groupChildrenDescriptors>
+        <control controlID="0" controlTypeID="com.balsamiq.mockups::iPhone" x="0" y="0" w="-1" h="-1" measuredW="282" measuredH="510" zOrder="0" locked="false" isInGroup="133"/>
+        <control controlID="1" controlTypeID="com.balsamiq.mockups::Label" x="56" y="354" w="172" h="29" measuredW="146" measuredH="33" zOrder="1" locked="false" isInGroup="133">
+          <controlProperties>
+            <size>24</size>
+            <text>Title%20of%20Place</text>
+          </controlProperties>
+        </control>
+        <control controlID="2" controlTypeID="com.balsamiq.mockups::Label" x="62" y="375" w="-1" h="-1" measuredW="94" measuredH="21" zOrder="2" locked="false" isInGroup="133">
+          <controlProperties>
+            <text>%23%20of%20comments</text>
+          </controlProperties>
+        </control>
+        <control controlID="3" controlTypeID="__group__" x="27" y="162" w="225" h="186" measuredW="225" measuredH="186" zOrder="3" locked="false" isInGroup="133">
+          <groupChildrenDescriptors>
+            <control controlID="0" controlTypeID="com.balsamiq.mockups::Map" x="0" y="0" w="225" h="186" measuredW="252" measuredH="222" zOrder="0" locked="false" isInGroup="3"/>
+            <control controlID="1" controlTypeID="com.balsamiq.mockups::RoundButton" x="48" y="37" w="30" h="23" measuredW="32" measuredH="32" zOrder="1" locked="false" isInGroup="3">
+              <controlProperties>
+                <color>13576743</color>
+                <shape>star</shape>
+                <text/>
+              </controlProperties>
+            </control>
+          </groupChildrenDescriptors>
+        </control>
+        <control controlID="4" controlTypeID="com.balsamiq.mockups::ButtonBar" x="27" y="99" w="-1" h="-1" measuredW="119" measuredH="29" zOrder="4" locked="false" isInGroup="133">
+          <controlProperties>
+            <text>%3C-%20Back</text>
+          </controlProperties>
+        </control>
+        <control controlID="5" controlTypeID="com.balsamiq.mockups::Button" x="202" y="100" w="50" h="27" measuredW="33" measuredH="27" zOrder="5" locked="false" isInGroup="133">
+          <controlProperties>
+            <color>7317724</color>
+            <text>+</text>
+          </controlProperties>
+        </control>
+        <control controlID="6" controlTypeID="com.balsamiq.mockups::Button" x="27" y="129" w="221" h="27" measuredW="149" measuredH="27" zOrder="6" locked="false" isInGroup="133">
+          <controlProperties>
+            <color>10470904</color>
+            <text>Map%20of%20Nearby%20Places</text>
+          </controlProperties>
+        </control>
+        <control controlID="7" controlTypeID="com.balsamiq.mockups::Image" x="187" y="162" w="33" h="33" measuredW="150" measuredH="150" zOrder="7" locked="false" isInGroup="133">
+          <controlProperties>
+            <src>../../../../../../../../E%3A/Kyles-PC/Downloads/assets/place_pointer.png</src>
+            <text/>
+          </controlProperties>
+        </control>
+        <control controlID="8" controlTypeID="com.balsamiq.mockups::Image" x="181" y="239" w="33" h="33" measuredW="150" measuredH="150" zOrder="8" locked="false" isInGroup="133">
+          <controlProperties>
+            <src>../../../../../../../../E%3A/Kyles-PC/Downloads/assets/place_pointer.png</src>
+            <text/>
+          </controlProperties>
+        </control>
+        <control controlID="9" controlTypeID="com.balsamiq.mockups::Image" x="207" y="295" w="33" h="33" measuredW="150" measuredH="150" zOrder="9" locked="false" isInGroup="133">
+          <controlProperties>
+            <src>../../../../../../../../E%3A/Kyles-PC/Downloads/assets/place_pointer.png</src>
+            <text/>
+          </controlProperties>
+        </control>
+        <control controlID="10" controlTypeID="com.balsamiq.mockups::Label" x="36" y="377" w="-1" h="-1" measuredW="23" measuredH="21" zOrder="10" locked="false" isInGroup="133">
+          <controlProperties>
+            <text>34</text>
+          </controlProperties>
+        </control>
+        <control controlID="11" controlTypeID="com.balsamiq.mockups::Image" x="36" y="355" w="19" h="24" measuredW="222" measuredH="227" zOrder="11" locked="false" isInGroup="133">
+          <controlProperties>
+            <src>../../../../../../../../E%3A/Kyles-PC/Downloads/assets/upvote.png</src>
+            <text/>
+          </controlProperties>
+        </control>
+        <control controlID="12" controlTypeID="com.balsamiq.mockups::Image" x="36" y="396" w="19" h="20" measuredW="219" measuredH="231" zOrder="12" locked="false" isInGroup="133">
+          <controlProperties>
+            <src>../../../../../../../../E%3A/Kyles-PC/Downloads/assets/downvote.png</src>
+            <text/>
+          </controlProperties>
+        </control>
+        <control controlID="13" controlTypeID="com.balsamiq.mockups::Paragraph" x="60" y="390" w="192" h="41" measuredW="200" measuredH="80" zOrder="13" locked="false" isInGroup="133">
+          <controlProperties>
+            <size>9</size>
+            <text>Description%20of%20Place.%20Lorem%20ipsum%20dolor%20sit%20amet%2C%20consectetur%20adipisicing%20elit%2C%20sed%20do%20eiusmod%20tempor%20incididunt%20ut%20labore%20et%20dolore%20magna%20aliqua.%20Ut%20enim%20ad%20minim%20veniam%2C%20quis%20nostrud%20exercitation%20ullamco%20laboris%20nisi%20ut%20aliquip%20ex%20ea%20commodo%20consequat.%20Duis%20aute%20irure%20dolor%20in%20reprehenderit%20in%20voluptate%20velit%20esse%20cillum%20dolore%20eu%20fugiat%20nulla%20pariatur.%20Excepteur%20sint%20occaecat%20cupidatat%20non%20proident%2C%20sunt%20in%20culpa%20qui%20officia%20deserunt%20mollit%20anim%20id%20est%20laborum.</text>
+          </controlProperties>
+        </control>
+        <control controlID="14" controlTypeID="com.balsamiq.mockups::Button" x="152" y="100" w="50" h="27" measuredW="45" measuredH="27" zOrder="14" locked="false" isInGroup="133">
+          <controlProperties>
+            <color>7317724</color>
+            <text>List</text>
+          </controlProperties>
+        </control>
+      </groupChildrenDescriptors>
+    </control>
+    <control controlID="134" controlTypeID="com.balsamiq.mockups::Arrow" x="1848" y="1493" w="305" h="158" measuredW="150" measuredH="100" zOrder="14" locked="false" isInGroup="-1">
+      <controlProperties>
+        <text>List%20View</text>
+      </controlProperties>
+    </control>
+    <control controlID="135" controlTypeID="com.balsamiq.mockups::Arrow" x="1917" y="1524" w="302" h="127" measuredW="150" measuredH="100" zOrder="15" locked="false" isInGroup="-1">
+      <controlProperties>
+        <direction>bottom</direction>
+        <text>Map%20View</text>
+      </controlProperties>
+    </control>
+    <control controlID="136" controlTypeID="com.balsamiq.mockups::Arrow" x="1489" y="1746" w="287" h="421" measuredW="150" measuredH="100" zOrder="16" locked="false" isInGroup="-1">
+      <controlProperties>
+        <direction>bottom</direction>
+        <text>Place%20Comments%20View</text>
+      </controlProperties>
+    </control>
+    <control controlID="137" controlTypeID="com.balsamiq.mockups::Arrow" x="1683" y="1790" w="437" h="418" measuredW="150" measuredH="100" zOrder="17" locked="false" isInGroup="-1">
+      <controlProperties>
+        <curvature>0</curvature>
+        <direction>bottom</direction>
+        <text>Place%20Comments%20View</text>
+      </controlProperties>
+    </control>
+    <control controlID="138" controlTypeID="__group__" x="1715" y="46" w="282" h="510" measuredW="282" measuredH="510" zOrder="18" locked="false" isInGroup="-1">
+      <groupChildrenDescriptors>
+        <control controlID="0" controlTypeID="com.balsamiq.mockups::iPhone" x="0" y="0" w="-1" h="-1" measuredW="282" measuredH="510" zOrder="0" locked="false" isInGroup="138"/>
+        <control controlID="1" controlTypeID="com.balsamiq.mockups::Button" x="29" y="99" w="226" h="27" measuredW="139" measuredH="27" zOrder="1" locked="false" isInGroup="138">
+          <controlProperties>
+            <color>10470904</color>
+            <text>Community%20Upgrade</text>
+          </controlProperties>
+        </control>
+        <control controlID="3" controlTypeID="com.balsamiq.mockups::Paragraph" x="29" y="149" w="226" h="129" measuredW="200" measuredH="80" zOrder="2" locked="false" isInGroup="138">
+          <controlProperties>
+            <text>Welcome%20to%20Community%20Upgrade%0A%20%0ALorem%20ipsum%20dolor%20sit%20amet%2C%20consectetur%20adipisicing%20elit%2C%20sed%20do%20eiusmod%20tempor%20incididunt%20ut%20labore%20et%20dolore%20magna%20aliqua.%20Ut%20enim%20ad%20minim%20veniam%2C%20quis%20nostrud%20exercitation%20ullamco%20laboris%20nisi%20ut%20aliquip%20ex%20ea%20commodo%20consequat.%20Duis%20aute%20irure%20dolor%20in%20reprehenderit%20in%20voluptate%20velit%20esse%20cillum%20dolore%20eu%20fugiat%20nulla%20pariatur.%20Excepteur%20sint%20occaecat%20cupidatat%20non%20proident%2C%20sunt%20in%20culpa%20qui%20officia%20deserunt%20mollit%20anim%20id%20est%20laborum.</text>
+          </controlProperties>
+        </control>
+        <control controlID="4" controlTypeID="com.balsamiq.mockups::Button" x="103" y="294" w="-1" h="-1" measuredW="54" measuredH="27" zOrder="3" locked="false" isInGroup="138">
+          <controlProperties>
+            <text>Login</text>
+          </controlProperties>
+        </control>
+        <control controlID="5" controlTypeID="com.balsamiq.mockups::Button" x="96" y="345" w="-1" h="-1" measuredW="68" measuredH="27" zOrder="4" locked="false" isInGroup="138">
+          <controlProperties>
+            <text>Sign%20Up</text>
+          </controlProperties>
+        </control>
+      </groupChildrenDescriptors>
+    </control>
+    <control controlID="139" controlTypeID="com.balsamiq.mockups::Arrow" x="1524" y="352" w="316" h="210" measuredW="150" measuredH="100" zOrder="19" locked="false" isInGroup="-1">
+      <controlProperties>
+        <direction>bottom</direction>
+        <text/>
+      </controlProperties>
+    </control>
+    <control controlID="140" controlTypeID="com.balsamiq.mockups::Arrow" x="1875" y="404" w="269" h="336" measuredW="150" measuredH="100" zOrder="20" locked="false" isInGroup="-1">
+      <controlProperties>
+        <direction>top</direction>
+        <text/>
+      </controlProperties>
+    </control>
+  </controls>
+</mockup>
